@@ -5,7 +5,7 @@
 
 ## [JavaSE](https://github.com/wyjPro/interview/blob/master/wyj/JavaSE.md)
 
-## [JavaEE](https://github.com/wyjPro/interview/blob/master/wyj/JavaEE.md)
+## [JavaEE](https://github.com/wyjPro/interview/blob/master/wyj/javaEE.md)
 
 ## [数据库](https://github.com/wyjPro/interview/blob/master/wyj/database.md)
 
