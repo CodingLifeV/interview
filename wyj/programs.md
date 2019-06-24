@@ -979,7 +979,7 @@ public class Test {
             if(i >= j) break;
             swap(nums, i, j);
         }
-        swap(nums, i, lo);
+        swap(nums, j, lo);
         return j;
     }
 
@@ -1004,8 +1004,8 @@ public class Test {
 
         int i = 0, j = nums.length - 1;
         while(i < j) {
-            if(nums[i] % 2 != 0) i++;
-            if(nums[j] % 2 == 0) j++;
+            while(nums[i] % 2 != 0) i++;
+            while(nums[j] % 2 == 0) j++;
             swap(nums, i, j);
         }
 
