@@ -30,6 +30,16 @@
         - [用二个栈实现队列](#用二个栈实现队列)
         - [**包含min函数的栈**](#包含min函数的栈)
         - [**输入二个序列，第一个序列是栈的压入序列，判断第二个序列是否为栈的弹出序列**](#输入二个序列第一个序列是栈的压入序列判断第二个序列是否为栈的弹出序列)
+    - [数组](#数组)
+        - [数组中重复的数字](#数组中重复的数字)
+        - [二维数组中的查找，数组从左到右从上到下递增](#二维数组中的查找数组从左到右从上到下递增)
+        - [旋转数组的最小数字](#旋转数组的最小数字)
+        - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
+        - [调整数组顺序使奇数位于偶数前面](#调整数组顺序使奇数位于偶数前面)
+    - [动态规划](#动态规划)
+        - [连续子数组的最大和](#连续子数组的最大和)
+        - [跳台阶](#跳台阶)
+        - [变态跳台阶](#变态跳台阶)
 
 <!-- /TOC -->
 
@@ -847,3 +857,204 @@ public class Test {
     return stack.isEmpty();
 }
 ```
+## 数组
+
+### 数组中重复的数字
+
+```java
+public class Test {
+    //将值为 i 的元素调整到第 i 个位置上
+    public boolean dulicate(int[] nums, int[] duplication) {
+        //特殊条件：二个
+        if(nums.length == 0 || nums == null) {
+            return false;
+        }
+
+        for(int i = 0; i < nums.length; i++) {
+            while(nums[i] != i) {
+                if(nums[i] == nums[nums[i]]) {
+                    duplication[0] = nums[i];
+                    return true;
+                }
+                swap(nums, nums[i], i);
+            }
+        }
+        return false;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+            int temp = nums[i]; 
+            nums[i]  = nums[j];
+            nums[j]  = temp; 
+        }
+}
+```
+
+### 二维数组中的查找，数组从左到右从上到下递增
+
+**思想：**
+
+类似二分查找
+
+```java
+public class Test {
+    public boolean findTarget(int[][] matrix, int target) {
+        if(matrix == null || matrix.length == 0 || matrix[0] == 0) {
+            return false;
+        }
+
+        int row = matrix.length, col = matrix[0].length;
+        int r = 0, c = col - 1;
+
+        while(r <= row-1 && c >= 0) {
+            if(target == matrix[r][c]) {
+                return true;
+            } else if(target > matrix[r][c]) {
+                r++;
+            } else {
+                c--;
+            }
+        }
+    }  
+}
+```
+
+### 旋转数组的最小数字
+
+**思想：**
+
+二分查找
+
+```java
+public class Test {
+    public int getMinNumber(int[] rotate) {
+        if(rotate == null || rotate.length == 0) {
+            return Integer.MIN_VALUE;
+        }
+
+        int l = 0, h = rotate.length - 1;
+        while(l < h) {
+            int m = l + (h - l) / 2;
+            if(rotate[m] <= nums[h]) {
+                h = m;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        return ratate[l];
+    }
+} 
+```
+### 数组中出现次数超过一半的数字
+
+**思想：**
+
+基于快排，数组中中位数肯定是出现超过一半的那一个数字
+
+```java
+public class Test {
+    public int getMoreThanHalfNumber(int[] nums) {
+        if(nums.length == 0 || nums == null) {
+            return Integer.MAX_VALUE;
+        }
+        int mid = nums.length / 2;
+        int index = patition(nums, 0, nums.length - 1);
+        while(mid != index) {
+            if(index > mid) {
+                index = partition(nums, 0, index-1);
+            } else {
+                index = partition(nums, index+1, nums.length - 1);
+            }
+        }
+    }
+
+    private int partition(int[] nums, int lo, int hi) {
+        int i = lo, j = hi + 1;
+        int temp = nums[lo];
+        while(true) {
+            while(nums[++i] < lo);
+            while(nums[--j] > lo);
+            //快排 if 
+            if(i >= j) break;
+            swap(nums, i, j);
+        }
+        swap(nums, i, lo);
+        return j;
+    }
+
+    private void swap(int nums, int i, int j) {
+        int temp = nums[i];
+        nums[i]  = nums[j];
+        nums[j]  = temp;  
+    }
+}
+```
+
+### 调整数组顺序使奇数位于偶数前面
+
+**思想：双指针**
+
+```java
+public class Test {
+    pubic int[] reAdjustArr(int[] nums) {
+        if(nums.length == null || nums.length == 0) {
+            return null;
+        }
+
+        int i = 0, j = nums.length - 1;
+        while(i < j) {
+            if(nums[i] % 2 != 0) i++;
+            if(nums[j] % 2 == 0) j++;
+            swap(nums, i, j);
+        }
+
+        return nums;
+    }
+}
+```
+
+
+
+
+
+## 动态规划
+
+### 连续子数组的最大和
+
+**思想：**
+
+DP[i] = max(dp[i-1]+num[i] , num[i])
+
+```java
+public class Test {
+    public int getMaxSumOFSubArray(int[] nums) {
+        if(nums == null && nums.length == 0) {
+            return 0;
+        }
+
+        int max = nums[0], sum = nums[0];
+
+        for(int i = 1; i < nums.length; i++) {
+            sum = Math.max(nums[i], sum + nums[i]);
+            if(sum > max) {
+                max = sum;
+            }
+        }
+
+        return max;
+    }
+}
+```
+
+### 跳台阶
+
+
+### 变态跳台阶
+
+
+
+
+
+
+
