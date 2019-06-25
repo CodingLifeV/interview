@@ -5,6 +5,8 @@
 
 ## [JavaSE](https://github.com/wyjPro/interview/blob/master/wyj/JavaSE.md)
 
+## [Java并发](https://github.com/wyjPro/interview/blob/master/wyj/concurrent.md)
+
 ## [JavaEE](https://github.com/wyjPro/interview/blob/master/wyj/javaEE.md)
 
 ## [数据库](https://github.com/wyjPro/interview/blob/master/wyj/database.md)
