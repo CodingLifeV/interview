@@ -36,11 +36,18 @@
         - [旋转数组的最小数字](#旋转数组的最小数字)
         - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
         - [调整数组顺序使奇数位于偶数前面](#调整数组顺序使奇数位于偶数前面)
-    - [六、](#六)
+        - [把数组排成最小的数](#把数组排成最小的数)
+        - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数)
+    - [六、动态规划](#六动态规划)
         - [连续子数组的最大和](#连续子数组的最大和)
-        - [跳台阶](#跳台阶)
-        - [变态跳台阶](#变态跳台阶)
         - [m * n 的棋盘上拿礼物，求礼物的最大价值](#m--n-的棋盘上拿礼物求礼物的最大价值)
+    - [贪心](#贪心)
+        - [股票的最大利润](#股票的最大利润)
+    - [递归](#递归)
+        - [斐波那契数列](#斐波那契数列)
+        - [跳 n 级台阶总共的跳法](#跳-n-级台阶总共的跳法)
+        - [用 2 * 1 的小矩形不重叠的覆盖 2 * n 的大矩形](#用-2--1-的小矩形不重叠的覆盖-2--n-的大矩形)
+        - [变态跳台阶](#变态跳台阶)
 
 <!-- /TOC -->
 
@@ -936,7 +943,7 @@ public class Test {
         int l = 0, h = rotate.length - 1;
         while(l < h) {
             int m = l + (h - l) / 2;
-            if(rotate[m] <= nums[h]) {
+            if(rotate[m] <= rotate[h]) {
                 h = m;
             } else {
                 l = m + 1;
@@ -968,6 +975,7 @@ public class Test {
                 index = partition(nums, index+1, nums.length - 1);
             }
         }
+        return nums[index];
     }
 
     private int partition(int[] nums, int lo, int hi) {
@@ -1015,19 +1023,78 @@ public class Test {
 }
 ```
 
-## 六、
-动态规划
+### 把数组排成最小的数
+
+```java
+
+```
+
+### 数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数
+
+**思想：**
+
+分治，采用归并排序。`逆序对的总数=左边数组中的逆序对的数量+右边数组中逆序对的数量+左右结合成新的顺序数组时中出现的逆序对的数量`
+
+```java
+public class Test{
+    private int cnt = 0;
+    private int[] copyOfNums;
+    public int getInversePairs(int[] nums) {
+        copyOfNums = new int[nums.length];
+        sort(nums, 0, nums.length);
+        return cnt;
+    }
+    private void sort(int[] nums, int lo, int hi) {
+        if(lo >= hi) {
+            return;
+        }
+        int mid = lo + (hi - lo) / 2;           
+        sort(nums, lo, mid);
+        sort(nums, mid+1, hi);
+        merge(nums, lo, mid, hi);
+
+    }
+    private void merge(int[] nums, int lo, int mid,int hi) {
+        int i = lo, j = mid + 1;
+        int k = lo;
+
+        while(i <= mid || j <= hi) {
+            if(i > mid) {
+                copyOfNums[k] = nums[j++];
+            } else if(j > hi) {
+                copyOfNums[k] = nums[i++];
+            } else if(nums[i] < nums[j]) {
+                copyOfNums[k] = nums[i++];
+            } else {
+                copyOfNums[k] = nums[j++];
+                //nums[i] > nums[j],说明nums[i...mid] > nums[j]
+                //统计逆序对总数
+                this.cnt += m - i + 1;
+            }
+            k++;
+        } 
+
+        //由于已经统计了这两对子数组内部的逆序对， 因此需要把这两对子数组进行排序，避免在之后的统计过程中重复统计
+        for(int k = lo, k <= hi; k++) {
+            nums[k] = copyOfNums[k];
+        } 
+    }
+}
+```
+
+
+## 六、动态规划
 
 ### 连续子数组的最大和
 
 **思想：**
-
-DP[i] = max(dp[i-1]+num[i] , num[i])
+一维dp，
+`dp[i] = max(dp[i-1]+nums[i] , nums[i])`
 
 ```java
 public class Test {
     public int getMaxSumOFSubArray(int[] nums) {
-        if(nums == null && nums.length == 0) {
+        if(nums == null || nums.length == 0) {
             return 0;
         }
 
@@ -1045,22 +1112,160 @@ public class Test {
 }
 ```
 
-### 跳台阶
 
-### 变态跳台阶
 
 ### m * n 的棋盘上拿礼物，求礼物的最大价值
 
+
+**思想：**
+
+二维 dp，转化为一维 dp。
+`dp[i] = Math.max(dp[i], dp[i-1]) + values[i]`; 
+
 ```java
 public class Test {
-    public int getMaxValue(int[] gift) {
+    public int getMaxValue(int[][] giftsValues) {
+        if(giftValues == null) {
+            return 0;
+        }
 
+        int n = giftValues[0].length;
+        int[] maxValues = new int[n]; 
+        for(int[] giftsValue : giftsValues) {
+            maxValues[0] = giftsValue[0];
+            for(int i = 1; i < n; i++) {
+                maxValues[i] = Math.max(maxValues[i], maxValues[i-1]) + giftsValue[i];
+            }
+        }
+
+        return maxValues[n-1];
     }
 }
 ```
 
 
+## 贪心
 
+### 股票的最大利润
 
+**思想：**
 
+记录当前最小值和最大值差
+
+```java
+public class Test {
+    public int getMostProfit(int[] prices) {
+        if(prices == null || prices.length == 0) {
+            return 0;
+        }
+
+        int sofarMin = prices[0];
+        int maxProfit = 0;
+        for(int i = 1; i < prices.length; i++) {
+            sofarMin = Math.min(sofarMin, prices[i]);
+            maxProfit = Math.max(maxProfit, prices[i] - sofarMin);
+        }
+        return maxProfit;
+    }
+}
+```
+
+## 递归
+
+### 斐波那契数列
+
+**思想：**
+
+第 i 项只与前二项相关，保存前二项就好了。
+`f(i) = f(i-1) + f(i-2)`
+
+```java
+public class Test{
+    public int fibonacci(int n) {
+        if(n <= 1) {
+            return n;
+        }
+        int pre2 = 0, pre1 = 1;
+        int fib = 0;
+        for(int i = 2; i <= n; i++) {
+            fib  = pre1 + pre2;
+            pre2 = pre1;
+            pre1 = fib; 
+        }
+        return fib;
+    }
+}
+```
+
+### 跳 n 级台阶总共的跳法
+
+**思想：**
+
+与 fibonacci 数列一样
+
+```java
+public class Test{
+    public int getJumpFloorNumbers(int n) {
+        if(n <= 2) {
+            return n;
+        }
+        int pre1 = 2, pre2 = 1;
+        int numbers = 1;
+        for(int i = 3; i <= n; i++) {
+            numbers = pre1 + pre2;
+            pre2    = pre1;
+            pre1    = numbers;
+        }
+        return numbers;
+    }
+}
+```
+
+### 用 2 * 1 的小矩形不重叠的覆盖 2 * n 的大矩形
+
+**思想：**
+
+与 fibonacci 数列一样
+
+```java
+public class Test{
+    public int getCoverRectNumbers(int n) {
+        if(n <= 2) {
+            return n;
+        }
+        int pre1 = 2, pre2 = 1;
+        int numbers = 1;
+        for(int i = 3; i <= n; i++) {
+            numbers = pre1 + pre2;
+            pre2    = pre1;
+            pre1    = numbers;
+        }
+        return numbers;
+    }
+}
+```
+
+### 变态跳台阶
+
+**思想：**
+
+f(n) 是一个等比数列，`f(n) = 2 * f(n-1)`
+
+```java
+public class Test{
+    public int getJumpFloorNumbers(int n) {
+        if (n <= 0) {
+            return 0;
+        }
+        if (n == 1) {
+            return 1;
+        }
+        for(int i = 2; i <= n; i++) {
+            return 2 * getJumpFloorNumbers(n-1);
+        }
+        
+        return numbers;
+    }
+}
+```
 
