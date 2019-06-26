@@ -27,6 +27,7 @@
         - [**快速排序**](#快速排序)
         - [**堆排序**](#堆排序)
         - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数)
+        - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
     - [**四、栈**](#四栈)
         - [用二个栈实现队列](#用二个栈实现队列)
         - [**包含min函数的栈**](#包含min函数的栈)
@@ -35,20 +36,25 @@
         - [数组中重复的数字](#数组中重复的数字)
         - [二维数组中的查找，数组从左到右从上到下递增](#二维数组中的查找数组从左到右从上到下递增)
         - [旋转数组的最小数字](#旋转数组的最小数字)
-        - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
+        - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字-1)
         - [调整数组顺序使奇数位于偶数前面](#调整数组顺序使奇数位于偶数前面)
-        - [把数组排成最小的数](#把数组排成最小的数)
+        - [把数组中的所有数字拼接起来，排成最小的数](#把数组中的所有数字拼接起来排成最小的数)
         - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数-1)
+        - [数组中只出现一次的数字](#数组中只出现一次的数字)
     - [六、动态规划](#六动态规划)
         - [**连续子数组的最大和**](#连续子数组的最大和)
         - [**m * n 的棋盘上拿礼物，求礼物的最大价值**](#m--n-的棋盘上拿礼物求礼物的最大价值)
-    - [贪心](#贪心)
+        - [剪绳子，使得每段的长度乘积最大](#剪绳子使得每段的长度乘积最大)
+        - [变态跳台阶](#变态跳台阶)
+    - [七、贪心](#七贪心)
         - [**股票的最大利润**](#股票的最大利润)
-    - [递归](#递归)
+    - [八、递归](#八递归)
         - [**斐波那契数列**](#斐波那契数列)
         - [跳 n 级台阶总共的跳法](#跳-n-级台阶总共的跳法)
         - [用 2 * 1 的小矩形不重叠的覆盖 2 * n 的大矩形](#用-2--1-的小矩形不重叠的覆盖-2--n-的大矩形)
-        - [变态跳台阶](#变态跳台阶)
+        - [变态跳台阶](#变态跳台阶-1)
+    - [九、字符串](#九字符串)
+        - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
 
 <!-- /TOC -->
 
@@ -842,6 +848,52 @@ public class Test{
 }
 ```
 
+### 数组中出现次数超过一半的数字
+
+**思想：**
+
+基于快排，数组中中位数肯定是出现超过一半的那一个数字
+
+```java
+public class Test {
+    public int getMoreThanHalfNumber(int[] nums) {
+        if(nums.length == 0 || nums == null) {
+            return Integer.MAX_VALUE;
+        }
+        int mid = nums.length / 2;
+        int index = patition(nums, 0, nums.length - 1);
+        while(mid != index) {
+            if(index > mid) {
+                index = partition(nums, 0, index-1);
+            } else {
+                index = partition(nums, index+1, nums.length - 1);
+            }
+        }
+        return nums[index];
+    }
+
+    private int partition(int[] nums, int lo, int hi) {
+        int i = lo, j = hi + 1;
+        int temp = nums[lo];
+        while(true) {
+            while(nums[++i] < lo);
+            while(nums[--j] > lo);
+            //快排 if 
+            if(i >= j) break;
+            swap(nums, i, j);
+        }
+        swap(nums, j, lo);
+        return j;
+    }
+
+    private void swap(int nums, int i, int j) {
+        int temp = nums[i];
+        nums[i]  = nums[j];
+        nums[j]  = temp;  
+    }
+}
+```
+
 ## **四、栈**
 
 栈的常用方法：
@@ -1077,10 +1129,43 @@ public class Test {
 }
 ```
 
-### 把数组排成最小的数
+### 把数组中的所有数字拼接起来，排成最小的数
+
+
+**思想：**
+
+排序问题，比较 s1+s2 和 s2+s1 的大小
 
 ```java
+public class Test{
+    public String createMinNumber(int[] nums) {
+        if(nums.length == 0 || nums == null) {
+            return null;
+        }
 
+        String[] copyOfNums = new String[nums.length];
+        for(int i = 0; i < nums.length; i++) {
+            copyOfNums[i] = nums[i] + " ";
+        } 
+
+        //使用自定义排序 Comparator 比较器
+        // comparaTo() 方法是 Comparable默认排序器的比较方法
+        /*Arrays.sort(nums, new Comparator<String>() {
+           @Override
+           public int compare(String s1, String s2) {
+               return (s1+s2).compareTo(s2+s1);
+           }
+       });*/
+        Arrays.sort(copyOfNums, (s1, s2)->(s1 + s2).comparaTo(s2 + s1));
+
+        StringBuffer ret = new StringBuffer();
+        for(String str : copyOfNums) {
+            ret.append(str);
+        }
+
+        return ret.toString();
+    }
+}
 ```
 
 ### 数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数
@@ -1136,6 +1221,29 @@ public class Test{
 }
 ```
 
+### 数组中只出现一次的数字
+
+**思想：**
+
+任何数字和 0 做异或运算的结果都是本身；任何数字和本身做异或运算的结果都是0。
+
+例如：`2 ^ 8 ^ 2 = 8`
+
+```java
+public class Test {
+    public int getOnceNumber(int[] nums) {
+        if(nums == null || nums.length <= 2) {
+            throw new Exception("nums size must bigger than 2")
+        }
+
+        int ret = 0;
+        for(int i = 0; i < nums.length; i++) {
+            ret ^= nums[i];
+        }
+        return ret;
+    }
+}
+```
 
 ## 六、动态规划
 
@@ -1197,8 +1305,54 @@ public class Test {
 }
 ```
 
+### 剪绳子，使得每段的长度乘积最大
 
-## 贪心
+**思想：**
+
+`dp[i] = Math.max(dp[i], Math.max(dp[j] * (i - j), j * (i * j)))`
+
+```java
+public class Test {
+    public int integerBreak(int n) {
+        if(nums.length == 0 || nums == null) {
+            return 0;
+        }
+
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        for(int i = 2; i <= n; i++) {
+            for(int j = 1; j < i; j++) {
+                dp[i] = Math.max(dp[i], Math.max(dp[j] * (i - j), j * (i * j)));
+            }
+        }
+    }
+}
+```
+
+### 变态跳台阶
+
+**思想：**
+
+动态规划
+
+```java
+public class Test{
+    public int getJumpFloorNumbers(int n) {
+        int[] dp = new int[n];
+        Arrays.fill(dp, 1);
+        for(int i = 1; i < n; i++) {
+            for(int j = 0; j < i; j++) {
+                dp[i] += dp[j];
+            }
+        }
+        return dp[n-1];
+    }
+}
+```
+
+
+
+## 七、贪心
 
 ### **股票的最大利润**
 
@@ -1224,7 +1378,7 @@ public class Test {
 }
 ```
 
-## 递归
+## 八、递归
 
 ### **斐波那契数列**
 
@@ -1319,4 +1473,8 @@ public class Test{
     }
 }
 ```
+
+## 九、字符串
+
+### 最长不含重复字符的子字符串
 
