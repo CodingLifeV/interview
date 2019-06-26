@@ -499,27 +499,83 @@ public Object getBean(String name) throws BeansException {
 
 **从缓存中获取 bean**
 
-Spring 中根据 scope 可以将 bean 分为以下几类：singleton、prototype 和 其他。
-
-* singleton：在 Spring 的 IoC 容器中只存在一个对象实例，所有该对象的引用都共享这个实例。Spring 容器只会创建该 bean 定义的唯一实例，这个实例会被保存到缓存中，并且对该bean的所有后续请求和引用都将返回该缓存中的对象实例。
-* prototype：每次对该bean的请求都会创建一个新的实例
-* 其他：其他包括 request、session、global session：
-  * request：每次 http 请求将会有各自的 bean 实例。
-  * session：在一个 http session 中，一个 bean 定义对应一个 bean 实例。
-  * global session：在一个全局的 http session 中，一个 bean 定义对应一个 bean 实例。
-
+Spring 中根据 scope 可以将 bean 分为以下几类：singleton、prototype 和 其他（request、session和global session）。
 
 从缓存中获取的 bean 一定是 singleton bean，这也是 Spring 为何只解决 singleton bean 的循环依赖。
+
+在 `doGetBean()` 中，首先会根据 beanName 从单例 bean 缓存中获取，如果不为空则直接返回。调用 `getSingleton()` 方法从单例缓存中获取，如下：
+```java
+protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+        Object singletonObject = this.singletonObjects.get(beanName);
+        if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
+            synchronized (this.singletonObjects) {
+                singletonObject = this.earlySingletonObjects.get(beanName);
+                if (singletonObject == null && allowEarlyReference) {
+                    ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+                    if (singletonFactory != null) {
+                        singletonObject = singletonFactory.getObject();
+                        this.earlySingletonObjects.put(beanName, singletonObject);
+                        this.singletonFactories.remove(beanName);
+                    }
+                }
+            }
+        }
+        return singletonObject;
+    }
+```
+
+`getSingleton()` 整个过程如下：
+1. 从一级缓存 singletonObjects 获取，如果没有且当前指定的 beanName 正在创建。bean 处于创建中也就是说 bean 在初始化但是没有完成初始化，此时会提前曝光 bean
+   
+2. 从二级缓存中 earlySingletonObjects 获取，如果还是没有获取到且允许运行 singletonFactories 通过 getObject() 获取对象（字段allowEarlyReference 的字面意思），则从三级缓存获取
+   
+3. 从三级缓存获取，如果获取到则，通过其 getObject() 获取对象，并将其加入到二级缓存 earlySingletonObjects 中 从三级缓存 singletonFactories 删除，这样就从三级缓存升级到二级缓存了。
+
+
+
 
 **创建 bean 实例对象**
 
 如果缓存中没有，也没有 parentBeanFactory ，则会调用 `createBean()` 创建 bean 实例，该方法主要是在处理不同 scope 的 bean 的时候进行调用。该抽象方法的默认实现是在类 AbstractAutowireCapableBeanFactory 中实现，该方法其实只是做一些检查和验证工作，真正的初始化工作是由 doCreateBean() 实现。
 
-`doCreateBean()` 是创建 bean 实例的核心方法，方法调用 `populateBean()` 进行属性填充，调用 `initializeBean()` 初始化 bean
+`doCreateBean()` 是创建 bean 实例的核心方法，主要用于完成 bean 的创建和初始化工作，我们可以将其分为四个过程：
+
+* createBeanInstance() 实例化 bean
+* populateBean() 属性填充
+* 循环依赖的处理
+* initializeBean() 初始化 bean
 
 **属性填充**
 
-属性填充其实就是将 BeanDefinition 的属性值赋值给 BeanWrapper 实例对象的过程。在填充的过程需要根据注入的类型不同来区分是根据类型注入 `autowireByType()` 还是名字注入 `autowireByName()`，当然在这个过程还会涉及循环依赖的问题的。
+属性填充其实就是将 BeanDefinition 的属性值赋值给 BeanWrapper 实例对象的过程。根据注入类型的不同来判断是根据名称来自动注入`autowireByName()`还是根据类型来自动注入`autowireByType()`，统一存入到 PropertyValues 中，PropertyValues 用于描述 bean 的属性，最后将所有 PropertyValues 中的属性填充到 BeanWrapper 中。
+
+`autowireByName()` 和 `autowireByType()` 主要过程和根据名称自动注入差不多都是找到需要依赖注入的属性，然后通过迭代的方式寻找所匹配的 bean，最后调用 registerDependentBean() 注册依赖。
+
+**循环依赖处理** 
+
+![image](https://gitee.com/chenssy/blog-home/raw/master/image/201811/201808131001.png)
+
+>首先 A 完成初始化第一步并将自己提前曝光出来（通过 ObjectFactory 将自己提前曝光），在初始化的时候，发现自己依赖对象 B，此时就会去尝试 get(B)，这个时候发现 B 还没有被创建出来，然后 B 就走创建流程，在 B 初始化的时候，同样发现自己依赖 C，C 也没有被创建出来，这个时候 C 又开始初始化进程，但是在初始化的过程中发现自己依赖 A，于是尝试 get(A)，这个时候由于 A 已经添加至缓存中（一般都是添加至三级缓存 singletonFactories ），通过 ObjectFactory 提前曝光，所以可以通过 ObjectFactory.getObject() 拿到 A 对象，C 拿到 A 对象后顺利完成初始化，然后将自己添加到一级缓存中，回到 B ，B 也可以拿到 C 对象，完成初始化，A 可以顺利拿到 B 完成初始化。到这里整个链路就已经完成了初始化过程了。
+
+Spring 循环依赖的场景有两种：
+
+1. 构造器的循环依赖
+2. field 属性的循环依赖
+
+对于构造器的循环依赖，Spring 是无法解决的，只能抛出 BeanCurrentlyInCreationException 异常表示循环依赖。
+
+Spring 解决 singleton bean 的关键因素为三级缓存，第一级为 singletonObjects，第二级为 earlySingletonObjects，第三级为 singletonFactories。
+
+* singletonObjects ：单例对象的cache
+* earlySingletonObjects ：提前暴光的单例对象的Cache
+* singletonFactories ： 单例对象工厂的cache
+
+三级缓存 singletonFactories 是解决 Spring Bean 循环依赖的诀窍所在，
+这段代码发生在 createBeanInstance() 方法之后，也就是说这个 bean 其实已经被创建出来了，但是它还不是很完美（没有进行属性填充和初始化），但是对于其他依赖它的对象而言已经足够了（可以根据对象引用定位到堆中对象），能够被认出来了。
+
+Spring 关于 singleton bean 循环依赖的大致方案：Spring 在创建 bean 的时候并不是等它完全完成，而是在创建过程中将创建中的 bean 的 ObjectFactory 提前曝光（即加入到 singletonFactories 缓存中），这样一旦下一个 bean 创建的时候需要依赖 bean ，则直接使用 ObjectFactory 的 `getObject()` 获取了。
+
+
 
 **初始化 bean**
 
