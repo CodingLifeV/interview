@@ -1314,11 +1314,8 @@ public class Test{
         if (n == 1) {
             return 1;
         }
-        for(int i = 2; i <= n; i++) {
-            return 2 * getJumpFloorNumbers(n-1);
-        }
         
-        return numbers;
+        return 2 * getJumpFloorNumbers(n-1);
     }
 }
 ```
