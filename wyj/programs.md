@@ -43,6 +43,7 @@
         - [数组中只出现一次的数字](#数组中只出现一次的数字)
     - [六、动态规划](#六动态规划)
         - [**连续子数组的最大和**](#连续子数组的最大和)
+        - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
         - [**m * n 的棋盘上拿礼物，求礼物的最大价值**](#m--n-的棋盘上拿礼物求礼物的最大价值)
         - [剪绳子，使得每段的长度乘积最大](#剪绳子使得每段的长度乘积最大)
         - [变态跳台阶](#变态跳台阶)
@@ -54,7 +55,9 @@
         - [用 2 * 1 的小矩形不重叠的覆盖 2 * n 的大矩形](#用-2--1-的小矩形不重叠的覆盖-2--n-的大矩形)
         - [变态跳台阶](#变态跳台阶-1)
     - [九、字符串](#九字符串)
-        - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
+        - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串-1)
+        - [第一次只出现一次的字符位置](#第一次只出现一次的字符位置)
+        - [把数字翻译成字符串](#把数字翻译成字符串)
 
 <!-- /TOC -->
 
@@ -1274,6 +1277,58 @@ public class Test {
 }
 ```
 
+### 最长不含重复字符的子字符串
+
+**思想：**
+
+[动态规划](https://blog.csdn.net/m0_37862405/article/details/80369128)，记录当前字符之前的最长非重复子字符串长度f(i-1)，其中i为当前字符的位置，d 为当前字符与它上次出现位置之间的距离。
+1. 当前字符第一次出现：`f(i) = f(i-1) + 1`
+2. 当前字符不是第一次出现：
+   * `d  > f(i)`时，`f(i) = f(i-1) + 1`
+   * `d <= f(i)`时，`f(i) = d`
+
+
+```java
+public class Test{
+    public int getLongestSubString(String str) {
+        if(str == null || str.length() == 0) {
+            return 0;
+        }
+
+        int maxLength = 0, curLength = 0;
+        //记录当前字符上一次出现的位置
+        int[] positions = new int[26];
+        //初始化为 -1，表示该字符在之前还没有出现过
+        Arrays.sort(positions, -1);
+
+        for(int i = 0; i < str.length(); i++) {
+            int curChar = str.charAt(i) - 'a';
+            //上一次出现的位置
+            int prePostion = positions[curChar];
+            //当前字符与它上次出现位置之间的距离
+            int distances = i - prePostion;
+
+            if(prePostion == -1 || distances > curLength) {
+                curLength++;
+            } else {
+                //更新最长非重复子字符串的长度
+                if(curLength > maxLength) {
+                    maxLength = curLength;
+                }
+                curLength = distances;
+            }
+            //更新字符最近一次出现的位置
+            positions[curChar] = i;
+        }
+
+        if(curLength > maxLength) {
+            maxLength = curLength;
+        }
+
+        return maxLength;
+    }
+}
+```
 
 
 ### **m * n 的棋盘上拿礼物，求礼物的最大价值**
@@ -1478,3 +1533,114 @@ public class Test{
 
 ### 最长不含重复字符的子字符串
 
+**思想：**
+
+[动态规划](https://blog.csdn.net/m0_37862405/article/details/80369128)，记录当前字符之前的最长非重复子字符串长度f(i-1)，其中i为当前字符的位置，d 为当前字符与它上次出现位置之间的距离。
+1. 当前字符第一次出现：`f(i) = f(i-1) + 1`
+2. 当前字符不是第一次出现：
+   * `d  > f(i)`时，`f(i) = f(i-1) + 1`
+   * `d <= f(i)`时，`f(i) = d`
+
+
+```java
+public class Test{
+    public int getLongestSubString(String str) {
+        if(str == null || str.length() == 0) {
+            return 0;
+        }
+
+        int maxLength = 0, curLength = 0;
+        //记录当前字符上一次出现的位置
+        int[] positions = new int[26];
+        //初始化为 -1，表示该字符在之前还没有出现过
+        Arrays.sort(positions, -1);
+
+        for(int i = 0; i < str.length(); i++) {
+            int curChar = str.charAt(i) - 'a';
+            //上一次出现的位置
+            int prePostion = positions[curChar];
+            //当前字符与它上次出现位置之间的距离
+            int distances = i - prePostion;
+
+            if(prePostion == -1 || distances > curLength) {
+                curLength++;
+            } else {
+                //更新最长非重复子字符串的长度
+                if(curLength > maxLength) {
+                    maxLength = curLength;
+                }
+                curLength = distances;
+            }
+            //更新字符最近一次出现的位置
+            positions[curChar] = i;
+        }
+
+        if(curLength > maxLength) {
+            maxLength = curLength;
+        }
+
+        return maxLength;
+    }
+}
+```
+
+### 第一次只出现一次的字符位置
+
+**思想：**
+
+1. 使用整型数组代替 HashMap 对出现的次数进行统计
+
+    ```java
+    public class Test {
+        public int getOncePosition(String str) {
+            //定义为 256，字符的 ASCII 码不超过 256
+            int[] number = new number[256];
+
+            for(int i = 0; i < str.length(); i++) {
+                number[str.charAt(i)]++;
+            }
+
+            for(int i = 0; i < str.length(); i++) {
+                if(number[str.charAt(i)] == 1) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+    }
+    ```
+
+2. 使用BitSet来存储元素，仅使用二个比特位，优化了空间复杂度
+
+    ```java
+    public class Test {
+        private BitSet bs1 = new BitSet(256);
+        private BitSet bs2 = new BitSet(256);
+        public int getOncePosition(String str) {
+            
+            for (char c : str.toCharArray()) {
+                //boolean get(int index) 返回指定索引处的位值
+                if(!bs1.get(c) && !bs2.get(c))  {
+                    //void set(int index)将指定索引处的位设置为 true
+                    bs1.set(c);
+                } else if(bs1.get(c) && !bs2.get(c)) {
+                    bs2.set(c);
+                }
+            }
+
+            for(int i = 0; i < str.length(); i++) {
+                char c = str.charAt(i);
+                if(bs1.get(c) && !bs2.get(c)) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+    }
+    ```
+
+### 把数字翻译成字符串
+
+**思想：**
+
+动态规划 
