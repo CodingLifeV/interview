@@ -58,6 +58,14 @@
         - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串-1)
         - [第一次只出现一次的字符位置](#第一次只出现一次的字符位置)
         - [把数字翻译成字符串](#把数字翻译成字符串)
+        - [不用额外的空间，翻转单词顺序列](#不用额外的空间翻转单词顺序列)
+        - [左旋转字符串](#左旋转字符串)
+    - [十、数字](#十数字)
+        - [二进制中 1 的个数](#二进制中-1-的个数)
+        - [数值的整数次方](#数值的整数次方)
+        - [最小的 k 个数](#最小的-k-个数)
+        - [数据流中的中位数](#数据流中的中位数)
+        - [字符流中第一个不重复的字符](#字符流中第一个不重复的字符)
 
 <!-- /TOC -->
 
@@ -1232,6 +1240,8 @@ public class Test{
 
 例如：`2 ^ 8 ^ 2 = 8`
 
+异或运算符 `^` 运算规则：`0^0=0`、`0^1=1`、`1^0=1`、`1^1=0`；
+
 ```java
 public class Test {
     public int getOnceNumber(int[] nums) {
@@ -1644,4 +1654,163 @@ public class Test{
 
 **思想：**
 
-动态规划 
+[动态规划](https://www.cnblogs.com/shiganquan/p/9347102.html)，`f(i) = f(i+1) + g(i, i+1) * f(i+2)`
+
+`f(i)` 来表示从第i位数字开始不同的翻译数目，`g(i,i+1)` 表示第 i 位和 i+1 位拼起来的数字在 10~25 范围内，值为 1，否则为0。
+
+```java
+public class Test {
+    public int numDecodings(String str) {
+        if(str.length == 0 || str == null) {
+            return 0;
+        }
+
+        int f2 = 1, f1 = 0, g = 0;
+        for(int i = str.length - 2; i >= 0; i++) {
+            if(str.charAt(i) + " " + str.charAt(i+1) > 26) {
+                g = 0;
+            } else {
+                g = 1;
+            }
+            int temp = f2;
+            f2 = f2 + g * f1;
+            f1 = temp;
+        }
+
+        return f2;
+    }
+}
+```
+
+### 不用额外的空间，翻转单词顺序列
+
+**思想：**
+
+先翻转每个单词，在翻转整个字符串
+
+```java
+public class Test {
+    public String reverseWord(String str) {
+        int n = str.length;
+        char[] arr = str.toCharArray();
+        int i = 0, j = 0;
+        while(j <= n) {
+            if(j == n || arr[j] == " ") {
+                reverse(arr, i, j - 1);
+                i = j + 1;
+            }
+            j++;
+        }
+        reverse(arr, 0, n - 1);
+        return new String(arr);
+    }
+    private void reverse(char[] arr, int i, int j) {
+        while(i < j) {
+            swap(arr, i++, j--);
+        }
+    }
+    private void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+```
+
+### 左旋转字符串
+
+**思想：**
+
+先翻转部分，在翻转整体
+
+```java
+public class Test {
+    public String reverseWord(String str， int k) {
+        if(k >= str.length) {
+            return str;
+        }
+        char[] arr = str.toCharArray();
+        reverse(arr, 0, k);
+        reverse(arr, k + 1; str.length - 1);
+        reverse(arr, 0, str.length - 1);
+        return new String(arr);
+    }
+    private void reverse(char[] arr, int i, int j) {
+        while(i < j) {
+            swap(arr, i++, j--);
+        }
+    }
+    private void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+```
+
+## 十、数字
+
+### 二进制中 1 的个数
+
+**思想：**
+
+把一个整数减去1，再和原整数做与 `&` 运算，会把该整数最右边一个1变成0。那么一个整数的二进制表示中有多少个1，就可以进行多少次这样的操作。
+
+
+`&` 运算规则：两位同时为 1，结果才为 1，否则为 0
+
+```java
+public class Test {
+    public int getNumberOne(int n) {
+        int cnt = 0;
+        while(n != 0) {
+            cnt++;
+            n &= (n - 1);
+        }
+
+        return cnt;
+    }
+}
+```
+
+### 数值的整数次方
+
+**思想：**
+
+递归，$(x*x)^{n/2}$ 可以递归求解，每次 n 都减小一半，算法时间复杂度为 O($\log$N)
+
+```java
+public class Test {
+    public double getPower(int base, int exponent) {
+        if(exponent = 0) {
+            return 1;
+        }
+        if(exponent = 1) {
+            return base;
+        }
+
+        boolean isNegitive = false;
+        if(exponent < 0) {
+            exponent = -exponent;
+            isNegitive = true;
+        }
+
+        double pow = getPower(base * base, exponent / 2);
+        if(exponent % 2 != 0) {
+            pow = base * pow;
+        }
+
+        return isNegitive ? 1 / pow : pow;
+    }
+}
+```
+
+### 最小的 k 个数
+
+
+
+### 数据流中的中位数
+
+
+
+### 字符流中第一个不重复的字符
