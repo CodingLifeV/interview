@@ -18,5 +18,3 @@
 ## [设计模式](https://github.com/wyjPro/interview/blob/master/wyj/designpattern.md)
 
 ## [Git操作](https://github.com/wyjPro/interview/blob/master/wyj/git.md)
-
-## [其它](https://github.com/wyjPro/interview/blob/master/wyj/hutao.docx)

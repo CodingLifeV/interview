@@ -28,6 +28,8 @@
         - [**堆排序**](#堆排序)
         - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数)
         - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
+        - [最小的 k 个数](#最小的-k-个数)
+        - [数据流中的中位数](#数据流中的中位数)
     - [**四、栈**](#四栈)
         - [用二个栈实现队列](#用二个栈实现队列)
         - [**包含min函数的栈**](#包含min函数的栈)
@@ -56,15 +58,15 @@
         - [变态跳台阶](#变态跳台阶-1)
     - [九、字符串](#九字符串)
         - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串-1)
-        - [第一次只出现一次的字符位置](#第一次只出现一次的字符位置)
+        - [字符串中第一次只出现一次的字符位置](#字符串中第一次只出现一次的字符位置)
         - [把数字翻译成字符串](#把数字翻译成字符串)
         - [不用额外的空间，翻转单词顺序列](#不用额外的空间翻转单词顺序列)
         - [左旋转字符串](#左旋转字符串)
     - [十、数字](#十数字)
         - [二进制中 1 的个数](#二进制中-1-的个数)
         - [数值的整数次方](#数值的整数次方)
-        - [最小的 k 个数](#最小的-k-个数)
-        - [数据流中的中位数](#数据流中的中位数)
+        - [最小的 k 个数](#最小的-k-个数-1)
+        - [数据流中的中位数](#数据流中的中位数-1)
         - [字符流中第一个不重复的字符](#字符流中第一个不重复的字符)
 
 <!-- /TOC -->
@@ -773,10 +775,10 @@ public class Test {
 ```java
 public class Test{
     public void sort(int[] arr) {
-        int arrLength = arr.length - 1;
+        int arrIndex = arr.length - 1;
         //构造大顶堆
-        for(int i = arrLength / 2 ; i >= 0; i--) {
-            sink(arr, i, arrLength);
+        for(int i = (arrIndex - 1) / 2 ; i >= 0; i--) {
+            sink(arr, i, arrIndex);
         }
 
         //下层排序阶段
@@ -786,10 +788,10 @@ public class Test{
         }
     }
     //下沉元素
-    private void sink(int[] arr, int index, int arrLength) {
-        while((2 * index + 1) <= arrLength) {
+    private void sink(int[] arr, int index, int arrIndex) {
+        while((2 * index + 1) <= arrIndex) {
             int j = 2 * index + 1;
-            if(j < arrLength && arr[j] < arr[j+1]) j++;
+            if(j < arrIndex && arr[j] < arr[j+1]) j++;
             if(arr[index] >= arr[j]) break;
             swap(arr, index, j);
         }
@@ -904,6 +906,132 @@ public class Test {
     }
 }
 ```
+
+### 最小的 k 个数
+
+**思想：**
+
+1. 快排，找到切分点 j 使得 j 等于 k
+
+    ```java
+    public class Test {
+        public ArrayList<Integer> getMinK(int[] nums, int k) {
+            ArrayList<Integer> ret = new ArrayList<>();
+            if(k > nums.length || k <= 0) {
+                return ret;
+            }
+
+            findKthSmallest(nums, k-1);
+            
+            for(int i = 0; i < k; i++) {
+                ret.add(nums[i]);
+            }
+            return ret;
+        }
+
+        private void findKthSmallest(int nums, int k) {
+            int lo = 0, hi = nums.length - 1;
+            while(lo < hi) {
+                int j = partition(nums, lo, hi);
+                if(j == k) {
+                    break;
+                } else if(j > k) {
+                    hi = j - 1;
+                } else {
+                    lo = j + 1;
+                }
+            }
+        }
+
+        private int partition(int nums, int lo, int hi) {      
+            int i = lo, j = hi + 1;
+            int temp = nums[lo];
+            while(true) {
+                //while(nums[++i] < temp);
+                //while(nums[--j] > temp);
+                while(i != hi && nums[++i] < temp);
+                while(j != lo && nums[--j] > temp);
+                // >=
+                if(i >= j) break;
+                swap(nums, i, j);
+            }
+            swap(nums, lo, j);
+            return j;
+        }
+
+        private void swap(int[] nums, int i, int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+
+        }
+    }   
+    ```
+
+2. 使用大顶堆来维护大小为 k 的最小堆，每当大顶堆的 size() 超过 k 时，就 poll 一个元素
+
+    堆常用方法：`poll()`：弹出并删除；`peek()`：返回但是不删除
+
+    ```java
+    public class Test {
+        public ArrayList<Integer> getMinK(int[] nums, int k) {
+            if(k > nums.length || k <= 0) {
+                return new ArrayList<>();
+            }
+
+            //构造一个大顶堆
+            //PriorityQueue 默认情况是一个小顶堆
+            //public PriorityQueue(Comparator<? super E> comparator)
+            PriorityQueue<Integer> maxHeap = new PriorityQueue<>((o1, o2)->o2 - o1);
+
+            for(int num : nums) {
+                maxHeap.add(num);
+                if(maxHeap.size() > k) {
+                    maxHeap.poll();
+                }
+            }
+
+            return new ArrayList<>(maxHeap);
+        }
+    }
+    ```
+
+### 数据流中的中位数
+
+**思想：**
+
+大顶堆存储左半边元素，小顶堆存储右半边元素，且右半边元素始终大于左半边元素
+
+```java
+public class Test {
+    private PriorityQueue<Integer> maxHeapInLeft = new PriorityQueue<>((o1, o2)->o2 - o1);
+    private PriorityQueue<Integer> minHeapInRight = new PriorityQueue<>((o1, o2)->o2 - o1);
+    private int N;
+
+    public void insert(int val) {
+        if(N % 2 == 0) {
+            maxHeapInLeft.add(val);
+            minHeapInRight.add(maxHeapInLeft.poll());
+        } else {
+            minHeapInRight.add(val);
+            maxHeapInLeft.add(minHeapInRight.poll());
+        }
+        N++;
+    }
+
+    public double getMiddle() {
+        //注意返回 double 类型
+        if(N % 2 == 0) {
+            // 2.0
+            return (maxHeapInLeft.peek() + minHeapInRight.peek()) / 2.0;
+        } else {
+            //(double)
+            return (double)minHeapInRight.peek();
+        }
+    }
+}
+```
+
 
 ## **四、栈**
 
@@ -1066,7 +1194,7 @@ public class Test {
                 l = m + 1;
             }
         }
-
+mai
         return ratate[l];
     }
 } 
@@ -1595,7 +1723,7 @@ public class Test{
 }
 ```
 
-### 第一次只出现一次的字符位置
+### 字符串中第一次只出现一次的字符位置
 
 **思想：**
 
@@ -1667,7 +1795,8 @@ public class Test {
 
         int f2 = 1, f1 = 0, g = 0;
         for(int i = str.length - 2; i >= 0; i++) {
-            if(str.charAt(i) + " " + str.charAt(i+1) > 26) {
+            int temp = str.charAt(i) + " " + str.charAt(i+1)；
+            if(temp > 26 && temp < 10) {
                 g = 0;
             } else {
                 g = 1;
@@ -1807,10 +1936,126 @@ public class Test {
 
 ### 最小的 k 个数
 
+**思想：**
 
+快排，找到切分点 j 使得 j 等于 k
+
+```java
+public class Test {
+    public ArrayList<Integer> getMinK(int[] nums, int k) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        if(k > nums.length || k <= 0) {
+            return ret;
+        }
+
+        findKthSmallest(nums, k-1);
+        
+        for(int i = 0; i < k; i++) {
+            ret.add(nums[i]);
+        }
+        return ret;
+    }
+
+    private void findKthSmallest(int nums, int k) {
+        int lo = 0, hi = nums.length - 1;
+        while(lo < hi) {
+            int j = partition(nums, lo, hi);
+            if(j == k) {
+                break;
+            } else if(j > k) {
+                hi = j - 1;
+            } else {
+                lo = j + 1;
+            }
+        }
+    }
+
+    private int partition(int nums, int lo, int hi) {      
+        int i = lo, j = hi + 1;
+        int temp = nums[lo];
+        while(true) {
+            //while(nums[++i] < temp);
+            //while(nums[--j] > temp);
+            while(i != hi && nums[++i] < temp);
+            while(j != lo && nums[--j] > temp);
+            // >=
+            if(i >= j) break;
+            swap(nums, i, j);
+        }
+        swap(nums, lo, j);
+        return j;
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+
+    }
+}   
+```
 
 ### 数据流中的中位数
 
+**思想：**
 
+大顶堆存储左半边元素，小顶堆存储右半边元素，且右半边元素始终大于左半边元素
+
+```java
+public class Test {
+    private PriorityQueue<Integer> maxHeapInLeft = new PriorityQueue<>((o1, o2)->o2 - o1);
+    private PriorityQueue<Integer> minHeapInRight = new PriorityQueue<>((o1, o2)->o2 - o1);
+    private int N;
+
+    public void insert(int val) {
+        if(N % 2 == 0) {
+            maxHeapInLeft.add(val);
+            minHeapInRight.add(maxHeapInLeft.poll());
+        } else {
+            minHeapInRight.add(val);
+            maxHeapInLeft.add(minHeapInRight.poll());
+        }
+        N++;
+    }
+
+    public double getMiddle() {
+        //注意返回 double 类型
+        if(N % 2 == 0) {
+            // 2.0
+            return (maxHeapInLeft.peek() + minHeapInRight.peek()) / 2.0;
+        } else {
+            //(double)
+            return (double)minHeapInRight.peek();
+        }
+    }
+}
+```
 
 ### 字符流中第一个不重复的字符
+
+**思想：**
+
+用一个数组存储字符出现的次数，用一个队列来存储第一次只出现一次的元素
+
+```java
+public class Test {
+    private int[] cnt = new int[256];
+    private LinkedList<Integer> list = new LinkedList<>();
+
+    public void insert(char c) {
+        cnt[c]++;
+        if(cnt[c] == 1) {
+            list.add(c);
+        }
+    }
+    public char getFirstAppearingOnce() {
+        if(!list.isEmpty() && cnt[list.peek()] > 1) {
+            list.poll();
+        }
+     
+        return list.isEmpty() ? '#' : list.peek();
+    }
+}
+```
+
+
