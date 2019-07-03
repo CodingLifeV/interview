@@ -11,6 +11,8 @@
 
 ## [数据库](https://github.com/wyjPro/interview/blob/master/wyj/database.md)
 
+## [SQL语句](https://github.com/wyjPro/interview/blob/master/wyj/sql.md)
+
 ## [网络](https://github.com/wyjPro/interview/blob/master/wyj/networks.md)
 
 ## [数据结构算法](https://github.com/wyjPro/interview/blob/master/wyj/programs.md)
@@ -18,3 +20,5 @@
 ## [设计模式](https://github.com/wyjPro/interview/blob/master/wyj/designpattern.md)
 
 ## [Git操作](https://github.com/wyjPro/interview/blob/master/wyj/git.md)
+
+## [linux基本操作](https://github.com/wyjPro/interview/blob/master/wyj/linux.md)
