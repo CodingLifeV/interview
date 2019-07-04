@@ -1,7 +1,7 @@
 <!-- TOC -->
 
 - [linux 基本操作](#linux-基本操作)
-  - [一、件和目录](#一件和目录)
+  - [一、文件和目录](#一文件和目录)
     - [1. 文件管理与操作](#1-文件管理与操作)
     - [2. 文件和目录的权限](#2-文件和目录的权限)
     - [3. 查找文件](#3-查找文件)
@@ -9,12 +9,15 @@
     - [1. 输出重定向](#1-输出重定向)
     - [2. 输入重定向](#2-输入重定向)
   - [三、进程与任务管理](#三进程与任务管理)
+  - [四、系统信息相关](#四系统信息相关)
+  - [五、网络相关](#五网络相关)
+  - [六、包管理](#六包管理)
 
 <!-- /TOC -->
 
 # linux 基本操作
 
-## 一、件和目录
+## 一、文件和目录
 
 ### 1. 文件管理与操作
 
@@ -60,14 +63,28 @@
 - `chmod 777 file`：修改 file 文件权限为 -rwxrwxrwx，r 表示读、w 表示写、x 表示可执行。  
   八进制权限表示：权限可以用 3 个 bits 表示，如下表：
 
-  ![八进制权限表]()
+  ![八进制权限表](https://ws1.sinaimg.cn/large/d4556b75ly1g4nsfsyxm4j20sf0csjrq.jpg)
 
 - `whoami`：显示用户名称
-- `passwd [-k] [-l] [-u [-f]] [-d] [-S] [username]`：用来更改使用者的密码
+- `passwd [-k] [-l] [-u [-f]] [-d] [-S] [username]`：更改使用者的密码
   - `-d` 删除用户密码
   - `-S` 显示密码信息
 
 ### 3. 查找文件
+
+[Java 开发必会的 Linux 命令](https://mp.weixin.qq.com/s?__biz=MzI3NzE0NjcwMg==&mid=2650120725&idx=1&sn=509097a810542f3cc2e3a308ed5981a0&chksm=f36bbf34c41c36222fe330a6ca0e99f15ed6724d7a023902af8b7dff8eeab32f3395f33da1ff&mpshare=1&scene=23&srcid=0602md7reWOxFollAaDWysLr#rd)
+
+- `find`
+
+  - 命令格式：`find [查找目录] [查找规则] [查找完后的操作]`
+  - 举例：
+    1. `find / -name filename.txt`：根据名称查找/目录下的 filename.txt 文件。
+    2. `find . -name "*.xml"`：递归查找所有的 xml 文件
+
+- `grep`：文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来
+  - 举例：
+    1. `grep -H 'spring' *.xml`：查找所以有的包含 spring 的 xml 文件
+    2. `grep 'test' d*`：显示所有以 d 开头的文件中包含 test 的行
 
 ## 二、重定向
 
@@ -87,16 +104,82 @@
 - `<`：代表从其他某一文件接收输入
 - `<<`：here-document 形式重定向, 代表将一段标记为 here-document 的文本作为输入
 
+  ![here-document](https://ws1.sinaimg.cn/large/d4556b75ly1g4nsexjs28j20k9055jrd.jpg)
+
 ## 三、进程与任务管理
 
-- 查看端口占用情况
-  - `netstat -tln | grep 8080` 查看端口 8080 的使用情况
 - 进程的查看
   - `ps`：查询进程列表
   - `ps aux`：长列表显示所有用户进程
   - `ps -ef`：显示 PPID，PPID 是程序的父进程号
   - `pstree -ap`：显示进程树
+  - `ps aux|grep java`：查看 java 进程
 - 给进程发送信号
   - `kill -l`：显示 kill 可以发送的信号列表，通常默认是 15，即 SIGTERM
   - `kill [参数] [PID]`：通过进程 PID 结束进程
   - `killall [进程名]`：可以通过进程名而不是 PID 来结束进程，且支持通配符
+
+## 四、系统信息相关
+
+- `top`：用来进程监控命令，用来监控系统的整体性能。
+  可以显示系统负载，进程，CPU，内存，分页等信息，常用 shift+m 和 shift+p 来按 memory 和 CPU 使用对进程进行排序。
+
+  [linux top 命令详解](https://cloud.tencent.com/developer/article/1124765)
+
+  [linux 每日命令(37)：top 命令](https://cloud.tencent.com/developer/article/1376653)
+
+  前五行是系统整体的统计信息。第一行是任务队列信息，第二、三行为进程和 CPU 的信息，最后两行为内存信息：
+
+  ![](https://ws1.sinaimg.cn/large/d4556b75ly1g4nsz8ki7hj20kc0c9760.jpg)
+
+  - 命令格式：
+    `top [参数]`
+
+  - 命令参数：
+    ![](https://ws1.sinaimg.cn/large/d4556b75ly1g4ntj4c6sgj20jr0att8z.jpg)
+
+- `df`：检查 linux 服务器的文件系统的磁盘空间占用情况
+
+- `uname`：用来获取电脑和操作系统的相关信息
+
+## 五、网络相关
+
+`ping`：测试主机之间网络的连通性
+
+- 命令格式：`ping [参数][目标主机]`
+
+  其中参数可以为 0 到多个，目标主机可以是 IP 或者域名
+
+`telnet`：登陆远程
+
+- 命令格式：`telnet [参数][主机名称或IP地址<通信端口>]`
+
+`curl`：利用 URL 规则在命令行下工作的文件传输工具，它支持文件的上传和下载
+
+- 命令格式：`curl [option] [url]`
+
+- 基本用法：
+  1. `curl https://www.baidu.com`：将 www.baidu.com 的 html 显示在屏幕上
+  2. `curl https://www.baidu.com >> file.html`：将 www.baidu.com 的 html 重定向到 file 文件
+  3. `curl -o file.html https://www.baidu.com`：使用 curl 的内置 option:-o(小写)保存网页到 file.html 文件中
+  4. `curl -O http://www.linux.com/hello.sh`：使用 curl 的内置 option:-O(大写)保存网页中的文件要注意这里后面的 url 要具体到某个文件，不然抓不下来
+
+`netstat`：用于显示各种网络相关信息，如网络连接，路由表，接口状态等
+
+- 命令格式：`netstat -a`
+- 基本用法：
+  1. `netstat -a`：列出所有端口
+  2. `netstat -at`：列出所有 tcp 端口
+  3. `netstat -au`：列出所有 udp 端口
+  4. `netstat -l`：列出所有处于监听的端口
+  5. `netstat -lt`：列出所有处于监听的 tcp 端口
+  6. `netstat -lu`：列出所有处于监听的 udp 端口
+  7. `netstat -tln | grep 8080` 查看端口 8080 的使用情况
+
+## 六、包管理
+
+- `apt-get`：软件的安装、卸载和升级
+  - `apt-get install xxx`：安装 xxx 安装包
+  - `sudo apt-get remove xxx`：卸载 xxx 安装包
+  - `apt-get update`：将所有包的来源更新
+- 添加软件源

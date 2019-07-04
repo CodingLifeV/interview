@@ -43,6 +43,9 @@
     - [把数组中的所有数字拼接起来，排成最小的数](#把数组中的所有数字拼接起来排成最小的数)
     - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数-1)
     - [数组中只出现一次的数字](#数组中只出现一次的数字)
+    - [递增数组中找和为 S 的二个数，若有多个， 输出乘积最小者](#递增数组中找和为-s-的二个数若有多个-输出乘积最小者)
+    - [和为 S 的连续正数序列](#和为-s-的连续正数序列)
+    - [滑动窗口中的最大值](#滑动窗口中的最大值)
   - [六、动态规划](#六动态规划)
     - [**连续子数组的最大和**](#连续子数组的最大和)
     - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
@@ -70,8 +73,6 @@
     - [数据流中的中位数](#数据流中的中位数-1)
     - [字符流中第一个不重复的字符](#字符流中第一个不重复的字符)
     - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5-1)
-    - [和为 S 的二个数](#和为-s-的二个数)
-    - [和为 S 的连续正数序列](#和为-s-的连续正数序列)
 
 <!-- /TOC -->
 
@@ -1419,6 +1420,93 @@ public class Main {
 }
 ```
 
+### 递增数组中找和为 S 的二个数，若有多个， 输出乘积最小者
+
+**思想：**
+
+双指针，最小者一定先出现
+
+```java
+public class Main {
+    public ArrayList<Integer> findNumbersWithNums(int[] nums, int number) {
+        int i = 0, j = nums.length;
+        while(i < j) {
+            int sum = nums[i] + nums[j];
+            if(sum == number) {
+                return new ArrayList<>(Arrays.asList(nums[i], nums[j]));
+            } else if(sum < number) {
+                i++;
+            } else {
+                j--;
+            }
+        }
+    }
+}
+```
+
+### 和为 S 的连续正数序列
+
+**[双指针](https://www.nowcoder.com/questionTerminal/c451a3fd84b64cb19485dad758a55ebe)，根据窗口内值之和来确定窗口的位置和宽度**
+
+```java
+public class Main {
+    public ArrayList<ArrayList<Integer> FindContinuousSequence(int sum) {
+        if(sum == 0) {
+            return null;
+        }
+        ArrayList<ArrayList<Integer> result = new ArrayList<>();
+        int plow = 1, phigh = 2;
+        while(phigh > plow) {
+            int cur = (plow + phigh) * (phigh - plow + 1) / 2;
+            if(cur == sum) {
+                ArrayList<Integer> list = new ArrayList<>();
+                for(int i = plow; i <= phigh; i++) {
+                    list.add(i);
+                }
+                result.add(list);
+                plow++;
+            } else if(cur > sum) {
+                plow++;
+            } else {
+                phigh++;
+            }
+        }
+        return result;
+    }
+}
+
+```
+
+### 滑动窗口中的最大值
+
+**大顶堆每次存放滑动窗口中的值**
+
+```java
+public class Main {
+    public ArrayList<Integer> getMaxInWindows(int[] nums, int size) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        if(size < 1 || nums.length < size) {
+            return ret;
+        }
+
+        //构造大顶堆
+        PriorityQueue<Integer> heap = new PriorityQueue<>((o1, o2)->o2 - o1);
+
+        for(int i = 0; i < size; i++) {
+            heap.add(nums[i]);
+        }
+        ret.add(heap.peek());
+
+        for(int i = 0, j = i + size; j < nums.length; i++, j++) {
+            heap.remove(nums[i]);
+            heap.add(nums[j]);
+            ret.add(heap.peek());
+        }
+        return ret;
+    }
+}
+```
+
 ## 六、动态规划
 
 ### **连续子数组的最大和**
@@ -1538,7 +1626,7 @@ public class Main {
 ```java
 public class Main {
     public int integerBreak(int n) {
-        if(nums.length == 0 || nums == null) {
+        if(n == 0) {
             return 0;
         }
 
@@ -2163,7 +2251,3 @@ public class Main {
     }
 }
 ```
-
-### 和为 S 的二个数
-
-### 和为 S 的连续正数序列
