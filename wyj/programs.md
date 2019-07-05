@@ -46,6 +46,7 @@
     - [递增数组中找和为 S 的二个数，若有多个， 输出乘积最小者](#递增数组中找和为-s-的二个数若有多个-输出乘积最小者)
     - [和为 S 的连续正数序列](#和为-s-的连续正数序列)
     - [滑动窗口中的最大值](#滑动窗口中的最大值)
+    - [5 张扑克牌能否组成顺子](#5-张扑克牌能否组成顺子)
   - [六、动态规划](#六动态规划)
     - [**连续子数组的最大和**](#连续子数组的最大和)
     - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
@@ -73,10 +74,15 @@
     - [数据流中的中位数](#数据流中的中位数-1)
     - [字符流中第一个不重复的字符](#字符流中第一个不重复的字符)
     - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5-1)
+    - [圆圈中最后剩下的数](#圆圈中最后剩下的数)
 
 <!-- /TOC -->
 
 # 算法题
+
+[剑指 Offer 学习心得](http://wiki.jikexueyuan.com/project/for-offer/)
+
+[剑指 Offer 题集](https://github.com/wyjPro/JianZhiOffer/tree/master/src/com/offer)
 
 ## **一、链表**
 
@@ -1507,6 +1513,35 @@ public class Main {
 }
 ```
 
+### 5 张扑克牌能否组成顺子
+
+```java
+public class Main {
+    public boolean isContinue(int[] nums) {
+        if(nums.length) {
+            return false;
+        }
+
+        Arrays.sort(nums);
+        int cnt = 0;
+        //癞子个数
+        for(int num : nums) {
+            if(num == 0) {
+                cnt++;
+            }
+        }
+        //使用癞子补全剩余牌
+        for(int i = cnt; i < nums.length; i++) {
+            if(nums[i+1] == nums[i]) {
+                return false;
+            }
+            cnt -= nums[i+1] - nums[i] - 1;
+        }
+        return cnt >= 0;
+    }
+}
+```
+
 ## 六、动态规划
 
 ### **连续子数组的最大和**
@@ -2248,6 +2283,34 @@ public class Main {
         }
 
         return dp[N - 1];
+    }
+}
+```
+
+### 圆圈中最后剩下的数
+
+**思想：**
+
+[用环形链表模拟圆圈](http://wiki.jikexueyuan.com/project/for-offer/question-forty-five.html)。创建一个总共有 n 个结点的环形链表，然后每次在这个链表中删除第 m 个结点
+
+```java
+public class Test {
+    public int getLastRemaining(int n, int m) {
+        if(n < 1 || m < 1) {
+            return -1;
+        }
+
+        List<Integer> ret = new LinkedList<>();
+        //要删除的元素位置
+        int idx = 0;
+        while(ret.size() > 1) {
+            //只要移动 m-1 次就可以移动到下一个要删除的元素上
+            for(int i = 1; i < m; i++) {
+                idx = (idx + 1) % ret.size();
+            }
+            ret.remove(idx);
+        }
+        return ret.get(0);
     }
 }
 ```
