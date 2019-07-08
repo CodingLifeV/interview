@@ -74,36 +74,14 @@
         - [14、ArrayList,Vector,LinkedList的存储性能和特性是什么？](#14arraylistvectorlinkedlist的存储性能和特性是什么)
         - [15、Collection 和 Collections的区别](#15collection-和-collections的区别)
         - [16、List、Map、Set三个接口存取元素时，各有什么特点？](#16listmapset三个接口存取元素时各有什么特点)
-    - [7、JDK](#7jdk)
+    - [5、JDK](#5jdk)
         - [1、Java中的LongAdder和AtomicLong的区别](#1java中的longadder和atomiclong的区别)
         - [2、JDK和JRE的区别是什么？](#2jdk和jre的区别是什么)
         - [3、java的跨平台](#3java的跨平台)
         - [4、机器码和字节码的区别](#4机器码和字节码的区别)
-    - [8、反射](#8反射)
+    - [6、反射](#6反射)
         - [1、反射的实现与作用](#1反射的实现与作用)
-    - [9、JVM](#9jvm)
-        - [1、JVM回收算法和回收器，CMS采用哪种回收算法，怎么解决内存碎片问题？](#1jvm回收算法和回收器cms采用哪种回收算法怎么解决内存碎片问题)
-        - [2、JVM分区](#2jvm分区)
-        - [3、eden区，survial区](#3eden区survial区)
-        - [4、JAVA虚拟机的作用](#4java虚拟机的作用)
-        - [5、GC中如何判断对象需要被回收](#5gc中如何判断对象需要被回收)
-        - [6、JAVA虚拟机中，哪些可作为ROOT对象？](#6java虚拟机中哪些可作为root对象)
-        - [7、Java内存模型是什么？JVM内存模型呢？](#7java内存模型是什么jvm内存模型呢)
-        - [8、jvm是如何实现线程？](#8jvm是如何实现线程)
-        - [9、jvm最大内存限制多少](#9jvm最大内存限制多少)
-        - [10、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？](#10什么是java虚拟机为什么java被称作是平台无关的编程语言)
-        - [11、描述一下JVM加载class文件的原理机制？](#11描述一下jvm加载class文件的原理机制)
-        - [12、内存分配与回收策略](#12内存分配与回收策略)
-        - [13、JVM调优？](#13jvm调优)
-        - [14、类加载机制，双亲委派模型，好处是什么？如何破坏双亲委派模型？应用场景？](#14类加载机制双亲委派模型好处是什么如何破坏双亲委派模型应用场景)
-    - [10、GC](#10gc)
-        - [1、java中内存泄露是啥，什么时候出现内存泄露？内存溢出？](#1java中内存泄露是啥什么时候出现内存泄露内存溢出)
-        - [2、minor gc如果运行的很频繁，可能是什么原因引起的，minorgc如果运行的很慢，可能是什么原因引起的?](#2minor-gc如果运行的很频繁可能是什么原因引起的minorgc如果运行的很慢可能是什么原因引起的)
-        - [3、阐述GC算法](#3阐述gc算法)
-        - [4、GC是什么? 为什么要有GC?](#4gc是什么-为什么要有gc)
-        - [5、垃圾回收的优点和原理。并考虑2种回收机制](#5垃圾回收的优点和原理并考虑2种回收机制)
-        - [6、垃圾回收器可以马上回收内存吗？有什么办法主动通知虚拟机进行垃圾回收？（垃圾回收）](#6垃圾回收器可以马上回收内存吗有什么办法主动通知虚拟机进行垃圾回收垃圾回收)
-    - [1、IO和NIO、AIO](#1io和nioaio)
+    - [7、IO和NIO、AIO](#7io和nioaio)
         - [1、怎么打印日志？](#1怎么打印日志)
         - [2、运行时异常与一般异常有何异同？](#2运行时异常与一般异常有何异同)
         - [3、error和exception有什么区别?](#3error和exception有什么区别)
@@ -464,32 +442,172 @@ Java不支持像C++中那样的复制构造方法，这个不同点是因为如�
 
 ## 4、集合
 ### 1、ConcurrentHashMap？ConcurrentSkipListMap？二者的区别
-[参考网址](https://sky-xin.iteye.com/blog/2431255)
+[ConcurrentHashMap在jdk1.8和1.7中的区别](https://sky-xin.iteye.com/blog/2431255)  
+[详解ConcurrentHashMap及JDK8的优化](https://mp.weixin.qq.com/s/kirY7_NQ-aZSqvsi4Nn21w)
 
-**concurrenthashmap：**
+**1. concurrenthashmap：**
 
 concurrenthashmap是hashmap的多线程版本
 
-* jdk1.7  
-  * 采用Segment + HashEntry的方式进行实现。锁加在了不同的Segment，ConcurrentHashMap将数据分段，在读写的时候只加到相应的数据段上，这样在多线程的时候，可以读写其他段的数据，提高效率。
-  * put操作：对于ConcurrentHashMap的数据插入，这里要进行两次Hash去定位数据的存储位置
-  * get操作: ConcurrentHashMap的get操作跟HashMap类似，只是ConcurrentHashMap第一次需要经过一次hash定位到Segment的位置，然后再hash定位到指定的HashEntry，遍历该HashEntry下的链表进行对比，成功就返回，不成功就返回null 。
+**jdk1.7**  
 
-* jdk1.8
+  * 采用Segment + HashEntry的方式进行实现。锁加在了不同的Segment（默认为16段），ConcurrentHashMap将数据分段，在读写的时候只加到相应的数据段上，这样在多线程的时候，可以读写其他段的数据，提高效率。
+  * put操作：
+    1. 首先对key进行第1次hash，通过hash值确定segment的位置
+    2. 然后在segment内进行操作，获取锁
+    3. 获取当前segment的HashEntry数组后对key进行第2次hash，通过hash值确定在HashEntry数组的索引位置
+    4. 通过继承ReentrantLock的tryLock方法尝试去获取锁，如果获取成功就直接插入相应的位置，如果已经有线程获取该Segment的锁，那当前线程会以自旋的方式去继续的调用tryLock方法去获取锁，超过指定次数就挂起，等待唤醒
+    5. 然后对当前索引的HashEntry链进行遍历，如果有重复的key，则替换；如果没有重复的，则插入到链头
+    6. 释放锁
 
-  * 实现已经摒弃了Segment的概念，而是直接用Node数组+链表+红黑树的数据结构来实现，并发控制使用Synchronized和CAS来操作。直接采用transient volatile HashEntry<k,v>[] table保存数据，采用table数组元素作为锁，从而实现了对每一行数据进行加锁，进一步减少并发冲突的概率。
-   * put操作
-     1. 如果没有初始化就先调用initTable（）方法来进行初始化过程
-     2. 如果没有hash冲突就直接CAS插入
-     3. 如果还在进行扩容操作就先进行扩容
-     4. 如果存在hash冲突，就加锁来保证线程安全，这里有两种情况，一种是链表形式就直接遍历到尾端插入，一种是红黑树就按照红黑树结构插入
-     5. 最后一个如果该链表的数量大于阈值8，就要先转换成黑红树的结构，break再一次进入循环
-     6. 如果添加成功就调用addCount（）方法统计size，并且检查是否需要扩容
+  * get操作:  
+  
+    ConcurrentHashMap的get操作跟HashMap类似，只是ConcurrentHashMap第一次需要经过一次hash定位到Segment的位置，然后再hash定位到指定的HashEntry，遍历该HashEntry下的链表进行对比，成功就返回，不成功就返回null 。但是get操作的concurrenthashmap不需要加锁，原因是将存储元素都标记了volatile
 
-  * get操作：
-    1. 计算hash值，定位到该table索引位置，如果是首节点符合就返回
-    2. 如果遇到扩容的时候，会调用标志正在扩容节点ForwardingNode的find方法，查找该节点，匹配就返回
-    3. 以上都不符合的话，就往下遍历节点，匹配就返回，否则最后就返回null 
+* size操作：
+  
+  size操作用来计算ConcurrentHashMap的元素大小。
+  1. size操作就是遍历了两次所有的Segments，每次记录Segment的modCount值，然后将两次的modCount进行比较，如果相同，则表示期间没有发生过写入操作，就将原先遍历的结果返回。
+  2. 如果经判断发现两次统计出的modCount并不一致，要重新启用全部segment加锁的方式来进行count的获取和统计了，这样在此期间每个segement都被锁住，无法进行其他操作，统计出的count自然很准确
+
+**jdk1.8:**
+
+* 实现已经摒弃了Segment分段锁的数据结构，而是直接用Node数组+链表+红黑树的数据结构来实现，并发控制使用Synchronized（写）和CAS（读）来操作，从而实现了对每一行数据进行加锁，进一步减少并发冲突的概率。
+  ![](https://upload-images.jianshu.io/upload_images/2184951-3d2365ca5996274f.png?imageMogr2/auto-orient/)
+
+* Node类成员变量Node的元素val和指针next都标注volatile，目的是在多线程环境下线程A修改结点的val或者新增节点的时候是对线程B可见的
+* ConcurrentHashMap有成员变量transient volatile Node<K,V>[] table，目的是为了使Node数组在扩容的时候对其他线程具有可见性而加的volatile。
+* ConcurrentHashMap的初始化其实是一个空实现，并没有做任何事，初始化操作并不是在构造函数实现的，而是在put操作中实现。
+
+* 与 jdk1.7 区别：
+  1. 数据结构不同
+  2. 保证线程安全机制不同
+  3. 锁的粒度不同
+  4. 链表转化为红黑树，查询时间复杂度不同
+  5. jdk1.8 推荐使用 mappingCount 方法而不是 size 方法获取当前 map 表的大小。因为这个方法的返回值是long类型，size方法是返回值类型是int
+
+* put操作
+  
+  对当前的table进行无条件自循环直到put成功
+    1. 如果没有初始化就先调用initTable（）方法来进行初始化过程
+    2. 如果没有hash冲突就直接CAS插入
+    3. 如果还在进行扩容操作就先进行扩容
+    4. 如果存在hash冲突，就加锁来保证线程安全，这里有两种情况，一种是链表形式就直接遍历到尾端插入，一种是红黑树就按照红黑树结构插入
+    5. 如果涉及到相同的key进行put就会覆盖原先的value  
+    6. 最后一个如果该链表的数量大于阈值8，就要先转换成黑红树的结构，break再一次进入循环
+    7. 如果添加成功就调用 addCount() 方法统计 size ，并且检查是否需要扩容
+
+    ```java
+    public V put(K key, V value) {  
+        return putVal(key, value, false);  
+    }  
+    /** Implementation for put and putIfAbsent */  
+    final V putVal(K key, V value, boolean onlyIfAbsent) {  
+        if (key == null || value == null) throw new NullPointerException();  
+        int hash = spread(key.hashCode()); //两次hash，减少hash冲突，可以均匀分布  
+        int binCount = 0;  
+        for (Node<K,V>[] tab = table;;) { //对这个table进行迭代  
+            Node<K,V> f; int n, i, fh;  
+            //这里就是上面构造方法没有进行初始化，在这里进行判断，为null就调用initTable进行初始化，属于懒汉模式初始化  
+            if (tab == null || (n = tab.length) == 0)  
+                tab = initTable();  
+            else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {//如果i位置没有数据，就直接无锁插入  
+                if (casTabAt(tab, i, null,  
+                            new Node<K,V>(hash, key, value, null)))  
+                    break;                   // no lock when adding to empty bin  
+            }  
+            else if ((fh = f.hash) == MOVED)//如果在进行扩容，则先进行扩容操作  
+                tab = helpTransfer(tab, f);  
+            else {  
+                V oldVal = null;  
+                //如果以上条件都不满足，那就要进行加锁操作，也就是存在hash冲突，锁住链表或者红黑树的头结点  
+                synchronized (f) {  
+                    if (tabAt(tab, i) == f) {  
+                        if (fh >= 0) { //表示该节点是链表结构  
+                            binCount = 1;  
+                            for (Node<K,V> e = f;; ++binCount) {  
+                                K ek;  
+                                //这里涉及到相同的key进行put就会覆盖原先的value  
+                                if (e.hash == hash &&  
+                                    ((ek = e.key) == key ||  
+                                    (ek != null && key.equals(ek)))) {  
+                                    oldVal = e.val;  
+                                    if (!onlyIfAbsent)  
+                                        e.val = value;  
+                                    break;  
+                                }  
+                                Node<K,V> pred = e;  
+                                if ((e = e.next) == null) {  //插入链表尾部  
+                                    pred.next = new Node<K,V>(hash, key,  
+                                                            value, null);  
+                                    break;  
+                                }  
+                            }  
+                        }  
+                        else if (f instanceof TreeBin) {//红黑树结构  
+                            Node<K,V> p;  
+                            binCount = 2;  
+                            //红黑树结构旋转插入  
+                            if ((p = ((TreeBin<K,V>)f).putTreeVal(hash, key,  
+                                                        value)) != null) {  
+                                oldVal = p.val;  
+                                if (!onlyIfAbsent)  
+                                    p.val = value;  
+                            }  
+                        }  
+                    }  
+                }  
+                if (binCount != 0) { //如果链表的长度大于8时就会进行红黑树的转换  
+                    if (binCount >= TREEIFY_THRESHOLD)  
+                        treeifyBin(tab, i);  
+                    if (oldVal != null)  
+                        return oldVal;  
+                    break;  
+                }  
+            }  
+        }  
+        addCount(1L, binCount);//统计size，并且检查是否需要扩容  
+        return null;  
+    }  
+    ```
+
+* get操作：
+  1. 计算hash值，定位到该table索引位置，如果是首节点符合就返回
+  2. 如果遇到扩容的时候，会调用标志正在扩容节点ForwardingNode的find方法，查找该节点，匹配就返回。
+     * ForwardingNode：一个特殊的Node节点，hash值为-1，其中存储nextTable的引用。只有table发生扩容的时候，ForwardingNode才会发挥作用，作为一个占位符放在table中表示当前节点为null或则已经被移动。
+     * nextTable：默认为null，扩容时新生成的数组，其大小为原数组的两倍
+  3. 以上都不符合的话，就往下遍历节点，匹配就返回，否则最后就返回null 
+
+    ```java
+    public V get(Object key) {  
+        Node<K,V>[] tab; Node<K,V> e, p; int n, eh; K ek;  
+        int h = spread(key.hashCode()); //计算两次hash  
+        if ((tab = table) != null && (n = tab.length) > 0 &&  
+            (e = tabAt(tab, (n - 1) & h)) != null) { //读取首节点的Node元素  
+            if ((eh = e.hash) == h) {                //如果该节点就是首节点就返回  
+                if ((ek = e.key) == key || (ek != null && key.equals(ek)))  
+                    return e.val;  
+            }  
+            //hash值为负值表示正在扩容
+            //这个时候查的是 ForwardingNode 的 find 方法来定位到 nextTable 来  
+            //查找，查找到就返回  
+            else if (eh < 0)  
+                return (p = e.find(h, key)) != null ? p.val : null;  
+            while ((e = e.next) != null) {//既不是首节点也不是ForwardingNode，那就往下遍历  
+                if (e.hash == h &&  
+                    ((ek = e.key) == key || (ek != null && key.equals(ek))))  
+                    return e.val;  
+            }  
+        }  
+        return null;  
+    }  
+    ```
+* size 方法
+  1. 通过二个变量 baseCount 和 counterCells 来计算 size
+  2. baseCount 用于记录节点的个数，是个 volatile 变量
+  3. counterCells 是一个辅助 baseCount 计数的数组，每个 counterCell 存着部分的节点数量，这样做的目的就是尽可能地减少冲突
+  4. ConcurrentHashMap节点的数量 = baseCount+counterCells每个cell记录下来的节点数量
+  5. 总体的原则就是：先尝试更新 baseCount，失败再利用 CounterCell。
 
 **ConcurrentSkipListMap：**
 
@@ -726,7 +844,7 @@ public interface ListIterator<E> extends Iterator<E> {}
 ### 16、List、Map、Set三个接口存取元素时，各有什么特点？
 list数据有序允许数据重复，set数据无序不允许数据重复，map以键值对存，键不能重复，可以允许一个键为null，允许多个值为null
 
-## 7、JDK
+## 5、JDK
 ### 1、Java中的LongAdder和AtomicLong的区别
 ### 2、JDK和JRE的区别是什么？
 
@@ -743,395 +861,14 @@ list数据有序允许数据重复，set数据无序不允许数据重复，map�
 * 机器码，完全依附硬件而存在，并且不同硬件由于内嵌指令集不同，即使相同的0 1代码意思也可能是不同的，换句话说，根本不存在跨平台性。比如：不同型号的CPU,你给他个指令10001101，他们可能会解析为不同的结果；
 * java字节码是java的.class文件,我们知道JAVA是跨平台的，为什么呢？因为他有一个jvm,不论那种硬件，只要你装有jvm,那么他就认识这个JAVA字节码，至于底层的机器码，咱不用管，有jvm搞定，他会把字节码再翻译成所在机器认识的机器码
 
-## 8、反射
+## 6、反射
 ### 1、反射的实现与作用
 
 JAVA语言编译之后会生成一个.class文件，反射就是通过字节码文件找到某一个类、类中的方法以及属性等。反射的实现主要借助以下四个类：Class：类的对象，Constructor：类的构造方法，Field：类中的属性对象，Method：类中的方法对象。 
 
 作用：反射机制指的是程序在运行时能够获取自身的信息。在JAVA中，只要给定类的名字，那么就可以通过反射机制来获取类的所有信息。
 
-
-## 9、JVM
-### 1、JVM回收算法和回收器，CMS采用哪种回收算法，怎么解决内存碎片问题？
-
-* 回收算法：
-  * 标记-清除算法：
-  1. 方法：首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象
-  2. 缺点：
-     1. 效率问题，标记和清除二个过程的效率都不高；
-     2. 空间问题，标记清除后会产生大量的不连续的内存碎片；
-  * 复制算法
-  1. 方法：将内容按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活的内存对象复制到另外一块上面，然后把已经使用过的内存空间一次性清理掉；
-  2. 缺点：
-     1. 对象存活率较高时就要进行较多的复制操作，效率将会变低；
-     2. 每次只能使用一半内容，代价较高；
-  * 标记-整理算法： 首先标记出所有需要回收的对象，在标记完成后让所有存活的对象都向一端移动，然后直接清理掉边界以外的内存；
-  * 分代收集算法： 据对象的存活周期的不同将内存划分为几块，一般就分为新生代和老年代，根据各个年代的特点采用不同的收集算法。新生代（少量存活）用复制算法，老年代（对象存活率高）“标记-清理”算法或标记-清除算法
-
-
-* 回收器：
-* 新生代回收器：
-  1. Serial：单线程，进行垃圾收集时，需暂停掉其它所有的用户线程，新生代复制算法，老年代标记-整理算法
-  2. ParNew：Serial收集器的多线程版本，需暂停掉其它所有的用户线程，新生代复制算法，老年代标记-整理算法，目前只能与CMS收集器配合工作
-  3. Parallel Scavenge：多线程并行，复制算法，“吞吐量优先”的收集器。吞吐量就是CPU用于运行用户代码的时间与总CPU总消耗时间的比值，即吞吐量=运行用户代码时间/（运行用户代码时间+垃圾回收时间）。并行是指同一时刻一起执行，并发是指同一时刻间隔执行。
-* 老年代回收器：
-  1. Serial Old：Serial的老年代版本，单线程，与Parallel Scavenge搭配使用，或作为CMS收集器的后备预案，新生代复制算法，老年代标记-整理算法
-  2. Parallel Old：Parallel Scavenge的老年代版本，注重吞吐量以及CPU资源敏感的场合，都可以优先考虑Parallel Scavenge加Parallel Old收集器
-  3. CMS：获取最短停顿时间为目标，尤其重视服务的响应速度，基于标记-清除算法；
-    解决内存碎片问题： 让CMS在进行一定次数的Full GC（标记清除）的时候进行一次标记整理算法，CMS提供了以下参数来控制：-XX:UseCMSCompactAtFullCollection   -XX:CMSFullGCBeforeCompaction=5 也就是CMS在进行5次Full GC（标记清除）之后进行一次标记整理算法，从而可以控制老年带的碎片在一定的数量以内，甚至可以配置CMS在每次Full GC的时候都进行内存的整理；
-  4. G1：并行的、并发的和增量式压缩短暂停顿的垃圾收集器。G1收集器不区分年轻代和年老代空间。它把堆空间划分为多个大小相等的区域。当进行垃圾收集时，它会优先收集存活对象较少的区域，因此叫“Garbage First”。
-
-### 2、JVM分区
-
-1. 程序计数器：字节码行号指示器，字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令，线程私有；
-2. 虚拟机栈：java方法执行的内存模型，每个方法执行的同时会创建一个栈帧，用于存放局部变量表、操作数栈、动态链接、方法出口等信息，每一个方法从调用到完成的过程，都对应着一个栈帧在虚拟机栈中入栈到出栈的过程，线程私有；
-3. 本地方法栈：存放虚拟机使用到的Native方法信息；
-4. 方法区：线程共享，存储已被虚拟机加载的类信息、常量、静态变量，即时编译后的代码数据等。运行时常量池是方法区的一部分，存放编译期生成的各种字面量和符号引用；
-5. 堆：线程共享，存放对象实例，垃圾收集管理的主要区域，java堆细分为新生代和老年代
-
-### 3、eden区，survial区
-
-[新生代Eden与两个Survivor区的解释](https://www.jianshu.com/p/534ab3c8335f)
-
-~~目前主流的虚拟机实现都采用了分代收集的思想，把整个堆区划分为新生代和老年代；新生代又被划分成Eden 空间、 From Survivor 和 To Survivor 三块区域。新生代有一个较大的Eden区和两个较小的Survivor区组成，绝大多数新创建的对象都是在Eden区分配的，其中大多数对象很快消亡。Eden是一块连续的内存，所以分配内存的速度很快。首先，Eden满时，进行一次minor gc ，将存活 的对象复制到 To Survivor（以下简称To），清除Eden消亡的对象。当Eden再次满时，进行minor gc,To中能够晋升的移动到老年代，存活的对象复制到From。清空Eden和To，如此切换（默认15），将存活的对象迁移到老年代。~~
-
-HotSpot JVM把年轻代分为了三部分：1个Eden区和2个Survivor区（分别叫from和to）。默认比例为8：1。
-
-一般情况下，新创建的对象都会被分配到Eden区(一些大对象特殊处理),这些对象经过第一次Minor GC后，如果仍然存活，将会被移到Survivor区。对象在Survivor区中每熬过一次Minor GC，年龄就会增加1岁，当它的年龄增加到一定程度时，就会被移动到年老代中
-
-在GC开始的时候，对象只会存在于Eden区和名为“From”的Survivor区，Survivor区“To”是空的。紧接着进行GC，Eden区中所有存活的对象都会被复制到“To”，而在“From”区中，仍存活的对象会根据他们的年龄值来决定去向。年龄达到一定值(年龄阈值，可以通过-XX:MaxTenuringThreshold来设置)的对象会被移动到年老代中，没有达到阈值的对象会被复制到“To”区域。经过这次GC后，Eden区和From区已经被清空。这个时候，“From”和“To”会交换他们的角色，也就是新的“To”就是上次GC前的“From”，新的“From”就是上次GC前的“To”。不管怎样，都会保证名为To的Survivor区域是空的。
-
-
-
-### 4、JAVA虚拟机的作用
-
-解释运行字节码程序消除平台相关性。 jvm将java字节码解释为具体平台的具体指令。一般的高级语言如要在不同的平台上运行，至少需要编译成不同的目标代码。而引入JVM后，Java语言在不同平台上运行时不需要重新编译。Java语言使用模式Java虚拟机屏蔽了与具体平台相关的信息，使得Java语言编译程序只需生成在Java虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行。Java虚拟机在执行字节码时，把字节码解释成具体平台上的机器指令执行。
-
-### 5、GC中如何判断对象需要被回收
-
-1. 首先，进行可达性算法分析，可达性算法基本思路是定义一些列称为"GC-Roots"的对象作为起始阶段，从这些节点向下搜索，搜索走过的路径称为引用链，当一个对象到GCRoots没有任何引用链时，即从GCRoots到这个对象不可达，则证明此对象是不可用的；
-2. 其次，可达性算法中的不可达对象在真正宣告“死亡”需要回收之前，至少要经过两轮标记过程：
-   1. 如果对象不可达，会被第一次标记并且进行一次筛选，筛选条件是此对象有没有必要执行finalize()方法，当对象没有覆盖finalize()方法或者这个方法以及被执行过了，那么就视为没有必要再执行；对于那些有必要执行finalize()方法的对象会被放在一个队列F-Queue中，稍后由虚拟机的一个线程去执行逐一执行队列中对象的finalize方法
-   2. finalize()方法是对象逃脱死亡命运的最后一次机会，稍后GC会对F-Queue中的对象进行第二次小规模的标记，如果能在finalize中成功重新引用，第二次标记时就会将该对象从F-Queue集合中移除，而成功脱逃，否则就判定为该对象可回收。
-
-### 6、JAVA虚拟机中，哪些可作为ROOT对象？
-
-1. 虚拟机栈（栈帧中的本地变量表）中引用的对象
-2. 方法区中的类静态属性引用的对象
-3. 方法区中常量引用的对象
-4. 本地方法栈中JNI（即一般说的native方法）引用的对象。
-
-### 7、Java内存模型是什么？JVM内存模型呢？
-
-**Java内存模型**
-
-线程间共享变量存储在主内存，每个线程都有自己的本地内存，存储的是共享变量在本地的副本。线程对变量的所有操作都必须在工作内存中进行，不同线程也无法访问到对方工作内存中的变量，线程间变量值的传递都需要经过主内存来完成
-
-**JVM内存模型：**
-
-[Java内存与垃圾回收调优](https://my.oschina.net/kanlianhui/blog/356650)
-
-JVM内存模型：虚拟机栈、本地方法栈、方法区、堆、程序计数器
-
-![](http://cdn1.importnew.com/2014/12/ba45c5c11b55f2cc224cd098e7f4b038.png)
-
-### 8、jvm是如何实现线程？
-
-java虚拟机的多线程是通过线程轮流切换分配处理执行时间的方式来实现的，在任何一个确定的时刻，一个处理器（对于多核处理器来说是一个内核）都只会执行一条程序中的指令。因此，为了线程切换后能恢复到正确的执行位置，每条线程都需要一个独立的程序计数器，各条线程之间计数器互不影响，独立存储。
-
-简单点说，对于单核处理器，是通过快速切换线程执行指令来达到多线程的，因为单核处理器同时只能处理一条指令，只是这种切换速度很快，我们根本不会感知到。
-
-### 9、jvm最大内存限制多少
-
-VM内存的最大值跟操作系统有很大的关系， 限制于实际的最大物理内存。简单的说就32位处理器虽然可控内存空间有4GB,但是具体的操作系统会给一个限制，这个限制一般是2GB-3GB（一般来说Windows系统下为1.5G-2G，Linux系统 下为2G-3G），而64bit以上的处理器就不会有限制了。 JVM主要管理两种类型的内存：堆和非堆。
-1. 堆内存分配 ：JVM初始分配的内存由-Xms指定，默认是物理内存的1/64；JVM最大分配的内存由-Xmx 指定，默认是物理内存的1/4。默认空余堆内存小于40%时，JVM就会增大堆直到-Xmx的最大限制；空余堆内存大于70%时，JVM会减少堆直到- Xms的最小限制。因此服务器一般设置-Xms、-Xmx相等以避免在每次GC 后调整堆的大小。 
-2. 非堆内存分配： JVM使用-XX:PermSize设置非堆内存初始值，默认是物理内存的1/64；由XX:MaxPermSize设置最大非堆内存的大小，默认是物理内存的1/4。 
-
-### 10、什么是Java虚拟机？为什么Java被称作是“平台无关的编程语言”？
-
-java虚拟机是执行字节码文件（.class）的虚拟机进程。java源程序（.java）被编译器编译成字节码文件（.class）。然后字节码文件，将由java虚拟机，解释成机器码（不同平台的机器码不同）。利用机器码操作硬件和操作系统。
-
-因为不同的平台装有不同的JVM，它们能够将相同的.class文件，解释成不同平台所需要的机器码。正是因为有JVM的存在，java被称为平台无关的编程语言。
-
-### 11、描述一下JVM加载class文件的原理机制？
-
-JVM中类的装载是由ClassLoader和它的子类来实现的,Java ClassLoader 是一个重要的Java运行时系统组件。它负责在运行时查找和装入类文件的类。 Java中的所有类，都需要由类加载器装载到JVM中才能运行。类加载器本身也是一个类，而它的工作就是把class文件从硬盘读取到内存中。在写程序的时候，我们几乎不需要关心类的加载，因为这些都是隐式装载的，除非我们有特殊的用法，像是反射，就需要显式的加载所需要的类。 
-
-类装载方式，有两种：
-1. 隐式装载，程序在运行过程中当碰到通过new 等方式生成对象时，隐式调用类装载器加载对应的类到jvm中
-2. 显式装载，通过class.forname()等方法，显式加载需要的类 
-
-隐式加载与显式加载的区别：两者本质是一样的。 Java类的加载是动态的，它并不会一次性将所有类全部加载后再运行，而是保证程序运行的基础类(像是基类)完全加载到jvm中，至于其他类，则在需要的时候才加载。这当然就是为了节省内存开销。
-
-### 12、内存分配与回收策略
-
-1. 对象优先在Eden区分配。当Eden区没有内存可分配的时候，虚拟机发出一次Minor GC（垃圾回收）；
-2. 大对象直接进入老年代。大对象指需要大量连续内存空间的java对象，典型的很长的字符串以及数组；
-3. 长期存活的对象进入老年代。虚拟机为每一个对象定义一个对象年龄计数器，对象在Survivor区中每熬过一次Minor GC，年龄就增加 1 岁，当年龄增加到一定程度（默认15岁），就将会被晋升到老年代中；
-4. 动态对象年龄判断。如果在Surivivor空间中相同年龄对象大小的总和大于Surivivor空间的一半，年龄大于或者等于该年龄的对象直接进入老年代；
-5. 空间分配担保。
-
-### 13、JVM调优？
-
-[JVM调优浅谈](https://www.cnblogs.com/xingzc/p/5756119.html)
-
-[Java内存与垃圾回收调优](https://my.oschina.net/kanlianhui/blog/356650)
-
-**堆大小设置：**
-  * 典型设置：
-  1. java -Xmx3550m  -Xms3550m -Xmn2g  -Xss128k
-  2. java  -Xmx3550m  -Xms3550m  -Xss128k  -XX:NewRatio=4  -XX:SurvivorRatio=4  -XX:MaxPermSize=16m  -XX:MaxTenuringThreshold=0
-  
-    | 命令     | 含义
-    ----------|-------------
-    -Xmx3550m       | 设置JVM最大可用内存为3550m
-    -Xms3550m        | 设置JVM初始内存为3550m。此值可以设置与 -Xmx相同，以避免每次垃圾回收完成后JVM重新分配内存
-    -Xmn2g | 设置年轻代大小为2G
-    -Xss128k|设置每个线程的堆栈大小， 根据应用的线程所需内存大小进行调整
-    -XX:NewRatio=4|设置年轻代（包括Eden和两个Survivor区）与年老代的比值（除去持久代）。设置为4，则年轻代与年老代所占比值为1:4，年轻代占整个堆栈的1/5。
-    -XX:SurvivorRatio=4|设置年轻代中Eden区与Survivor区的大小比值。设置为4，则两个Survivor区与一个Eden区的比值为2:4，一个Survivor区占整个年轻代的1/6。
-    -XX:MaxPermGen=16m|设置永久代最大值为16m。
-    -XX:MaxTenuringThreshold=0|设置垃圾最大年龄。如果设置为0的话，则年轻代对象不经过Survivor区，直接进入年老代 
-    -XX:PermGen|设置永久代内存的初始化大小。
-
-
-**选择合适的垃圾收集算法：**
-
-  * 吞吐量优先的并行收集器：
-    1. java  -Xmx3800m  -Xms3800m  -Xmn2g  -Xss128k  -XX:+UseParallelGC  -XX:ParallelGCThreads=20
-    2. java  -Xmx3550m  -Xms3550m  -Xmn2g  -Xss128k  -XX:+UseParallelGC  -XX:ParallelGCThreads=20 -XX:+UseParallelOldGC
-     3. 还可以加入参数  -XX:MaxGCPauseMillis=100：设置每次年轻代垃圾回收的最长时间，如果无法满足此时间，JVM会自动调整年轻代大小，以满足此值
-
-  * 响应时间优先的并发收集器：
-    1. 典型配置：java  -Xmx3550m  -Xms3550  -Xmn2g  -Xss128k  -XX:ParallelGCThreads=20  -XX:+UseConcMarkSweepGC  -XX:+UseParNewGC
-    2. 还可以使用参数  -XX:CMSFullGCsBeforeCompaction=5 ： 由于并发收集器不对内存空间进行压缩、整理，所以运行一段时间后会产生“碎片”，使得运行效率降低。此值设置运行多少次GC以后对内存空间进行压缩、整理。
--XX:+UseCMSCompactAtFullCollection ： 打开对年老代的压缩。可能会影响性能，但是可以消除碎片
-
-    参数 | 含义
-    ---|---
-     -XX:+UseParallelGC|选择垃圾收集器为并行收集器。此配置仅对年轻代有效。 而年老代仍旧使用串行收集
-    -XX:ParallelGCThreads=20|配置并行收集器的线程数
-    -XX:+UseParallelOldGC|配置年老代垃圾收集方式为并行收集。 JDK6.0支持对年老代并行收集
-    -XX:+UseConcMarkSweepGC|设置年老代为并发收集
-    -XX:+UseParNewGC|设置年轻代为并行收集。可与CMS收集同时使用
-
-    | | 适用情况|缺点|如何配置
-    ---|---|---|---
-    串行处理器|数据量比较小（100M左右），单处理器下并且对相应时间无要求的应用|只能用于小型应用|使用 -XX:+UseSerialGC
-    并行处理器|对吞吐量有高要求，多CPU，对应用过响应时间无要求的中、大型应用。如后台处理、科学计算|垃圾收集过程中应用响应时间可能加长|使用-XX:+UseParallelGC 打开；最大垃圾回收暂停：指定垃圾回收时的最长暂停时间，通过-XX:MaxGCPauseMillis=<N>指定。 吞吐量：吞吐量为垃圾回收时间与非垃圾回收时间的比值，通过-XX:GCTimeRatio = <N> 来设定， 公式为 1/(1 + N)
-    并发处理器|对响应时间有高要求，多CPU，对应用响应时间有较高要求的中大型应用。如Web服务器/应用服务器||使用 -XX:+UseConcMarkSweepGC打开
-
-**java垃圾收集监控：**
-
-[JAVA VisualVM介绍以及IDEA下使用](https://blog.csdn.net/qq_22741461/article/details/80451675)
-
-1. IDEA安装VisualVM插件，之后运行工程的时候选择`Run With VisualVM`
-2. 本地安装VisualVM，之后启动进入`VisualVM`页面，安装`java VisualVM`插件，之后在左侧便可以选择监视的相应IDE（例如idea或者eclipse）
-
-之后便可以看到监控数据：
-
-![](https://upload-images.jianshu.io/upload_images/13925206-9ecdf3da53f80e0b.png?imageMogr2/auto-orient/)
-
-整个界面分为三个区域，分别为：Spaces、Graphs和Histogram：
-
-[Visual GC 插件使用](https://www.jianshu.com/p/9e4ccd705709)
-
-* **Spaces窗口：**
-
-  ![](https://upload-images.jianshu.io/upload_images/13925206-1799221d7e7cfa8c.png?imageMogr2/auto-orient/)
-  
-  上图呈现了程序运行时我们比较关注的几个区域的内存使用情况：
-  * Metaspace：方法区，如果JDK1.8之前的版本，就是Perm，JDK7和之前的版本都是以永久代(PermGen)来实现方法区的，JDK8之后改用元空间来实现(MetaSpace)。
-  * Old：老年代
-  * Eden: 新生代Eden区
-  * S0和S1：新生代的两个 Survivor 区
-
-* **Graphs窗口：**
-
-  该窗口区域包含8个图标，以时间为横坐标动态展示各个指标的运行状态。
-
-  ![](https://upload-images.jianshu.io/upload_images/13925206-d18f2631954ef5b3.png?imageMogr2/auto-orient/)
-
-  * Compile Time：编译情况，包括编译总数和编译耗时，一个脉冲表示一次JIT编译；
-  * Class Loader Time：类加载情况，包括加载的类，卸载的类以及耗时
-  * GC Time：总的（包含新生代和老年代）gc情况记录
-  * Eden Space：新生代Eden区内存使用情况，包括Eden区的最大容量、当前容量、当前已使用容量、从开始监控到现在该内存区域一共发生的 Minor GC 次数以及 GC 耗时情况
-  * Survivor 0和Survivor 1：新生代的两个Survivor区内存使用情况
-  * Old Gen：老年代内存使用情况
-  * Metaspace：方法区内存使用情况
-
-* **Histogram窗口：**
-
-  Histogram窗口是对当前正在被使用的Survivor区内存使用情况的详细描述
-
-  * Tenuring Threshold：晋升到老年代的年龄阈值，但是有动态年龄判断情况出现
-  * Max Tenuring Threshold：表示新生代中对象的最大年龄值
-
-
-
-**Java垃圾回收调优：**
-
-[一次针对idea启动的JVM调优过程记录](https://www.jianshu.com/p/12adb143f149)
-
-为了能看到idea运行时的gc日志，添加如下参数输出gc日志
-
-```
--verbose:gc
--XX:+PrintGCDetails
--Xloggc:D:/gc.log
-```
-接下来打开VisualVM工具，准备监控idea。
-
-* 如果在gc日志看到大量 Minor GC 信息，是由于年轻代空间不足而导致内存分配失败（Allocation Failure）而发起的，解决方案就是扩大新生代容量，以减少Minor GC发生的次数
-
-* 观察堆空间的变化曲线图，
-  idea的初始堆空间分配如下：
-  ```
-  -Xms 128m
-  -Xmx 750m
-  ```
-  当内存占用过高时启动垃圾回收，虚拟机为了减少过于频繁的垃圾回收，会对堆空间进行扩容。
-如果看到堆内容扩容次数较多，说明初始堆空间设置的过小，可以将初始值跟最大值一样大，防止因为堆扩容引发的消耗。
-
-* 老年代空间设置过小或者Matespace（元空间）空间不足都会发生Full GC。
-
-  如果Matespace的初始值非常小，程序在启动过程中由于空间不足会发生多次的扩容。如果在日志中看到`[Full GC (Metadata GC Threshold)`，说明这次的Full GC发生是由于Metadata GC Threshold导致的，因为元空间内存不足够而产生扩容导致的GC。通过参数`-XX MetaspaceSize`可以设置一个足够大的元空间初始容量
-
-[理解CMS GC日志](https://www.jianshu.com/p/ba768d8e9fec)
-
-[GC 性能优化文集](http://cmsblogs.com/?p=3819)
-
-* 如果你在日志里看到 java.lang.OutOfMemoryError: PermGen space错误，表达的意思是: 永久代(Permanent Generation) 内存区域已满，主要原因,是加载到内存中的 class 数量太多或体积太大。那么可以尝试使用 -XX:PermGen 和 -XX:MaxPermGen JVM选项去监控并增加Perm Gen内存空间。
-
-* 如果你在日志里看到 java.lang.OutOfMemoryError: Java heap space错误，主要是由代码问题导致的：
-  * 超出预期的访问量/数据量
-  * 内存泄露(Memory leak)
-
-  解决方案：
-  如果设置的最大内存不满足程序的正常运行, 只需要增大堆内存即可。但很多情况下, 增加堆内存空间并不能解决问题，要从根本上解决问题, 则需要排查分配内存的代码. 简单来说, 需要解决这些问题:
-  1. 哪类对象占用了最多内存？
-  2. 这些对象是在哪部分代码中分配的。
-
-* 如果你在日志里看到 java.lang.OutOfMemoryError: Metaspace 错误所表达的信息是: 元数据区(Metaspace) 已被用满，Metaspace 错误的主要原因, 是加载到内存中的 class 数量太多或者体积太大。
-
-  如果抛出与 Metaspace 有关的 OutOfMemoryError , 第一解决方案是增加 Metaspace 的大小. 使用下面这样的启动参数:
-  ```
-  -XX:MaxMetaspaceSize=512m
-  ```
-  
-  
-
-### 14、类加载机制，双亲委派模型，好处是什么？如何破坏双亲委派模型？应用场景？
-[参考网址1](https://www.jianshu.com/p/60dbd8009c64)
-[参考网址2](https://blog.csdn.net/yangcheng33/article/details/52631940)
-
-* 概念：
-  * 类加载机制：虚拟机把描述类的数据从Class文件加载到内存，并对数据进行校验，转化解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是虚拟机的类加载机制。类加载的全过程包括加载、验证、准备、解析和初始化五个阶段。
-  * 双亲委派模型：每次收到类加载请求时，先将请求委派给父类加载器完成，如果父类加载器无法完成加载，那么子类尝试自己加载
-
-* 优点 ：采用双亲委派的一个好处是： 双亲委派模型很好地解决了各个类加载器的基础类统一问题 (越基础的类由越上层的加载器进行加载）。
-
-  对于任意一个类，都需要由加载它的类加载器和这个类本身来一同确立其在Java虚拟机中的唯一性。如果不是同一个类加载器加载，即时是相同的class文件，也会出现判断不想同的情况，从而引发一些意想不到的情况，为了保证相同的class文件，在使用的时候，是相同的对象，jvm设计的时候，采用了双亲委派的方式来加载类。
-
-  比如加载位于rt.jar包中的类java.lang.Object，不管是哪个加载器加载这个类，最终都是委托给顶层的启动类加载器进行加载，这样就保证了使用不同的类加载器最终得到的都是同样一个Object对象
-
-* jvm提供了三种系统加载器：
-  * 启动类加载器（Bootstrap ClassLoader）：C++实现，在java里无法获取，负责加载/lib下的类。
-  * 扩展类加载器（Extension ClassLoader）： Java实现，可以在java里获取，负责加载/lib/ext下的类。
-  * 系统类加载器/应用程序类加载器（Application ClassLoader）：是与我们接触对多的类加载器，我们写的代码默认就是由它来加载，ClassLoader.getSystemClassLoader返回的就是它。
-
-* 如何打破：需要重写loadClass()方法，双亲委派模型主要体现在ClassLoader类中的 loadClass()方法中：
-
-```java
-  protected Class<?> loadClass(String name, boolean resolve)
-        throws ClassNotFoundException
-    {
-        synchronized (getClassLoadingLock(name)) {
-            Class<?> c = findLoadedClass(name);
-            if (c == null) {
-                long t0 = System.nanoTime();
-                try {
-                    //双亲委派模型的体现
-                    if (parent != null) {
-                        c = parent.loadClass(name, false);
-                    } else {
-                        c = findBootstrapClassOrNull(name);
-                    }
-                } catch (ClassNotFoundException e) {
-                    // ClassNotFoundException thrown if class not found
-                    // from the non-null parent class loader
-                }
-              .......
-            }
-            return c;
-        }
-    }
-```
-* 应用场景： Java中所有涉及SPI的加载动作基本上都采用这种方式，例如JNDI、JDBC、JCE、JAXB和JBI等， 也就是父类加载器请求子类加载器去完成类加载动作。
-
-  例如JDBC中，引入线程上下文件类加载器， 程序就可以把原本需要由启动类加载器进行加载的类，由应用程序类加载器去进行加载了。
-Java SPI机制：为某个接口寻找服务实现的机制。有点类似IOC的思想，就是将装配的控制权移到程序之外。
-
-
-
-
-## 10、GC
-### 1、java中内存泄露是啥，什么时候出现内存泄露？内存溢出？
-
-* 内存泄露
-  * 概念：不再会被使用的对象的内存不能被回收，就是内存泄露。
-  * 场景：长生命周期的对象持有短生命周期对象的引用就很可能发生内存泄露，尽管短生命周期对象已经不再需要，但是因为长生命周期对象持有它的引用而导致不能被回收，例如：
-     1. 集合类。集合类仅仅有添加元素的方法，而没有相应的删除机制，导致内存被占用。如果这个集合类如果仅仅是局部变量，根本不会造成内存泄露，在方法栈退出后就没有引用了会被jvm正常回收。而如果这个集合类是全局性的变量（比如类中的静态属性，全局性的map等即有静态引用或final一直指向它），那么没有相应的删除机制，很可能导致集合所占用的内存只增不减，因此提供这样的删除机制或者定期清除策略非常必要。
-    2. 单例模式。不正确使用单例模式是引起内存泄露的一个常见问题，单例对象在被初始化后将在JVM的整个生命周期中存在（以静态变量的方式），如果单例对象持有外部对象的引用，那么这个外部对象将不能被jvm正常回收，导致内存泄露
-* 内存溢出out of memory
-  * 概念：是指程序在申请内存时，没有足够的内存空间供其使用，出现out of memory，包括：
-    1. 方法区内存溢出（outOfMemoryError：permgem space）方法区主要存放的是类信息、常量、静态变量等。所以如果程序加载的类过多，或者使用反射、gclib等这种动态代理生成类的技术，就可能          导致该区发生内存溢出
-    2. 线程栈溢出（java.lang.StackOverflowError）线程栈时线程独有的一块内存结构，所以线程栈发生问题必定是某个线程运行时产生的错误。 一般线程栈溢出是由于递归太深或方法调用层级过多导致的。
-  * 引起原因：
-     1. 内存中加载的数据量过于庞大，如一次从数据库取出过多数据；
-     2. 代码中存在死循环或循环产生过多重复的对象实体；
-     3. 集合类中有对对象的引用，使用完后未清空，使得JVM不能回收；
-  * 解决方案：
-    1. 修改JVM启动参数，直接增加内存。(-Xms，-Xmx参数一定不要忘记加。)
-    2. 检查错误日志，查看“OutOfMemory”错误前是否有其它异常或错误。
-    3. 对代码进行排查和分析，找出可能发生内存溢出的位置。
-
-### 2、minor gc如果运行的很频繁，可能是什么原因引起的，minorgc如果运行的很慢，可能是什么原因引起的?
-
-运行的很频繁可能是因为：
-1. 产生了太多朝生夕灭的对象导致需要频繁minor gc
-2. 新生代空间设置的比较小
-
-运行的很频繁可能是因为：
-1. 新生代空间设置过大。
-2. 对象引用链较长，进行可达性分析时间较长。
-3。 新生代survivor区设置的比较小，清理后剩余的对象不能装进去需要移动到老年代，造成移动开销。
-4. 内存分配担保失败，由minor gc转化为full gc
-5. 采用的垃圾收集器效率较低，比如新生代使用serial收集器
-
-### 3、阐述GC算法
-
-同JVM回收算法，标记清除算法、复制算法、标记整理算法和分代收集算法
-
-### 4、GC是什么? 为什么要有GC?
-
-GC是垃圾回收。
-
-内存处理是编程人员容易出现问题的地方，忘记或错误的内存回收，会导致程序或系统不稳，甚至崩溃。Java的GC功能可自动监控对象是否超过作用域，从而达到自动回收内存的目的。Java语言没有提供释放已分配的显示操作方法。
-
-### 5、垃圾回收的优点和原理。并考虑2种回收机制
-[参考](https://www.cnblogs.com/pypua/articles/8779469.html)
-
-* 优点：垃圾回收机制使得java程序员在编写程序的时候不再需要考虑内存管理。 有效的防止了内存泄露，可以有效的使用可使用的内存。 
-* 原理： 当创建对象时，GC就开始监视这个对象的地址、大小以及使用情况。通常，GC采用有向图的方式记录和管理heap（堆）中的素有对象。通过这种方式确定哪些对象时“可达的”，哪些是“不可达的”。垃圾回收器通常作为一个单独的低级别的线程运行，在不可预知的情况下对内存堆中已经死亡的或很长时间没有用过的对象进行清除和回收， 程序员不能实时的对某个对象或所有对象调用垃圾回收器进行垃圾回收。
-* 回收机制：分代复制垃圾回收和标记垃圾回收，增量垃圾回收。
-
-### 6、垃圾回收器可以马上回收内存吗？有什么办法主动通知虚拟机进行垃圾回收？（垃圾回收）
-可以马上回收内存。
-
-程序员可以手动执行System.gc()，通知GC运行，但是Java语言规范并不保证GC一定会执行。
-
-## 1、IO和NIO、AIO
+## 7、IO和NIO、AIO
 ### 1、怎么打印日志？
 ### 2、运行时异常与一般异常有何异同？
 ### 3、error和exception有什么区别?
