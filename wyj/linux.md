@@ -49,10 +49,10 @@
   - `mv /path/to/file1 /path/to/file2`：移动 file1 文件且重命名为 file2
 - 编辑
 
-  - `nano file`：对 file 文件进行文本编辑
+  - `nano file`：对 file 文件进行文本编辑，如果想搜索文件内容，按`ctrl + W` 输入内容后回车即可
   - `vi file`：对 file 文件进行文本编辑，如果文件不存在，则创建一个 file 文件并对其编辑
 
-- 解压缩
+* 解压缩
   - `tar -xvzf file.tar.gz`：解压文件
   - `tar -tzf file.tar.gz`：列出压缩文件列表
   - `tar -czf file.tar.gz /test1 /test2`：压缩文件
@@ -96,6 +96,7 @@
 
 - `n>`：将输出从文件描述符 n 重定向到文件。
 - `n>>`：追加文件内容，而不是覆盖原文件
+- `echo`：输出到终端
 
 ### 2. 输入重定向
 
