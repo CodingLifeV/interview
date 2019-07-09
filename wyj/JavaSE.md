@@ -95,12 +95,21 @@
 # javaSE
 ## 1、Java基础
 ### 1. 为什么重写equals还要重写hashcode
-Object类默认的equals比较规则就是比较两个对象的内存地址， 默认的hashcode方法是根据对象的内存地址经哈希算法得来的，因此，二个对象equals相等，hashcode一定相等。根据对象的某种性质重写了equals方法后，为了保证同一个对象，保证equals相同的情况下hashcode值必定相同，如果重写了equals而未重写hashcode方法，可能就会出现两个没有关系的对象equals相同的（因为equal都是根据对象的特征进行重写的），但hashcode确实不相同的。
+
+[为什么要重写hashcode和equals方法？初级程序员在面试中很少能说清楚。](https://www.cnblogs.com/JavaArchitect/p/10474448.html)
+
+Object类默认的equals比较规则就是比较两个对象的内存地址， 默认的hashcode方法是根据对象的内存地址经哈希算法得来的，因此，二个对象equals相等，hashcode一定相等。
+
+hashmap 中通过 hashcode 值来定位存储的索引号，如果处于相同索引位置但存在冲突，则在通过 equal 方法来比较二个对象是否相同。
+
+根据对象的某种性质重写了equals方法后，为了保证同一个对象，保证equals相同的情况下hashcode值必定相同，如果重写了equals而未重写hashcode方法，可能就会出现两个没有关系的对象equals相同的（因为equal都是根据对象的特征进行重写的），但hashcode确实不相同的。
 如果你改写了equal()方法，令两个实际不是一个对象的两个实例在逻辑上相等了，但是hashcode却是不等。所以要记得改写hashcode。
 
-因为重写的equal里一般比较的比较全面比较复杂，这样效率就比较低，而利用hashCode()进行对比，则只要生成一个hash值进行比较就可以了，效率很高，那么hashCode()既然效率这么高为什么还要equal()呢？因为hashCode()并不是完全可靠，有时候不同的对象他们生成的hashcode也会一样（生成hash值得公式可能存在的问题），所以hashCode()只能说是大部分时候可靠，并不是绝对可靠，所以我们可以得出：
+因为重写的equal里一般比较的比较全面比较复杂，这样效率就比较低，而利用hashCode()进行对比，则只要生成一个hash值进行比较就可以了，效率很高，那么hashCode()既然效率这么高为什么还要equal()呢？因为hashCode()并不是完全可靠，有时候不同的对象他们生成的hashcode也会一样（生成hash值得公式可能存在的问题），此时产生冲突，需要通过 equal 方法解决，所以hashCode()只能说是大部分时候可靠，并不是绝对可靠，所以我们可以得出：
 1. equal()相等的两个对象他们的hashCode()肯定相等，也就是用equal()对比是绝对可靠的。
 2. hashCode()相等的两个对象他们的equal()不一定相等，也就是hashCode()不是绝对可靠的。
+
+
 
 ### 2、说一下map的分类和常见的情况
 Java为数据结构中的映射定义了一个接口java.util.Map，此接口主要有四个常用的实现类，分别是HashMap、Hashtable、LinkedHashMap和TreeMap

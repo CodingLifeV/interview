@@ -38,6 +38,8 @@
   - [3. 底层原理](#3-底层原理)
     - [1、java 内存模型](#1java-内存模型)
     - [2、synchronized 底层原理](#2synchronized-底层原理)
+    - [3、java 对象头](#3java-对象头)
+    - [4、Monitor](#4monitor)
 
 <!-- /TOC -->
 
@@ -609,3 +611,39 @@ synchronized 有两种使用形式，同步方法和同步代码块，对于同�
 同步代码块使用 `monitorenter` 和 `monitorexit`两个指令实现。
 
 可以把执行 `monitorenter` 指令理解为加锁，执行 `monitorexit` 理解为释放锁。 每个对象维护着一个记录着被锁次数的计数器。未被锁定的对象的该计数器为 0，当一个线程获得锁（执行 monitorenter）后，该计数器自增变为 1 ，当同一个线程再次获得该对象的锁的时候，计数器再次自增。当同一个线程释放锁（执行 monitorexit 指令）的时候，计数器再自减。当计数器为 0 的时候，锁将被释放，其他线程便可以获得锁。
+
+### 3、java 对象头
+
+[深入理解多线程（三）—— Java 的对象头](https://www.hollischuang.com/archives/1953)
+
+在 HotSpot 虚拟机中，使用 oop-klass 模型来表示对象。每一个 Java 类，在被 JVM 加载的时候，JVM 会给这个类创建一个 `instanceKlass`，保存在方法区，用来在 JVM 层表示该 Java 类。
+
+当我们在 Java 代码中，使用 new 创建一个对象的时候，JVM 会创建一个 `instanceOopDesc` 对象，这个对象中包含了两部分信息，对象头以及元数据。对象头中有一些运行时数据，其中就包括和多线程相关的锁的信息。元数据其实维护的是指针，指向的是对象所属的类的 `instanceKlass`。
+
+对象头信息是与对象自身定义的数据无关的额外存储成本，考虑到虚拟机的空间效率，Mark Word 被设计成一个非固定的数据结构以便在极小的空间内存储尽量多的信息，它会根据对象的状态复用自己的存储空间。
+
+![image](https://www.hollischuang.com/wp-content/uploads/2018/01/ObjectHead.png)
+
+可以看出，对象头中主要包含了 GC 分代年龄、锁状态标记、哈希码、epoch 等信息。
+
+从上图中可以看出，对象的状态一共有五种，分别是无锁态、轻量级锁、重量级锁、GC 标记和偏向锁，在 32 位的虚拟机中有两个 Bits 是用来存储锁的标记位的，第五种状态额外依赖 1Bit 的空间，使用 0 和 1 来区分来表示，额外的标记为用来区分无锁和偏向锁状态。
+
+### 4、Monitor
+
+> 无论是同步方法还是同步代码块，无论是 `ACC_SYNCHRONIZED` 还是 `monitorenter`、`monitorexit` 都是基于 `Monitor` 实现的
+
+Monitor 其实是一种同步工具，也可以说是一种同步机制，它通常被描述为一个对象，基于 c++ 实现的，表示为一个类 objectMonitor 对象，objectMonitor 中几个关键属性：
+
+- `_owner`：指向持有 Monitor 对象的线程
+- `_WaitSet`：存放处于 wait 状态的线程队列
+- `_recursions`：锁的重入次数
+- `count`：用来记录该线程获取锁的次数
+- `_EntryList`：存放处于等待锁 block 状态的线程队列
+
+当多个线程同时访问一段同步代码时，首先会进入`_EntryList`队列中，当某个线程获取到对象的 monitor 后进入`_Owner`区域并把 monitor 中的`_owner`变量设置为当前线程，同时 monitor 中的计数器`_count`加 1。即获得对象锁。
+
+若持有 monitor 的线程调用 wait()方法，将释放当前持有的 monitor，`_owner`变量恢复为 null，`_count`自减 1，同时该线程进入`_WaitSet`集合中等待被唤醒。若当前线程执行完毕也将释放 monitor(锁)并复位变量的值，以便其他线程进入获取 monitor(锁)
+
+![image](https://www.hollischuang.com/wp-content/uploads/2017/12/monitor.png)
+
+ObjectMonitor 类中提供了几个方法，如`enter`、`exit`、`wait`、`notify`、`notifyAll`等。`sychronized` 加锁的时候，会调用 objectMonitor 的 `enter` 方法，解锁的时候会调用 `exit` 方法。

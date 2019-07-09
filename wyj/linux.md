@@ -51,11 +51,13 @@
 
   - `nano file`：对 file 文件进行文本编辑，如果想搜索文件内容，按`ctrl + W` 输入内容后回车即可
   - `vi file`：对 file 文件进行文本编辑，如果文件不存在，则创建一个 file 文件并对其编辑
+  - `vim file`：对 file 文件进行文本编辑，在 vi 的基础上改进和增加了很多特性
 
 * 解压缩
   - `tar -xvzf file.tar.gz`：解压文件
   - `tar -tzf file.tar.gz`：列出压缩文件列表
   - `tar -czf file.tar.gz /test1 /test2`：压缩文件
+  - `unzip www.war -d <目录>`：解压一个 war 包并放在相应目录中
 
 ### 2. 文件和目录的权限
 
@@ -183,4 +185,8 @@
   - `apt-get install xxx`：安装 xxx 安装包
   - `sudo apt-get remove xxx`：卸载 xxx 安装包
   - `apt-get update`：将所有包的来源更新
+- `wget`
+  - `wget URL`：把 URL 中指定的文件下载到当前目录
+  - `wget URL -O file_name`：指定下载目录
+  - `wget -c URL`：重新启动下载中断的文件
 - 添加软件源

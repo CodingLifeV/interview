@@ -19,6 +19,11 @@
     - [4. 找出所有员工当前(to_date='9999-01-01')具体的薪水 salary 情况，对于相同的薪水只显示一次,并按照逆序显示](#4-找出所有员工当前to_date9999-01-01具体的薪水-salary-情况对于相同的薪水只显示一次并按照逆序显示)
       - [order by](#order-by)
       - [`group by` 代替 `distinct`](#group-by-代替-distinct)
+    - [5. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。](#5-从-titles-表获取按照-title-进行分组每组个数大于等于-2给出-title-以及对应的数目-t)
+      - [`count`、`group by`和 `having` 搭配使用](#countgroup-by和-having-搭配使用)
+    - [6. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。注意对于重复的 emp_no 进行忽略。](#6-从-titles-表获取按照-title-进行分组每组个数大于等于-2给出-title-以及对应的数目-t注意对于重复的-emp_no-进行忽略)
+      - [`count` 内部搭配 `distinct` 使用](#count-内部搭配-distinct-使用)
+    - [7. 查找 employees 表所有 emp_no 为奇数，且 last_name 不为 Mary 的员工信息，并按照 hire_date 逆序排列](#7-查找-employees-表所有-emp_no-为奇数且-last_name-不为-mary-的员工信息并按照-hire_date-逆序排列)
   - [二、多表操作](#二多表操作)
     - [1. 查找各个部门当前(to_date='9999-01-01')领导当前薪水详情以及其对应部门编号](#1-查找各个部门当前to_date9999-01-01领导当前薪水详情以及其对应部门编号)
       - [`join`](#join)
@@ -37,6 +42,9 @@
     - [7. 获取所有员工当前的 manager，如果当前的 manager 是自己的话结果不显示，当前表示 to_date='9999-01-01'。结果第一列给出当前员工的 emp_no,第二列给出其 manager 对应的 manager_no](#7-获取所有员工当前的-manager如果当前的-manager-是自己的话结果不显示当前表示-to_date9999-01-01结果第一列给出当前员工的-emp_no第二列给出其-manager-对应的-manager_no)
       - [`<>`](#)
       - [inner join](#inner-join-2)
+    - [8. 获取所有部门中当前员工薪水最高的相关信息，给出 dept_no, emp_no 以及其对应的 salary](#8-获取所有部门中当前员工薪水最高的相关信息给出-dept_no-emp_no-以及其对应的-salary)
+      - [inner join](#inner-join-3)
+      - [group by](#group-by)
 
 <!-- /TOC -->
 
@@ -127,6 +135,34 @@ from salaries s
 where s.to_date = '9999-01-01'
 group by s.salary
 order by s.salary desc
+```
+
+### 5. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。
+
+#### `count`、`group by`和 `having` 搭配使用
+
+```sql
+select title, count(title) as t from titles
+group by title
+having t >= 2
+```
+
+### 6. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。注意对于重复的 emp_no 进行忽略。
+
+#### `count` 内部搭配 `distinct` 使用
+
+```sql
+select distinct title, count(distinct emp_no) as t
+from titles
+group by title
+having t >= 2
+```
+
+### 7. 查找 employees 表所有 emp_no 为奇数，且 last_name 不为 Mary 的员工信息，并按照 hire_date 逆序排列
+
+```sql
+
+
 ```
 
 ## 二、多表操作
@@ -248,4 +284,20 @@ on e.dept_no = m.dept_no
 where e.to_date = '9999-01-01'
 and m.to_date = '9999-01-01'
 and e.emp_no <> m.emp_no
+```
+
+### 8. 获取所有部门中当前员工薪水最高的相关信息，给出 dept_no, emp_no 以及其对应的 salary
+
+#### inner join
+
+#### group by
+
+```sql
+select d.dept_no, s.emp_no, max(s.salary) as salary
+from salaries as s
+inner join dept_emp as d
+on d.emp_no = s.emp_no
+where d.to_date = '9999-01-01'
+and s.to_date = '9999-01-01'
+group by d.dept_no
 ```

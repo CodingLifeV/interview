@@ -21,6 +21,8 @@
 
 ## [设计模式](https://github.com/wyjPro/interview/blob/master/wyj/designpattern.md)
 
+## [redis、分布式](https://github.com/wyjPro/interview/blob/master/wyj/redis.md)
+
 ## [Git操作](https://github.com/wyjPro/interview/blob/master/wyj/git.md)
 
 ## [linux基本操作](https://github.com/wyjPro/interview/blob/master/wyj/linux.md)
