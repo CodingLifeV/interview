@@ -484,9 +484,10 @@ concurrenthashmap是hashmap的多线程版本
 * 实现已经摒弃了Segment分段锁的数据结构，而是直接用Node数组+链表+红黑树的数据结构来实现，并发控制使用Synchronized（写）和CAS（读）来操作，从而实现了对每一行数据进行加锁，进一步减少并发冲突的概率。
   ![](https://upload-images.jianshu.io/upload_images/2184951-3d2365ca5996274f.png?imageMogr2/auto-orient/)
 
-* Node类成员变量Node的元素val和指针next都标注volatile，目的是在多线程环境下线程A修改结点的val或者新增节点的时候是对线程B可见的
+* Node类成员变量Node的元素val和指针next都标注volatile，目的是在多线程环境下线程A修改结点的val或者新增节点的时候是对线程B可见的。因此，get 操作不需要加锁是因为 Node 的成员 val 是用 volatile 修饰的和数组用 volatile 修饰没有关系。
 * ConcurrentHashMap有成员变量transient volatile Node<K,V>[] table，目的是为了使Node数组在扩容的时候对其他线程具有可见性而加的volatile。
 * ConcurrentHashMap的初始化其实是一个空实现，并没有做任何事，初始化操作并不是在构造函数实现的，而是在put操作中实现。
+* 1.8 中 get 操作不需要加锁，这也是它比其它并发集合比如 hashtable、用 Colletions.synchronizedMap() 包装的 hashmap 安全且效率高的原因
 
 * 与 jdk1.7 区别：
   1. 数据结构不同
