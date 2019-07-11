@@ -61,12 +61,15 @@
     - [跳 n 级台阶总共的跳法](#跳-n-级台阶总共的跳法)
     - [用 2 _ 1 的小矩形不重叠的覆盖 2 _ n 的大矩形](#用-2-_-1-的小矩形不重叠的覆盖-2-_-n-的大矩形)
     - [变态跳台阶](#变态跳台阶-1)
+    - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字)
   - [九、字符串](#九字符串)
     - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串-1)
     - [字符串中第一次只出现一次的字符位置](#字符串中第一次只出现一次的字符位置)
     - [把数字翻译成字符串](#把数字翻译成字符串)
     - [不用额外的空间，翻转单词顺序列](#不用额外的空间翻转单词顺序列)
     - [左旋转字符串](#左旋转字符串)
+    - [把字符串转成整数](#把字符串转成整数)
+    - [替换空格](#替换空格)
   - [十、数字](#十数字)
     - [二进制中 1 的个数](#二进制中-1-的个数)
     - [数值的整数次方](#数值的整数次方)
@@ -75,6 +78,7 @@
     - [字符流中第一个不重复的字符](#字符流中第一个不重复的字符)
     - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5-1)
     - [圆圈中最后剩下的数](#圆圈中最后剩下的数)
+    - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字-1)
 
 <!-- /TOC -->
 
@@ -1859,6 +1863,22 @@ public class Main{
 }
 ```
 
+### 求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字
+
+**思想：**
+
+递归
+
+```java
+public class Main {
+    public int getSum(int N) {
+        int sum = N;
+        boolean b = (N > 0) && (sum += getSum(n - 1) > 0);
+        return sum;
+    }
+}
+```
+
 ## 九、字符串
 
 ### 最长不含重复字符的子字符串
@@ -2067,6 +2087,35 @@ public class Main {
     }
 }
 ```
+
+### 把字符串转成整数
+
+```java
+public class Main {
+    public int getStringToInteger(String str) {
+        if(str.length == 0 || str ==null) {
+            return 0;
+        }
+
+        boolean isNegtive = str.charAt(0) == '-';
+        int ret = 0;
+
+        for(int i = 0; i < str.length; i++) {
+            char c = str.charAt(i);
+            if(i == '0' && (c == '+' || c == '-')) {
+                continue;
+            }
+            if(c < '0' || c > '9') {
+                return 0;
+            }
+            ret += ret * 10 + (c - '0');
+        }
+    }
+}
+
+```
+
+### 替换空格
 
 ## 十、数字
 
@@ -2311,6 +2360,22 @@ public class Test {
             ret.remove(idx);
         }
         return ret.get(0);
+    }
+}
+```
+
+### 求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字
+
+**思想：**
+
+递归
+
+```java
+public class Main {
+    public int getSum(int N) {
+        int sum = N;
+        boolean b = (N > 0) && (sum += getSum(n - 1) > 0);
+        return sum;
     }
 }
 ```
