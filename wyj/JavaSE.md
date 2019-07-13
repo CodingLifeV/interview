@@ -882,8 +882,28 @@ JAVA语言编译之后会生成一个.class文件，反射就是通过字节码�
 ### 1、怎么打印日志？
 ### 2、运行时异常与一般异常有何异同？
 ### 3、error和exception有什么区别?
+
+
 ### 4、给我一个你最常见到的runtime exception
+
+* `Java.lang.NullPointerException`：空指针异常，应用程序试图在需要对象的地方使用 null 时
+* `Java.lang.IndexOutOfBoundsException`：索引超出异常
+* `ClassCastException`：类转换异常，试图将对象强制转换为不是实例的子类时
+* `ArithmeticException`：算术异常，例如：`int a = 5 / 0;`
+
 ### 5、Java中的异常处理机制的简单原理和应用。
 ### 6、java中有几种类型的流？JDK为每种类型的流提供了一些抽象类以供继承，请说出他们分别是哪些类？
+
+Java中的流分为两种，一种是字节流，另一种是字符流，分别由四个抽象类来表示（每种流包括输入和输出两种所以一共四个）:InputStream，OutputStream，InputStreamReader，OutputStreamWriter。二者区别：
+
+1. 字节流可用于任何类型的对象，包括二进制对象，而字符流只能处理字符或者字符串；
+2. 字节流提供了处理任何类型的IO操作的功能，但它不能直接处理Unicode字符，而字符流就可以。
+
 ### 7、什么是java序列化，如何实现java序列化？
+
+序列化指把 Java 对象转换为字节序列的过程；反序列化指把字节序列恢复为Java对象的过程。
+
+* java.io.ObjectOutputStream 代表对象输出流，它的 writeObject(Object obj) 方法可对参数指定的 obj 对象进行序列化，把得到的字节序列写到一个目标输出流中。
+* java.io.ObjectInputStream 代表对象输入流，它的 readObject() 方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。
+
 ### 8、运行时异常与受检异常有什么区别？
