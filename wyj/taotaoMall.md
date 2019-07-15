@@ -1,31 +1,35 @@
 <!-- TOC -->
 
 - [项目介绍](#项目介绍)
-  - [系统功能](#系统功能)
-  - [项目架构](#项目架构)
+    - [系统功能](#系统功能)
+    - [项目架构](#项目架构)
 - [项目搭建](#项目搭建)
-  - [使用 Maven 的好处](#使用-maven-的好处)
-  - [工程搭建](#工程搭建)
+    - [使用 Maven 的好处](#使用-maven-的好处)
+    - [工程搭建](#工程搭建)
 - [系统功能分析](#系统功能分析)
-  - [首页轮播图功能分析](#首页轮播图功能分析)
-  - [首页轮播图数据库表结构分析](#首页轮播图数据库表结构分析)
+    - [首页轮播图功能分析](#首页轮播图功能分析)
+    - [首页轮播图数据库表结构分析](#首页轮播图数据库表结构分析)
 - [redis 项目相关](#redis-项目相关)
-  - [redis 集群搭建](#redis-集群搭建)
-  - [Jedis 的使用](#jedis-的使用)
+    - [redis 集群搭建](#redis-集群搭建)
+    - [Jedis 的使用](#jedis-的使用)
 - [Solr 集群](#solr-集群)
-  - [solr 服务搭建](#solr-服务搭建)
+    - [solr 服务搭建](#solr-服务搭建)
 - [Zookeeper 集群](#zookeeper-集群)
-  - [zookeeper 集群搭建](#zookeeper-集群搭建)
+    - [zookeeper 集群搭建](#zookeeper-集群搭建)
 - [ActiveMQ 消息队列](#activemq-消息队列)
-  - [概念](#概念)
-  - [消息模型](#消息模型)
-  - [使用场景](#使用场景)
-  - [可靠性](#可靠性)
+    - [概念](#概念)
+    - [消息模型](#消息模型)
+    - [使用场景](#使用场景)
+    - [可靠性](#可靠性)
 - [ActiveMQ 消息队列项目相关](#activemq-消息队列项目相关)
-  - [环境搭建](#环境搭建)
-  - [代码实例](#代码实例)
-    - [生产者](#生产者)
-    - [消费者](#消费者)
+    - [环境搭建](#环境搭建)
+    - [代码实例](#代码实例)
+        - [点对点生产者](#点对点生产者)
+        - [点对点消费者](#点对点消费者)
+        - [发布/订阅生产者消费者](#发布订阅生产者消费者)
+    - [ActiveMQ 整合 Spring](#activemq-整合-spring)
+    - [ActiveMQ 整合到项目](#activemq-整合到项目)
+        - [生产者 Producer](#生产者-producer)
 
 <!-- /TOC -->
 
@@ -698,7 +702,14 @@ ActiveMQ 是 Apache 软件基金下的一个开源软件，它遵循 JMS1.1 规�
 发送者将消息发送给消息队列之后，不需要同步等待消息接收者处理完毕，而是立即返回进行其它操作。消息接收者从消息队列中订阅消息之后异步处理。
 
 应用场景：
-注册流程中通常需要发送验证邮件来确保注册用户身份的合法性，可以使用消息队列使发送验证邮件的操作异步处理，用户在填写完注册信息之后就可以完成注册，而将发送验证邮件这一消息发送到消息队列中。
+新用户注册之后发放100积分，180元新手大礼包，激活会员卡  
+* 传统方式：
+  
+  ![image](https://segmentfault.com/img/bVbamXP?w=639&h=101)
+
+* 使用消息队列：
+  
+  ![image](https://segmentfault.com/img/bVbamZn?w=674&h=249)
 
 只有在业务流程允许异步处理的情况下才能这么做，例如上面的注册流程中，如果要求用户对验证邮件进行点击之后才能完成注册的话，就不能再使用消息队列。
 
@@ -754,7 +765,20 @@ ActiveMQ 是 Apache 软件基金下的一个开源软件，它遵循 JMS1.1 规�
 
 ## 代码实例
 
-### 生产者
+### 点对点生产者
+
+主要流程：
+1. 创建 ConnectionFactory 对象，需要指定服务端 ip 及端口号
+2. 使用 ConnectionFactory 对象创建一个 Connection 对象
+3. 开启连接
+4. 创建一个 session 对象，提供发送消息等方法
+5. 使用 Session 对象创建一个发送消息的目的地（Destination）对象
+   * Queue：点对点
+   * Topic：发布/订阅
+6. 使用 Session 对象创建一个生产者 Producer 对象
+7. 构建消息的内容
+8. 发送消息
+9. 关闭资源
 
 代码如下：
 
@@ -793,7 +817,17 @@ public class QueueProducer {
 
 ```
 
-### 消费者
+### 点对点消费者
+
+主要流程：
+1. 创建连接工厂
+2. 创建连接
+3. 开启连接
+4. 创建 Session
+5. 创建接收消息的一个目的地
+6. 创建消费者
+7. 接受消息
+8. 关闭资源
 
 代码如下：
 
@@ -853,5 +887,213 @@ public class QueueCustomer {
 		connection.close();
 	}
 }
+```
+
+### 发布/订阅生产者消费者
+
+发布/订阅模式代码实现类似点对点模式，不同的是：
+1. 发布/订阅模式创建目的地的时候使用类 `Topic`
+   ```java
+	Topic createTopic = session.createTopic("topic-test");
+   ```
+2. Queue 默认是存在于 MQ 的服务器中的，发送消息之后，消费者随时取。但是一定是一个消费者取，消费完消息也就没有了。Topic 默认是不存在于 MQ 服务器中的，一旦发送之后，如果没有订阅，消息则丢失。
+
+## ActiveMQ 整合 Spring
+
+整合 Spring 主要是将消息端和发送端中的一些对象配置到 Spring 配置文件中，创建一个 Spring 配置文件 `applicationContext-activemq.xml`，主要需要配置的内容有：
+* 连接工厂 SingleConnectionFactory
+* 接收和发送消息时使用的模板对象类 JmsTemplate
+* 接收和发送消息的目的地：ActiveMQTopic（发布/订阅）或者ActiveMQQueue（一对一）
+* 监听器，用于消费者接收消息 MyMessageListener
+* 监听容器，用于启动线程做监听
+
+配置文件内容如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ...//省略">
+	
+	<bean id="targetConnection" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://192.168.25.130:61616"></property>
+	</bean>
+	<!-- 通用的connectionfacotry 指定真正使用的连接工厂 -->
+	<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="targetConnection"></property>
+	</bean>
+	<!-- 接收和发送消息时使用的类 模板对象-->
+	<bean class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+	</bean>
+	<!-- <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg name="name" value="item-change-queue"></constructor-arg>
+	</bean> -->
+	<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg name="name" value="item-change-topic"></constructor-arg>
+	</bean>
+	
+	<!-- 监听器 -->
+	<bean id="myMessageListener" class="com.itheima.activemq.spring.MyMessageListener"></bean>
+	<!-- 监听容器，作用：启动线程做监听 -->
+	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<property name="destination" ref="topicDestination"></property>
+		<property name="messageListener" ref="myMessageListener"></property>
+	</bean>
+	
+	<bean id="myMessageListener2" class="com.itheima.activemq.spring.MyMessageListener"></bean>
+	<!-- 监听容器，作用：启动线程做监听 -->
+	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<property name="destination" ref="topicDestination"></property>
+		<property name="messageListener" ref="myMessageListener2"></property>
+	</bean>
+</beans>
 
 ```
+
+此时生产者需要实现简单的代码即可，主要流程：
+
+1. 初始化 Spring 容器
+2. 获取 JmsTemplate 对象
+3. 发送消息
+
+
+```java
+public class Producer {
+	@Test
+	public void send() throws Exception{
+		//1.初始化spring容器
+		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:applicationContext-activemq.xml");
+		//2.获取到 Jmstemplate 的对象
+		JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
+		//3.获取destination
+		Destination destination = (Destination) context.getBean(Destination.class);
+		//4.发送消息
+		jmsTemplate.send(destination, new MessageCreator() {
+			
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				return session.createTextMessage("通过spring发送的消息123");
+			}
+		});
+		Thread.sleep(100000);
+	}
+}
+```
+消费者监听容器也只需要实现 MessageListener 类并重写 `onMessage()` 方法即可：
+
+```java
+public class MyMessageListener implements MessageListener {
+
+	@Override
+	public void onMessage(Message message) {
+		//获取消息
+		if(message instanceof TextMessage){
+			TextMessage textMessage = (TextMessage)message;
+			String text;
+			try {
+				text = textMessage.getText();
+				System.out.println(text);
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+}
+```
+
+## ActiveMQ 整合到项目
+
+功能分析：
+* 当添加一个商品之后，需要发送一个 TextMessage，该 TextMessage 只需包含一个商品 id 即可。在 taotao-manager 的子工程 taotao-manager-service 工程中发送消息。
+* 接收端收到商品 id 通过数据库查询到商品的信息（搜索的结果商品的信息）再同步索引库。在 taotao-search 的子工程 taotao-search-service 工程中接收消息。
+  
+### 生产者 Producer
+
+**applicationContext-activemq.xml 配置内容**
+
+* 连接工厂 SingleConnectionFactory
+* 接收和发送消息时使用的模板对象类 JmsTemplate
+* 接收和发送消息的目的地 ActiveMQTopic（发布/订阅）
+
+```xml
+	<bean id="targetConnection" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://192.168.25.130:61616"></property>
+	</bean>
+	<!-- 通用的connectionfacotry 指定真正使用的连接工厂 -->
+	<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="targetConnection"></property>
+	</bean>
+	<!-- 接收和发送消息时使用的类 -->
+	<bean class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+	</bean>
+	<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg name="name" value="item-change-topic"></constructor-arg>
+	</bean> 
+```
+
+**发送消息**
+
+消息的发送添加在 taotao-manager-service 工程中 ItemServiceImpl 类的 `saveItem()` 方法。
+* ItemServiceImpl 类：商品服务的实现类。商品服务的实现类主要实现了 ItemService 的以下方法：
+  ```java
+	public interface ItemService {
+	
+        //根据当前的页码和每页的行数进行分页查询
+		public EasyUIDataGridResult getItemList(Integer page,Integer rows);
+
+		//添加商品基本数据和描述数据	
+		public TaotaoResult saveItem(TbItem item,String desc);
+
+		//根据商品的id查询商品的数据
+		public TbItem  getItemById(Long itemId);
+		
+		//根据商品的id查询商品的描述
+		public TbItemDesc getItemDescById(Long itemId);
+	}
+  ```
+  为了消息发送
+* saveItem() 方法：用于把商品添加到数据中并发送添加的商品 Id 号到 ActiiveMQ 中，代码实现如下：
+  ```java
+	@Override
+	public TaotaoResult saveItem(TbItem item, String desc) {
+		// 生成商品的id
+		final long itemId = IDUtils.genItemId();
+		//补全item 的其他属性
+		item.setId(itemId);
+		item.setCreated(new Date());
+		// 1-正常，2-下架，3-删除',
+		item.setStatus((byte) 1);
+		item.setUpdated(item.getCreated());
+		// 插入到item表 商品的基本信息表
+		mapper.insertSelective(item);
+		//补全商品描述中的属性
+		TbItemDesc desc2 = new TbItemDesc();
+		desc2.setItemDesc(desc);
+		desc2.setItemId(itemId);
+		desc2.setCreated(item.getCreated());
+		desc2.setUpdated(item.getCreated());
+		// 4.插入商品描述数据
+		// 注入tbitemdesc的mapper
+		descmapper.insertSelective(desc2);
+
+		// 添加发送消息的业务逻辑
+		jmstemplate.send(destination, new MessageCreator() {
+			
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				//发送的消息
+				return session.createTextMessage(itemId+"");
+			}
+		});
+		// 5.返回taotaoresult
+		return TaotaoResult.ok();
+	}
+  ```
+  
+
+  
+
+
