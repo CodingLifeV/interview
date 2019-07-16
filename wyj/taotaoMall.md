@@ -30,6 +30,7 @@
     - [ActiveMQ 整合 Spring](#activemq-整合-spring)
     - [ActiveMQ 整合到项目](#activemq-整合到项目)
         - [生产者 Producer](#生产者-producer)
+        - [消费者 Consumer](#消费者-consumer)
 
 <!-- /TOC -->
 
@@ -1094,6 +1095,96 @@ public class MyMessageListener implements MessageListener {
   ```
   
 
-  
+### 消费者 Consumer
+
+在 taotao-search-service 中消费消息。需要加入 ActiveMQ 的依赖。
+
+功能分析：
+
+1. 接收消息，创建 MessageListener 接口的实现类
+
+**MessageListener 接口的实现类：**
+
+在 taotao-search-service 下创建一个类 ItemChangeMessageListener，实现了 MessageListener，用于消息的接收，接收的数据为新添加的商品的 `id` 号。实现接口的消息接收方法 `onMessage()`，该方法流程如下：
+
+1. 判断消息的类型是否为 TextMessage
+2. 如果是，获取商品的 id
+3. 通过商品的 id 查询数据，需要开发 Mapper，通过 id 查询商品搜索时的数据
+
+代码如下：
+
+```java
+public class ItemChangeListener implements MessageListener {	
+	
+	@Autowired
+	private SearchItemService searchItemService;
+
+	@Override
+	public void onMessage(Message message) {
+		try {
+			TextMessage textMessage = null;
+			Long itemId = null; 
+			//取商品id
+			if (message instanceof TextMessage) {
+				textMessage = (TextMessage) message;
+				itemId = Long.parseLong(textMessage.getText());
+			}
+			//向索引库添加文档
+            searchservice.updateItemById(itemId);						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+```
+
+
+**服务层：**
+
+服务层主要调用 dao 层方法 `updateSearchItemById(itemId)`，通过商品 id 来更新搜索商品信息。
+
+代码如下：
+
+```java
+@Service
+public class SearchServiceImpl implements SearchService {
+
+	@Override
+	public TaotaoResult updateSearchItemById(Long itemId) throws Exception {
+		return searchdao.updateSearchItemById(itemId);
+	}
+}
+
+```
+
+**Dao 层：**
+
+根据商品 id 查询商品信息。需要在 SearchItemMapper 接口中添加方法 `getSearchItemById(itemId)`，该方法通过商品的 id 来查询商品的数据。代码如下：
+
+```java
+public interface SearchItemMapper {
+	//查询所有的商品的数据
+	public  List<SearchItem> getSearchItemList();
+	
+	//根据商品的id查询商品的数据
+	public SearchItem getSearchItemById(Long itemId);
+}
+```
+
+Mapper 的映射 xml 文件 SearchItemMapper.xml 需要添加相对应的 select 语句：
+
+```sql
+<mapper namespace="com.taotao.search.mapper.SearchItemMapper" >
+ 	<select id="getSearchItemById" parameterType="long" resultType="com.taotao.common.pojo.SearchItem">
+ 		select a.id, a.title, a.image, a.price, a.sell_point, b.`name` as category_name, c.item_desc
+		from tb_item a, tb_item_cat b, tb_item_desc c
+		where a.cid = b.id
+		and a.id = c.item_id
+		and a.id = #{itemId}
+ 	</select>
+</mapper>
+```
+
+
 
 

@@ -21,6 +21,7 @@
     - [二叉查找树的第 K 个节点](#二叉查找树的第-k-个节点)
     - [二叉树的深度](#二叉树的深度)
     - [平衡二叉树](#平衡二叉树)
+    - [树中二个节点的最低公共祖先](#树中二个节点的最低公共祖先)
 - [排序](#排序)
     - [归并排序](#归并排序)
     - [快速排序](#快速排序)
@@ -696,6 +697,42 @@ public class Main{
         }
         return 1 + Math.max(l, r);
     }
+}
+```
+
+## 树中二个节点的最低公共祖先
+
+1. 二叉查找树
+
+```java
+public TreeNode getLowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if(root == null) {
+        return root;
+    }
+
+    if(root.val > p.val && root.val > q.val) {
+        return getLowestCommonAncestor(root.left, p, q);
+    }
+    if(root.val < p.val && root.val < q.val) {
+        return getLowestCommonAncestor(root.right, p, q);
+    }
+
+    return root;
+}
+```
+
+2. 普通二叉树
+
+```java
+public TreeNode getLowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if(root == null || p == null || q == null) {
+        return root;
+    }
+
+    TreeNode left  = getLowestCommonAncestor(root.left, p, q);
+    TreeNode right = getLowestCommonAncestor(root.right, p, q);
+
+    return root == null ? right : right == null ? left : root;
 }
 ```
 

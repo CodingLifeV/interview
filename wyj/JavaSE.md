@@ -1,100 +1,99 @@
 <!-- TOC -->
 
-- [javaSE](#javase)
-    - [1、Java基础](#1java基础)
-        - [1. 为什么重写equals还要重写hashcode](#1-为什么重写equals还要重写hashcode)
-        - [2、说一下map的分类和常见的情况](#2说一下map的分类和常见的情况)
-        - [3、Object若不重写hashCode()的话，hashCode()如何计算出来的？](#3object若不重写hashcode的话hashcode如何计算出来的)
-        - [4、==比较的是什么？](#4比较的是什么)
-        - [5、若对一个类不重写，它的equals()方法是如何比较的？](#5若对一个类不重写它的equals方法是如何比较的)
-        - [6、java8新特性](#6java8新特性)
-        - [7、说说Lamda表达式的优缺点。](#7说说lamda表达式的优缺点)
-        - [8、一个十进制的数在内存中是怎么存的？](#8一个十进制的数在内存中是怎么存的)
-        - [9、为啥有时会出现4.0-3.6=0.40000001这种现象？](#9为啥有时会出现40-36040000001这种现象)
-        - [10、Java支持的数据类型有哪些？什么是自动拆装箱？](#10java支持的数据类型有哪些什么是自动拆装箱)
-        - [11、什么是值传递和引用传递？](#11什么是值传递和引用传递)
-        - [12、数组(Array)和列表(ArrayList)有什么区别？什么时候应该使用Array而不是ArrayList？](#12数组array和列表arraylist有什么区别什么时候应该使用array而不是arraylist)
-        - [13、你了解大O符号(big-Onotation)么？你能给出不同数据结构的例子么？](#13你了解大o符号big-onotation么你能给出不同数据结构的例子么)
-        - [14、String是最基本的数据类型吗?](#14string是最基本的数据类型吗)
-        - [15、int 和 Integer 有什么区别？](#15int-和-integer-有什么区别)
-        - [16、String、StringBuffer、StringBuffer](#16stringstringbufferstringbuffer)
-        - [17、我们在web应用开发过程中经常遇到输出某种编码的字符，如iso8859-1等，如何输出一个某种编码的字符串？](#17我们在web应用开发过程中经常遇到输出某种编码的字符如iso8859-1等如何输出一个某种编码的字符串)
-        - [18、&和&&的区别？](#18和的区别)
-        - [19、在Java中，如何跳出当前的多重嵌套循环？](#19在java中如何跳出当前的多重嵌套循环)
-        - [20、你能比较一下Java和JavaSciprt吗？](#20你能比较一下java和javasciprt吗)
-        - [21、正则表达式](#21正则表达式)
-        - [22、请你说说Java和PHP的区别？](#22请你说说java和php的区别)
-    - [2、关键字](#2关键字)
-        - [1、介绍一下Syncronized锁，如果用这个关键字修饰一个静态方法，锁住了什么？如果修饰成员方法，锁住了什么？](#1介绍一下syncronized锁如果用这个关键字修饰一个静态方法锁住了什么如果修饰成员方法锁住了什么)
-        - [2、介绍一下volatile？](#2介绍一下volatile)
-        - [3、锁有了解嘛，说一下Synchronized和lock](#3锁有了解嘛说一下synchronized和lock)
-        - [4、讲一讲Java里面的final关键字怎么用的？](#4讲一讲java里面的final关键字怎么用的)
-    - [3、面向对象](#3面向对象)
-        - [1、wait方法底层原理](#1wait方法底层原理)
-        - [2、Java有哪些特性，举个多态的例子](#2java有哪些特性举个多态的例子)
-        - [3、String为啥不可变？String能继承吗？](#3string为啥不可变string能继承吗)
-        - [4、类和对象的区别](#4类和对象的区别)
-        - [5、请列举你所知道的Object类的方法](#5请列举你所知道的object类的方法)
-        - [6、重载(Overload)和重写(Override)的区别？相同参数不同返回值能重载吗？Overload的方法是否可以改变返回值的类型](#6重载overload和重写override的区别相同参数不同返回值能重载吗overload的方法是否可以改变返回值的类型)
-        - [7、”static”关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？](#7static关键字是什么意思java中是否可以覆盖override一个private或者是static的方法)
-        - [8、静态变量存在哪?](#8静态变量存在哪)
-        - [9、讲讲什么是泛型？](#9讲讲什么是泛型)
-        - [10、解释extends 和super 泛型限定符-上界不存下界不取](#10解释extends-和super-泛型限定符-上界不存下界不取)
-        - [11、是否可以在static环境中访问非static变量？](#11是否可以在static环境中访问非static变量)
-        - [12、谈谈如何通过反射创建对象？](#12谈谈如何通过反射创建对象)
-        - [13、Java支持多继承么？](#13java支持多继承么)
-        - [14、接口和抽象类的区别是什么？](#14接口和抽象类的区别是什么)
-        - [15、Comparable和Comparator接口是干什么的？列出它们的区别](#15comparable和comparator接口是干什么的列出它们的区别)
-        - [16、面向对象的特征有哪些方面](#16面向对象的特征有哪些方面)
-        - [17、final, finally, finalize的区别](#17final-finally-finalize的区别)
-        - [18、Static Nested Class（嵌套类） 和 Inner Class（内部类）的不同](#18static-nested-class嵌套类-和-inner-class内部类的不同)
-        - [19、当一个对象被当作参数传递到一个方法后，此方法可改变这个对象的属性，并可返回变化后的结果，那么这里到底是值传递还是引用传递?](#19当一个对象被当作参数传递到一个方法后此方法可改变这个对象的属性并可返回变化后的结果那么这里到底是值传递还是引用传递)
-        - [20、Java的接口和C++的虚类的相同和不同处。](#20java的接口和c的虚类的相同和不同处)
-        - [21、JAVA语言如何进行异常处理，关键字：throws,throw,try,catch,finally分别代表什么意义？在try块中可以抛出异常吗？](#21java语言如何进行异常处理关键字throwsthrowtrycatchfinally分别代表什么意义在try块中可以抛出异常吗)
-        - [22、内部类可以引用他包含类的成员吗？有没有什么限制？](#22内部类可以引用他包含类的成员吗有没有什么限制)
-        - [23、两个对象值相同(x.equals(y) == true)，但却可有不同的hash code说法是否正确？](#23两个对象值相同xequalsy--true但却可有不同的hash-code说法是否正确)
-        - [24、如何通过反射获取和设置对象私有字段的值？](#24如何通过反射获取和设置对象私有字段的值)
-        - [25、谈一下面向对象的"六原则一法则"](#25谈一下面向对象的六原则一法则)
-        - [27、请问Query接口的list方法和iterate方法有什么区别？](#27请问query接口的list方法和iterate方法有什么区别)
-        - [28、Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？](#28java中什么是构造函数什么是构造函数重载什么是复制构造函数)
-    - [4、集合](#4集合)
-        - [1、ConcurrentHashMap？ConcurrentSkipListMap？二者的区别](#1concurrenthashmapconcurrentskiplistmap二者的区别)
-        - [2、hashMap？](#2hashmap)
-        - [3、如果hashMap的key是一个自定义的类，怎么办？](#3如果hashmap的key是一个自定义的类怎么办)
-        - [4、ArrayList和LinkedList的区别，如果一直在list的尾部添加元素，用哪个效率高？](#4arraylist和linkedlist的区别如果一直在list的尾部添加元素用哪个效率高)
-        - [5、TreeMap底层，红黑树原理？](#5treemap底层红黑树原理)
-        - [6、ArrayList是否会越界？](#6arraylist是否会越界)
-        - [7、Java集合类框架的基本接口有哪些？](#7java集合类框架的基本接口有哪些)
-        - [8、为什么集合类没有实现Cloneable和Serializable接口？](#8为什么集合类没有实现cloneable和serializable接口)
-        - [9、什么是迭代器？](#9什么是迭代器)
-        - [10、Iterator和ListIterator的区别是什么？](#10iterator和listiterator的区别是什么)
-        - [11、快速失败(fail-fast)和安全失败(fail-safe)的区别是什么？](#11快速失败fail-fast和安全失败fail-safe的区别是什么)
-        - [12、HashMap和Hashtable有什么区别？](#12hashmap和hashtable有什么区别)
-        - [13、ArrayList和LinkedList有什么区别？](#13arraylist和linkedlist有什么区别)
-        - [14、ArrayList,Vector,LinkedList的存储性能和特性是什么？](#14arraylistvectorlinkedlist的存储性能和特性是什么)
-        - [15、Collection 和 Collections的区别](#15collection-和-collections的区别)
-        - [16、List、Map、Set三个接口存取元素时，各有什么特点？](#16listmapset三个接口存取元素时各有什么特点)
-    - [5、JDK](#5jdk)
-        - [1、Java中的LongAdder和AtomicLong的区别](#1java中的longadder和atomiclong的区别)
-        - [2、JDK和JRE的区别是什么？](#2jdk和jre的区别是什么)
-        - [3、java的跨平台](#3java的跨平台)
-        - [4、机器码和字节码的区别](#4机器码和字节码的区别)
-    - [6、反射](#6反射)
-        - [1、反射的实现与作用](#1反射的实现与作用)
-    - [7、IO和NIO、AIO](#7io和nioaio)
-        - [1、怎么打印日志？](#1怎么打印日志)
-        - [2、运行时异常与一般异常有何异同？](#2运行时异常与一般异常有何异同)
-        - [3、error和exception有什么区别?](#3error和exception有什么区别)
-        - [4、给我一个你最常见到的runtime exception](#4给我一个你最常见到的runtime-exception)
-        - [5、Java中的异常处理机制的简单原理和应用。](#5java中的异常处理机制的简单原理和应用)
-        - [6、java中有几种类型的流？JDK为每种类型的流提供了一些抽象类以供继承，请说出他们分别是哪些类？](#6java中有几种类型的流jdk为每种类型的流提供了一些抽象类以供继承请说出他们分别是哪些类)
-        - [7、什么是java序列化，如何实现java序列化？](#7什么是java序列化如何实现java序列化)
-        - [8、运行时异常与受检异常有什么区别？](#8运行时异常与受检异常有什么区别)
+- [Java基础](#java基础)
+    - [为什么重写equals还要重写hashcode](#为什么重写equals还要重写hashcode)
+    - [说一下map的分类和常见的情况](#说一下map的分类和常见的情况)
+    - [Object若不重写hashCode()的话，hashCode()如何计算出来的？](#object若不重写hashcode的话hashcode如何计算出来的)
+    - [==比较的是什么？](#比较的是什么)
+    - [若对一个类不重写，它的equals()方法是如何比较的？](#若对一个类不重写它的equals方法是如何比较的)
+    - [java8新特性](#java8新特性)
+    - [说说Lamda表达式的优缺点。](#说说lamda表达式的优缺点)
+    - [一个十进制的数在内存中是怎么存的？](#一个十进制的数在内存中是怎么存的)
+    - [为啥有时会出现4.0-3.6=0.40000001这种现象？](#为啥有时会出现40-36040000001这种现象)
+    - [Java支持的数据类型有哪些？什么是自动拆装箱？](#java支持的数据类型有哪些什么是自动拆装箱)
+    - [什么是值传递和引用传递？](#什么是值传递和引用传递)
+    - [数组(Array)和列表(ArrayList)有什么区别？什么时候应该使用Array而不是ArrayList？](#数组array和列表arraylist有什么区别什么时候应该使用array而不是arraylist)
+    - [你了解大O符号(big-Onotation)么？你能给出不同数据结构的例子么？](#你了解大o符号big-onotation么你能给出不同数据结构的例子么)
+    - [String是最基本的数据类型吗?](#string是最基本的数据类型吗)
+    - [int 和 Integer 有什么区别？](#int-和-integer-有什么区别)
+    - [String、StringBuffer、StringBuffer，什么时候会走StringBuilder？](#stringstringbufferstringbuffer什么时候会走stringbuilder)
+    - [我们在web应用开发过程中经常遇到输出某种编码的字符，如iso8859-1等，如何输出一个某种编码的字符串？](#我们在web应用开发过程中经常遇到输出某种编码的字符如iso8859-1等如何输出一个某种编码的字符串)
+    - [&和&&的区别？](#和的区别)
+    - [在Java中，如何跳出当前的多重嵌套循环？](#在java中如何跳出当前的多重嵌套循环)
+    - [你能比较一下Java和JavaSciprt吗？](#你能比较一下java和javasciprt吗)
+    - [正则表达式](#正则表达式)
+    - [请你说说Java和PHP的区别？](#请你说说java和php的区别)
+- [关键字](#关键字)
+    - [介绍一下Syncronized锁，如果用这个关键字修饰一个静态方法，锁住了什么？如果修饰成员方法，锁住了什么？](#介绍一下syncronized锁如果用这个关键字修饰一个静态方法锁住了什么如果修饰成员方法锁住了什么)
+    - [介绍一下volatile？](#介绍一下volatile)
+    - [锁有了解嘛，说一下Synchronized和lock](#锁有了解嘛说一下synchronized和lock)
+    - [讲一讲Java里面的final关键字怎么用的？](#讲一讲java里面的final关键字怎么用的)
+- [面向对象](#面向对象)
+    - [wait方法底层原理](#wait方法底层原理)
+    - [Java有哪些特性，举个多态的例子](#java有哪些特性举个多态的例子)
+    - [String为啥不可变？String能继承吗？](#string为啥不可变string能继承吗)
+    - [类和对象的区别](#类和对象的区别)
+    - [请列举你所知道的Object类的方法](#请列举你所知道的object类的方法)
+    - [重载(Overload)和重写(Override)的区别？相同参数不同返回值能重载吗？Overload的方法是否可以改变返回值的类型](#重载overload和重写override的区别相同参数不同返回值能重载吗overload的方法是否可以改变返回值的类型)
+    - [static 关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？](#static-关键字是什么意思java中是否可以覆盖override一个private或者是static的方法)
+    - [静态变量存在哪?](#静态变量存在哪)
+    - [讲讲什么是泛型？](#讲讲什么是泛型)
+    - [解释extends 和super 泛型限定符-上界不存下界不取](#解释extends-和super-泛型限定符-上界不存下界不取)
+    - [是否可以在static环境中访问非static变量？](#是否可以在static环境中访问非static变量)
+    - [谈谈如何通过反射创建对象？](#谈谈如何通过反射创建对象)
+    - [Java支持多继承么？](#java支持多继承么)
+    - [接口和抽象类的区别是什么？](#接口和抽象类的区别是什么)
+    - [Comparable和Comparator接口是干什么的？列出它们的区别](#comparable和comparator接口是干什么的列出它们的区别)
+    - [面向对象的特征有哪些方面](#面向对象的特征有哪些方面)
+    - [final, finally, finalize的区别](#final-finally-finalize的区别)
+    - [Static Nested Class（嵌套类） 和 Inner Class（内部类）的不同](#static-nested-class嵌套类-和-inner-class内部类的不同)
+    - [当一个对象被当作参数传递到一个方法后，此方法可改变这个对象的属性，并可返回变化后的结果，那么这里到底是值传递还是引用传递?](#当一个对象被当作参数传递到一个方法后此方法可改变这个对象的属性并可返回变化后的结果那么这里到底是值传递还是引用传递)
+    - [Java的接口和C++的虚类的相同和不同处。](#java的接口和c的虚类的相同和不同处)
+    - [JAVA语言如何进行异常处理，关键字：throws,throw,try,catch,finally分别代表什么意义？在try块中可以抛出异常吗？](#java语言如何进行异常处理关键字throwsthrowtrycatchfinally分别代表什么意义在try块中可以抛出异常吗)
+    - [内部类可以引用他包含类的成员吗？有没有什么限制？](#内部类可以引用他包含类的成员吗有没有什么限制)
+    - [两个对象值相同(x.equals(y) == true)，但却可有不同的hash code说法是否正确？](#两个对象值相同xequalsy--true但却可有不同的hash-code说法是否正确)
+    - [如何通过反射获取和设置对象私有字段的值？](#如何通过反射获取和设置对象私有字段的值)
+    - [谈一下面向对象的"六原则一法则"](#谈一下面向对象的六原则一法则)
+    - [请问Query接口的list方法和iterate方法有什么区别？](#请问query接口的list方法和iterate方法有什么区别)
+    - [Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？](#java中什么是构造函数什么是构造函数重载什么是复制构造函数)
+- [集合](#集合)
+    - [ConcurrentHashMap？ConcurrentSkipListMap？二者的区别](#concurrenthashmapconcurrentskiplistmap二者的区别)
+    - [hashMap？](#hashmap)
+    - [如果hashMap的key是一个自定义的类，怎么办？](#如果hashmap的key是一个自定义的类怎么办)
+    - [ArrayList和LinkedList的区别，如果一直在list的尾部添加元素，用哪个效率高？](#arraylist和linkedlist的区别如果一直在list的尾部添加元素用哪个效率高)
+    - [TreeMap底层，红黑树原理？](#treemap底层红黑树原理)
+    - [ArrayList是否会越界？](#arraylist是否会越界)
+    - [Java集合类框架的基本接口有哪些？](#java集合类框架的基本接口有哪些)
+    - [为什么集合类没有实现Cloneable和Serializable接口？](#为什么集合类没有实现cloneable和serializable接口)
+    - [什么是迭代器？](#什么是迭代器)
+    - [Iterator和ListIterator的区别是什么？](#iterator和listiterator的区别是什么)
+    - [快速失败(fail-fast)和安全失败(fail-safe)的区别是什么？](#快速失败fail-fast和安全失败fail-safe的区别是什么)
+    - [HashMap和Hashtable有什么区别？](#hashmap和hashtable有什么区别)
+    - [ArrayList和LinkedList有什么区别？](#arraylist和linkedlist有什么区别)
+    - [ArrayList,Vector,LinkedList的存储性能和特性是什么？](#arraylistvectorlinkedlist的存储性能和特性是什么)
+    - [Collection 和 Collections的区别](#collection-和-collections的区别)
+    - [List、Map、Set三个接口存取元素时，各有什么特点？](#listmapset三个接口存取元素时各有什么特点)
+- [JDK](#jdk)
+    - [Java中的LongAdder和AtomicLong的区别](#java中的longadder和atomiclong的区别)
+    - [JDK和JRE的区别是什么？](#jdk和jre的区别是什么)
+    - [java的跨平台](#java的跨平台)
+    - [机器码和字节码的区别](#机器码和字节码的区别)
+- [反射](#反射)
+    - [反射的实现与作用](#反射的实现与作用)
+- [IO和NIO、AIO](#io和nioaio)
+    - [怎么打印日志？](#怎么打印日志)
+    - [运行时异常与一般异常有何异同？](#运行时异常与一般异常有何异同)
+    - [error和exception有什么区别?](#error和exception有什么区别)
+    - [给我一个你最常见到的runtime exception](#给我一个你最常见到的runtime-exception)
+    - [Java中的异常处理机制的简单原理和应用。](#java中的异常处理机制的简单原理和应用)
+    - [java中有几种类型的流？JDK为每种类型的流提供了一些抽象类以供继承，请说出他们分别是哪些类？](#java中有几种类型的流jdk为每种类型的流提供了一些抽象类以供继承请说出他们分别是哪些类)
+    - [什么是java序列化，如何实现java序列化？](#什么是java序列化如何实现java序列化)
+    - [运行时异常与受检异常有什么区别？](#运行时异常与受检异常有什么区别)
 
 <!-- /TOC -->
-# javaSE
-## 1、Java基础
-### 1. 为什么重写equals还要重写hashcode
+
+# Java基础
+## 为什么重写equals还要重写hashcode
 
 [为什么要重写hashcode和equals方法？初级程序员在面试中很少能说清楚。](https://www.cnblogs.com/JavaArchitect/p/10474448.html)
 
@@ -111,7 +110,7 @@ hashmap 中通过 hashcode 值来定位存储的索引号，如果处于相同�
 
 
 
-### 2、说一下map的分类和常见的情况
+## 说一下map的分类和常见的情况
 Java为数据结构中的映射定义了一个接口java.util.Map，此接口主要有四个常用的实现类，分别是HashMap、Hashtable、LinkedHashMap和TreeMap
 * HashMap：它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。 HashMap最多只允许一条记录的键为null，允许多条记录的值为null。HashMap非线程安全，即任一时刻可以有多个线程同时写HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以用 Collections的synchronizedMap方法使HashMap具有线程安全的能力，或者使用ConcurrentHashMap。
 * Hashtable：Hashtable是遗留类，很多映射的常用功能与HashMap类似，不同的是它承自Dictionary类，并且是线程安全的，任一时间只有一个线程能写Hashtable，并发性不如ConcurrentHashMap，因为ConcurrentHashMap引入了分段锁。Hashtable不建议在新代码中使用，不需要线程安全的场合可以用HashMap替换，需要线程安全的场合可以用ConcurrentHashMap替换。
@@ -121,66 +120,78 @@ Java为数据结构中的映射定义了一个接口java.util.Map，此接口主
 对于上述四种Map类型的类，要求映射中的key是不可变对象。不可变对象是该对象在创建后它的哈希值不会被改变。如果对象的哈希值发生变化，Map对象很可能就定位不到映射的位置了。
 
 
-### 3、Object若不重写hashCode()的话，hashCode()如何计算出来的？
+## Object若不重写hashCode()的话，hashCode()如何计算出来的？
 Object 的 hashcode 方法是本地方法，也就是用 c 语言或 c++ 实现的，该方法直接返回对象的内存地址。
-### 4、==比较的是什么？
+## ==比较的是什么？
 对于对象引用类型:“==”比较的是对象的内存地址。
       对于基本类型数据，其实比较的是它的值。
 
-### 5、若对一个类不重写，它的equals()方法是如何比较的？
+## 若对一个类不重写，它的equals()方法是如何比较的？
 如果没有对equals方法进行重写，则比较的是引用类型的变量所指向的对象的地址；诸如String、Date等类对equals方法进行了重写的话，比较的是所指向的对象的内容。
-### 6、java8新特性
+## java8新特性
 1. Lambda 表达式 − Lambda允许把函数作为一个方法的参数（函数作为参数传递进方法中）
 2. 接口的默认方法和静态方法 −  可以在接口中定义默认方法，使用default关键字，并提供默认的实现。所有实现这个接口的类都会接受默认方法的实现，除非子类提供的自己的实现
 3. 方法引用 − 方法引用使得开发者可以直接引用现存的方法、Java类的构造方法或者实例对象。可以与lambda联合使用
 4. 重复注解- 注解有一个很大的限制是：在同一个地方不能多次使用同一个注解。Java 8打破了这个限制，引入了重复注解的概念，允许在同一个地方多次使用同一个注解
     ......  等等（重点lambda表达式）
 
-### 7、说说Lamda表达式的优缺点。
+## 说说Lamda表达式的优缺点。
 * 优点：1. 简洁; 2. 非常容易并行计算; 3. 可能代表未来的编程趋势
 * 缺点：1. 若不用并行计算，很多时候计算速度没有比传统的 for 循环快。（并行计算有时需要预热才显示出效率优势）2. 不容易调试。3. 若其他程序员没有学过 lambda 表达式，代码不容易让其他语言的程序员看懂。
 
-### 8、一个十进制的数在内存中是怎么存的？
+## 一个十进制的数在内存中是怎么存的？
 二进制补码形式
 [原码补码反码介绍]( https://www.cnblogs.com/wangsiting/p/7339192.html)
 
-### 9、为啥有时会出现4.0-3.6=0.40000001这种现象？
+## 为啥有时会出现4.0-3.6=0.40000001这种现象？
  2进制的小数无法精确的表达10进制小数，计算机在计算10进制小数的过程中要先转换为2进制进行计算，这个过程中出现了误差。
 
-### 10、Java支持的数据类型有哪些？什么是自动拆装箱？
+## Java支持的数据类型有哪些？什么是自动拆装箱？
 八个基本数据类型：byte，short，int，long，float，double，char，boolean；以及引用类型，引用类型包括类类型、接口类型和数组。整数默认int型，小数默认是double型，float、long类型必须加后缀f、l；
 
 自动装箱和拆箱就是基本类型和其对应引用类型之间的转换，基本类型转换为引用类型后，就可以直接调用包装类中封装好的一些方法
 ![](https://ws1.sinaimg.cn/large/d4556b75ly1g3mteb1k1kj20l00eidgb.jpg)
 
-### 11、什么是值传递和引用传递？
+## 什么是值传递和引用传递？
 [参考网址]( https://www.cnblogs.com/xiaoxiaoyihan/p/4883770.html)
 * 值传递，在方法的调用过程中，实参把它的实际值传递给形参，此传递过程就是将实参的值复制一份传递到函数中，这样如果在函数中对该值（形参的值）进行了操作将不会影响实参的值。
 * 引用传递，将对象的地址值传递过去，函数接收的是原始值的首地址值。在方法的执行过程中，形参和实参的内容相同，指向同一块内存地址，也就是说操作的其实都是源数据，所以方法的执行将会影响到实际对象
 
-### 12、数组(Array)和列表(ArrayList)有什么区别？什么时候应该使用Array而不是ArrayList？
+## 数组(Array)和列表(ArrayList)有什么区别？什么时候应该使用Array而不是ArrayList？
 Array 可以包含基本类型和对象类型，ArrayList 只能包含对象类型。 Array 大小是固定的，ArrayList 的大小是动态变化的。
 ArrayList 提供了更多的方法和特性，比如:addAll()，removeAll()，iterator()等等。
 
 对于基本类型数据，集合使用自动装箱来减少编码工作量。但是，当处理固定大小的基本数据类型的时候，这种方式相对比较慢。
 
-### 13、你了解大O符号(big-Onotation)么？你能给出不同数据结构的例子么？
+## 你了解大O符号(big-Onotation)么？你能给出不同数据结构的例子么？
 O表示算法的时间或者空间复杂度上界。比如数组的插入时间复杂度为O(N),空间复杂度为O(1),链表的插入时间复杂度为O(1),空间复杂度为O(1)
 
-### 14、String是最基本的数据类型吗?
+## String是最基本的数据类型吗?
 不是，基本数据类型包括：byte,short,int,long,float,double,boolean,char。而String是类代表字符串，属于引用类型，所谓引用类型包括：类，接口，数组...
 
-### 15、int 和 Integer 有什么区别？
+## int 和 Integer 有什么区别？
 [参考网址](http://www.cnblogs.com/liuling/archive/2013/05/05/intAndInteger.html)
 
 Ingeter是int的包装类，int的初值为0，Ingeter的初值为null。java可以通过自动拆箱和装箱对int和Integer进行转化。
 
-### 16、String、StringBuffer、StringBuffer
-1. String为字符串常量，每次对string操作都会产生一个新的对象，而StringBuilder和StringBuffer均为字符串变量，即String对象一旦创建之后该对象是不可更改的，但后两者的对象是变量，是可以更改的。因此在运行速度快慢为：StringBuilder > StringBuffer > String
-2. 在线程安全上，StringBuilder是线程不安全的，而StringBuffer是线程安全的
-3. String适用于少量的字符串操作的情况；StringBuilder适用于单线程下在字符缓冲区进行大量操作的情况；StringBuffer适用多线程下在字符缓冲区进行大量操作的情况
+## String、StringBuffer、StringBuffer，什么时候会走StringBuilder？
 
-### 17、我们在web应用开发过程中经常遇到输出某种编码的字符，如iso8859-1等，如何输出一个某种编码的字符串？
+
+
+
+三者区别：
+1. String 为字符串常量，每次对 string 操作都会产生一个新的对象，而StringBuilder 和 StringBuffer 均为字符串变量，即 String 对象一旦创建之后该对象是不可更改的，但后两者的对象是变量，是可以更改的。因此在运行速度快慢为：StringBuilder > StringBuffer > String
+2. 在线程安全上，StringBuilder 是线程不安全的，而 StringBuffer 是线程安全的
+3. String 适用于少量的字符串操作的情况；StringBuilder 适用于单线程下在字符缓冲区进行大量操作的情况；StringBuffer 适用多线程下在字符缓冲区进行大量操作的情况
+
+以下情况走 StringBuilder：
+
+[String字符串拼接问题，到底什么时候会走StringBuilder？](https://www.jianshu.com/p/a80c9b2b89cd)
+
+1. 通过变量和字符串拼接，java 是需要先到内存找变量对应的值，才能进行完成字符串拼接的工作，这种方式 java 编译器没法优化，只能走StringBuilder 进行拼接字符串，然后调用 toString 方法。当然返回的结果和常量池中的字符串的内存地址是不一样的。
+2. 直接在表达式里写值，java不用根据变量去内存里找对应的值，可以在编译的时候直接对这个表达式进行优化，不用走 StringBilder，优化后的表达式直接指向常量池的字符串
+
+## 我们在web应用开发过程中经常遇到输出某种编码的字符，如iso8859-1等，如何输出一个某种编码的字符串？
 通过new一个字符串对象，把原始编码和需要输出编码类型传进构造器中
 
 ```java
@@ -196,22 +207,22 @@ public String translate (String str) {
 }
 ```
 
-### 18、&和&&的区别？
+## &和&&的区别？
 1. Java中&&和&都是表示与的逻辑运算符，都表示逻辑运输符and，当两边的表达式都为true的时候，整个运算结果才为true，否则为false。
 2. &&的短路功能，当第一个表达式的值为false的时候，则不再计算第二个表达式；&则两个表达式都执行。
 3. &可以用作位运算符，当&两边的表达式不是Boolean类型的时候，&表示按位操作。
 
-### 19、在Java中，如何跳出当前的多重嵌套循环？
+## 在Java中，如何跳出当前的多重嵌套循环？
 在Java中，要想跳出多重循环，可以在外面的循环语句前定义一个标号，
 然后在里层循环体的代码中使用带有标号的break语句，即可跳出外层循环
 
-### 20、你能比较一下Java和JavaSciprt吗？
+## 你能比较一下Java和JavaSciprt吗？
 1. 基于对象和面向对象：Java 是一种真正的面向对象的语言，即使是开发简单的程序，必须设计对象；JavaScript 是种脚本语 言，它可以用来制作与网络无关的，与用户交互作用的复杂软件。它是一种基于对 象（Object Based）和事件驱动（Event Driver）的编程语言。因而它本身提供了非常丰富的内部对象供设计人员使用；
 2. 解释和编译：Java 的源代码在执行之前，必须经过编译；JavaScript 是一种解释性编程语言，其源代码不需经过编译，由浏览器解释执行；
 3. 强类型变量和类型弱变量： Java 采用强类型变量检查，即所有变量在编译之前必须作声明；JavaScript 中变量声明，采用其弱类型。即变量在使用前不需作声明，而是解释器在运行时检查其数据类型；
 4. 代码格式不一样。
 
-### 21、正则表达式
+## 正则表达式
 1. 概念：
 在编写处理字符串的程序时，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具。换句话说，正则表达式就是记录文本规则的代码。
 2. java与正则相关的工具主要在java.util.regex包中；此包中主要有两个类：Pattern、Matcher
@@ -235,7 +246,7 @@ p.pattern();//返回 \w+
             System.out.println("NO MATCH");
         }
 ```
-### 22、请你说说Java和PHP的区别？
+## 请你说说Java和PHP的区别？
 1. Java是一种静态类型语言（强类型语言），需要编译后才能执行；PHP是一种动态类型语言（弱类型语言），不需要编译即可执行。
 2. java使用封装继承，最小的单位是类，php作为脚本，最小单位就是语句，用两者输出hello world就知道了，所以java语法比较严格，而php很灵活
 3. java是自动内存分配回收，php是一次创建一次销毁。
@@ -244,14 +255,14 @@ p.pattern();//返回 \w+
 6. java已经是一门很成熟的语言，或者说其语言的进一步提升已经不可能能了，php是在web繁荣之后兴起的语言，所以语言成熟度没有java高。
 
 
-## 2、关键字
-### 1、介绍一下Syncronized锁，如果用这个关键字修饰一个静态方法，锁住了什么？如果修饰成员方法，锁住了什么？
+# 关键字
+## 介绍一下Syncronized锁，如果用这个关键字修饰一个静态方法，锁住了什么？如果修饰成员方法，锁住了什么？
 Syncronized锁是同步锁，如果关键字修饰静态方法的话是一个类锁（当前类的所有线程都必须等待同步线程执行）， 如果关键字修饰成员方法的话是一个对象锁（当前对象的所有进程必须等待同步进程执行完，释放锁）。
 
-### 2、介绍一下volatile？
+## 介绍一下volatile？
 volatile关键字可以修饰共享变量。保证其他线程访问这个变量的时候始终是最新值。 也就是volatile会更新最新值到java主内存中去，其他线程使用这个变量的时候会从java主内存中去取得这个变量。（解决可见性和有序性）
 
-### 3、锁有了解嘛，说一下Synchronized和lock
+## 锁有了解嘛，说一下Synchronized和lock
 1. Lock是一个接口，而synchronized是Java中的关键字，synchronized是内置的语言实现；
 2. synchronized可以用来修饰方法代码块，Lock的话需要它的一些实现类来做到加锁和解锁比如ReentrantLock、 ReentrantReadWriteLock
 3. synchronized在发生异常时，会自动释放线程占有的锁，因此不会导致死锁现象发生；而Lock在发生异常时，如果没有主动通过unLock()去释放锁，则很可能造成死锁现象，因此使用Lock时需要在finally块中释放锁；
@@ -260,19 +271,19 @@ volatile关键字可以修饰共享变量。保证其他线程访问这个变量
 6. Lock可以提高多个线程进行读操作的效率。
 7. 在性能上来说，如果竞争资源不激烈，两者的性能是差不多的，而当竞争资源非常激烈时（即有大量线程同时竞争），此时Lock的性能要远远优于synchronized。
 
-### 4、讲一讲Java里面的final关键字怎么用的？
+## 讲一讲Java里面的final关键字怎么用的？
 1. 修饰类：表示该类不能被继承；
 2. 修饰方法：表示方法不能被重写；
 3. 修饰变量：表示变量只能赋值一次且赋值以后值不能被修改（常量）。
 
-## 3、面向对象
-### 1、wait方法底层原理
+# 面向对象
+## wait方法底层原理
 Object中的方法，可以暂停线程，期间会释放对象锁，不像sleep方法，线程休眠期依然持有锁，wait方法的线程，必须调用notify或notifyAll方法唤醒线程。
 
-### 2、Java有哪些特性，举个多态的例子
+## Java有哪些特性，举个多态的例子
  封装、继承以及多态，其中方法的重写和重载都和多态有关。 多态的主要特征就是父类引用指向子类对象，生活中的例子：Animal animal = new Dog();
 
-### 3、String为啥不可变？String能继承吗？
+## String为啥不可变？String能继承吗？
  Sting是这样定义的：public final class String extends Object，里边有final关键字，所以不可变也不能被继承，同时string底层是字符串数组也是final修饰，这样做首先是安全，比如hashset中用string做为键，不会出现string变化，导致违反唯一键。另外节约内存
  
 ```java
@@ -284,10 +295,10 @@ public final class String
 }
 ```
 
-### 4、类和对象的区别
+## 类和对象的区别
 类是抽象的结果，也是一种数据结构，类里面有属性、方法、代码块、构造器这些是类的基本元素。如果想使用类 ，那么你需要创建一个具体的对象，才能够正常使用类里面的属性和方法，同时，也有专门属于类的属性和方法， 属于类的东西， 可以没有对象也可以使用。由此可见对象是从类创建而来。
 
-### 5、请列举你所知道的Object类的方法
+## 请列举你所知道的Object类的方法
 1. getClass():用于返回当前运行时对象的Class对象，使用了final关键字修饰，故不允许子类重写
 2. equals():用于比较两个对象的地址是否相同，即两个引用是否指向同一个对象；
 3. clone():用于创建并返回当前对象的一份拷贝；
@@ -295,25 +306,25 @@ public final class String
 5. notify():唤醒等待队列中的其中一个线程；notifyAll():唤醒线程等待队列中的所有线程；
 6. wait(long timeout):让一个线程等待一段时间。
 
-### 6、重载(Overload)和重写(Override)的区别？相同参数不同返回值能重载吗？Overload的方法是否可以改变返回值的类型
+## 重载(Overload)和重写(Override)的区别？相同参数不同返回值能重载吗？Overload的方法是否可以改变返回值的类型
 相同参数不同返回值不可以重载,重载可以改变返回值的类型，重载的方法不能根据返回类型进行区分
 * 重写：一个类是继承一个父类时，从父类那儿继承来的方法，进行重新写过。
 * 重载：多个同名方法，名称相同，但是参数不同，可以通过参数来识别调用的是哪一个方法。
 
-### 7、”static”关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？
+## static 关键字是什么意思？Java中是否可以覆盖(override)一个private或者是static的方法？
 static是静态的意思，被static修饰的变量，在内存中只有一份，被所有对象共享，static修饰额方法叫静态方法，从属于类，可以通过类调用，也可以通过对象调用，方法中不能访问非静态变量和方法。
 
 静态，就是禁止多态。所以不能重写static方法。 private是私有的，肯定不能重写了。
 
-### 8、静态变量存在哪?
+## 静态变量存在哪?
 方法区，静态变量是共享内容，栈是不共享的，堆存放new关键字创建的对象实例，方法区是共享的区域，它用于存储已被虚拟机加载的类信息，常量，静态变量，即时编译后的代码等数据
 
-### 9、讲讲什么是泛型？
+## 讲讲什么是泛型？
 泛型是一种参数化类型，它的<>里面可以放任何类型，而且不要强转，它是多态的一种体现。 泛型多用于容器中，往容器中方数据，事先约定什么类型数据，放的时候会检查，不是正确的类型放入时会报错，这样可以建立安全的数据，也避免了强制类型转换。
 
 泛型也是Java提供的语法糖,只不过是将类型检查从运行期提到编译器.运行时都会被擦除为Object.,运行的时候都会在方法的入口和出口进行转换(就是发生擦除的边界位置),
 
-### 10、解释extends 和super 泛型限定符-上界不存下界不取
+## 解释extends 和super 泛型限定符-上界不存下界不取
 extends上限通配符，用来限制类型的上限，只能传入本类和子类，add方法受阻，可以从一个数据类型里获取数据；
 
 ```java
@@ -328,10 +339,10 @@ List<? super Integer> sList = null;
 sList = new ArrayList<Number>();
 ```
 
-### 11、是否可以在static环境中访问非static变量？
+## 是否可以在static环境中访问非static变量？
 不可以在static环静中，不可以访问非static。因为静态的成员属于类，随着类的加载而加载到静态方法区内存，当类加载时，此时不一定有实例创建，没有实例，就不可以访问非静态的成员。类的加载先于实例的创建，因此静态环境中，不可以访问非静态。
 
-### 12、谈谈如何通过反射创建对象？
+## 谈谈如何通过反射创建对象？
 [参考网址](https://www.cnblogs.com/qjlbky/p/5929452.html)
 1. 通过默认的构造器通过Class的newInstance()方法来获取
 2. 通过指定的构造器来创建
@@ -345,16 +356,16 @@ Constructor cons =clazz.getConstructor(String.class,int.class);//拿的是公有
 Object obj = cons.newInstance("lisisi",23);
 ```
 
-### 13、Java支持多继承么？
+## Java支持多继承么？
 java只支持单继承，这是由于安全性的考虑，如果子类继承的多个父类里面有相同的方法或者属性，子类将不知道具体要继承哪个，而接口可以多实现，是因为接口只定义方法，而没有具体的逻辑实现，多实现也要重新实现方法。
 
-### 14、接口和抽象类的区别是什么？
+## 接口和抽象类的区别是什么？
 1. 接口的方法默认是public，所有方法在接口中不能有实现，抽象类可以有非抽象的方法， 可以由public protected或者默认修饰。 java1.8以前接口中方法不能有方法体，1.8以后可以由default关键字修  饰，从而可以拥有方法体。
 2. 接口中的实例变量默认是final类型的，而抽象类中则不一定
 3. 一个类可以实现多个接口，但最多只能实现一个抽象类
 4. 一个类实现接口的话要实现接口的所有方法，而抽象类不一定
 
-### 15、Comparable和Comparator接口是干什么的？列出它们的区别
+## Comparable和Comparator接口是干什么的？列出它们的区别
 1. Comparable & Comparator接口都可以用来实现集合中元素的比较、排序。
 2. Comparator位于包java.util下，而Comparable位于包java.lang下
 3. Comparable接口将比较代码嵌入自身类中，而后者在一个独立的类中实现比较。像Integer、String等这些基本类型的JAVA封装类都已经实现了Comparable接口，这些类对象本身就支持自比较，直接调用Collections.sort()就可以对集合中元素的排序，无需自己去实现Comparable接口。而有些自定义类的List序列，当这个对象不支持自比较或者自比较函数不能满足你的要求时，你可以写一个比较器来完成两个对象之间大小的比较，也就是指定使用Comparator（临时规则排序，也称作专门规则排序），如果不指定Comparator，那么就用自然规则排序，这里的自然顺序就是实现Comparable接口设定的排序方式。
@@ -366,23 +377,23 @@ java只支持单继承，这是由于安全性的考虑，如果子类继承的�
     
   第二种叫定制排序,或自定义排序,需编写匿名内部类,先new一个Comparator接口的比较器对象c,同时实现compare()其方法。
 
-### 16、面向对象的特征有哪些方面
+## 面向对象的特征有哪些方面
 1. 封装： 面向对象的封装就是把描述一个对象的属性和行为的代码封装在一个“模块”中，也就是一个类中，属性用变量定义，行为用方法进行定义，方法可以直接访问同一个对象中的属性
 2. 继承： 在定义和实现一个类的时候，可以在一个已经存在的类的基础之上来进行，把这个已经存在的类所定义的内容作为自己的内容，并可以加入若干新的内容，或修改原来的方法使之更适合特殊的需要，这就是继承。继承是子类自动共享父类数据和方法的机制，这是类之间的一种关系，提高了软件的可重用性和可扩展性
 3. 多态是指程序中定义的引用变量所指向的具体类型和通过该引用变量发出的方法调用在编程时并不确定，而是在程序运行期间才确定，即一个引用变量倒底会指向哪个类的实例对象，该引用变量发出的方法调用到底是哪个类中实现的方法，必须在由程序运行期间才能决定。
 
-### 17、final, finally, finalize的区别
+## final, finally, finalize的区别
 1. final:被final修饰的变量，赋值后，被视为常量，被final修饰的方法，不能再重写，被final修饰的类不能在被继承 
 2. finally是异常中的一个关键字，try catch finally不管异常是否发生，finally块中的代码都会执行，程序的出口
 3. finallize是java垃圾回收中的一个关键字，在对垃圾对象回收时，会调用finalize方法
 
-### 18、Static Nested Class（嵌套类） 和 Inner Class（内部类）的不同
+## Static Nested Class（嵌套类） 和 Inner Class（内部类）的不同
 Static Nested Class是被声明为静态（static）的内部类，它可以不依赖于外部类实例被实例化。而通常的内部类需要在外部类实例化后才能实例化
 
-### 19、当一个对象被当作参数传递到一个方法后，此方法可改变这个对象的属性，并可返回变化后的结果，那么这里到底是值传递还是引用传递?
+## 当一个对象被当作参数传递到一个方法后，此方法可改变这个对象的属性，并可返回变化后的结果，那么这里到底是值传递还是引用传递?
 传递的是值， 在 Java应用程序中，当对象引用传递给方法的一个参数时，传递的是该引用的一个副本（按值传递），实际上传递的该对象的内存首地址
 
-### 20、Java的接口和C++的虚类的相同和不同处。
+## Java的接口和C++的虚类的相同和不同处。
 c++的虚类与java的抽象方法相同，其与接口的不同之处在于
 1. 只能继承一个虚类，可以实现多个接口
 2. 虚类中可以有构造方法，接口没有构造方法
@@ -392,18 +403,18 @@ c++的虚类与java的抽象方法相同，其与接口的不同之处在于
 
 他们的相同之处在于：都不能被实例化。
 
-### 21、JAVA语言如何进行异常处理，关键字：throws,throw,try,catch,finally分别代表什么意义？在try块中可以抛出异常吗？
+## JAVA语言如何进行异常处理，关键字：throws,throw,try,catch,finally分别代表什么意义？在try块中可以抛出异常吗？
 Java使用面向对象的方式来处理异常，它把程序中发生的每个异常也都分别封装到一个对象来表示的，该对象中包含有异常的信息。throws、throw、try、catch、finally就是Java中用来对异常进行处理的几个关键字
 
 在Java编程中规定Java编译器强制普通异常必须try..catch处理或用throws声明继续抛给上层调用方法处理，一般异常必须要求被捕获和处理，而系统异常可以处理也可以不处理，所以编译器不强制用try..catch处理或用throws、throw声明异常。而 finally一般与try或try\catch一起使用做为异常的最后，finally是无论有没有异常发生，都要执行的代码块。
 
-### 22、内部类可以引用他包含类的成员吗？有没有什么限制？
+## 内部类可以引用他包含类的成员吗？有没有什么限制？
 完全可以，内部类拥有外围类的所有元素的访问权，不论是外围的的私有方法和属性都可以访问的的到。如果不是静态内部类，那没有什么限制。如果把静态嵌套类当作内部类的一种特例，那在这种情况下不可以访问外部类的普通成员变 量，而只能访问外部类中的静态成员
 
-### 23、两个对象值相同(x.equals(y) == true)，但却可有不同的hash code说法是否正确？
+## 两个对象值相同(x.equals(y) == true)，但却可有不同的hash code说法是否正确？
 如果两个对象相同，那么它们的hashCode值一定要相同；如果两个对象的hashCode相同，它们并不一定相同。 重写了equals方法就但没重写hashcode方法，就会出现这样的问题。
 
-### 24、如何通过反射获取和设置对象私有字段的值？
+## 如何通过反射获取和设置对象私有字段的值？
 可以通过类对象的getDeclaredField()方法字段Field对象，然后再通过字段对象的setAccessible(true)将其设置为可以访问，接下来就可以通过get/set方法来获取/设置字段的值了。
 
 ```java
@@ -425,7 +436,7 @@ public static Object dictConvert (Object obj) {try {    //得到对象的所有�
 }
 ```
 
-### 25、谈一下面向对象的"六原则一法则"
+## 谈一下面向对象的"六原则一法则"
 * 六原则：
   * 单一职责原则：一个类只做它该做的事情。（单一职责原则想表达的就是"高内聚"，写代码最终极的原则只有六个字"高内聚、低耦合"，所谓的高内聚就是一个代码模块只完成一项功能，在面向对象  中，如果只让一个类完成它该做的事，而不涉及与它无关的领域就是践行了高内聚的原则，这个类就只有单一职责。
   * 开闭原则：软件实体应当对扩展开放，对修改关闭。（在理想的状态下，当我们需要为一个软件系统增加新功能时，只需要从原来的系统派生出一些新类就可以，不需要修改原来的任何一行代码。要做到开闭有两个要点：①抽象是关键，一个系统中如果没有抽象类或接口系统就没有扩展点；②封装可变性，将系统中的各种可变因素封装到一个继承结构中，如果多个可变因素混杂在一起，系统将变得复杂而混乱。
@@ -438,19 +449,19 @@ public static Object dictConvert (Object obj) {try {    //得到对象的所有�
 总结：单一职责原则告诉我们实现类要职责单一；里氏替换原则告诉我们不要破坏继承体系；依赖倒置原则告诉我们要面向接口编程；接口隔离原则告诉我们在设计接口的时候要精简单一；迪米特法则告诉我们要降低耦合。而开闭原则是总纲，他告诉我们要对扩展开放，对修改关闭。
 
 
-### 27、请问Query接口的list方法和iterate方法有什么区别？
+## 请问Query接口的list方法和iterate方法有什么区别？
 1. 返回的类型不一样，list返回List，iterate返回iterator
 2. 查询策略不同。获取数据的方式不一样，list会直接查询数据库，iterate会先到数据库中把id取出来，然后真正要遍历某个对象的时候先到缓存中找，如果找不到，以id为条件再发一条sql到数据库，这样如果缓存中没有数据，则查询数据库的次数为n+1
 
-### 28、Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？
+## Java中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？
 新对象被创建的时候，构造方法会被调用。每一个类都有构造方法。在程序员没有给类提供构造方法的情况下，Java编译器会为这个类创建一个默认的构造方法。
 
 Java中构造方法重载和方法重载很相似。可以为一个类创建多个构造方法。每一个构造方法必须有它自己唯一的参数列表。
 
 Java不支持像C++中那样的复制构造方法，这个不同点是因为如果你不自己写构造方法的情况下，Java不会创建默认的复制构造方法。
 
-## 4、集合
-### 1、ConcurrentHashMap？ConcurrentSkipListMap？二者的区别
+# 集合
+## ConcurrentHashMap？ConcurrentSkipListMap？二者的区别
 [ConcurrentHashMap在jdk1.8和1.7中的区别](https://sky-xin.iteye.com/blog/2431255)  
 [详解ConcurrentHashMap及JDK8的优化](https://mp.weixin.qq.com/s/kirY7_NQ-aZSqvsi4Nn21w)
 
@@ -623,7 +634,7 @@ concurrenthashmap是hashmap的多线程版本
 
 是线程安全的有序的哈希表，适用于高并发的场景。
 
-### 2、hashMap？
+## hashMap？
 [hashmap参考1](https://zhuanlan.zhihu.com/p/21673805)
 
 [hashmap参考2](http://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/)
@@ -722,13 +733,13 @@ JDK1.8中不使用头插法，用 head 和 tail 来保证链表的顺序和之�
 
 但是1.8和1.7的 put 操作都会导致数据丢失的问题，因此还是线程不安全的
 
-### 3、如果hashMap的key是一个自定义的类，怎么办？
+## 如果hashMap的key是一个自定义的类，怎么办？
 必须重写该类的hashcode()方法和equals()方法
 
 HashMap中，如果要比较key是否相等，要同时使用这两个函数:通过hashcode值定位bucket位置，如果发生冲突通过equal方法定位在链表或者红黑树中的插入位置
 因为自定义的类的hashcode()方法继承于Object类，其hashcode码为默认的内存地 址，这样即便有相同含义的两个对象，比较也是不相等的，equals()比较的是内存地址是否相等。
 
-### 4、ArrayList和LinkedList的区别，如果一直在list的尾部添加元素，用哪个效率高？
+## ArrayList和LinkedList的区别，如果一直在list的尾部添加元素，用哪个效率高？
 ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构
 
 ~~当输入的数据一直是小于千万级别的时候，大部分是Linked效率高, 而当数据量大于千万级别的时候，就会出现ArrayList的效率比较高了。~~
@@ -737,7 +748,7 @@ ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表�
 
 选择LinkedList，arraylist是静态内存。如果一直插，需要耗费时间，并且可能会造成没内存泄露，扩容有可能导致内存不够
 
-### 5、TreeMap底层，红黑树原理？
+## TreeMap底层，红黑树原理？
 [参考1](https://blog.csdn.net/sun_tttt/article/details/65445754)
 [参考2](https://blog.csdn.net/qq_39295755/article/details/80182288)
 
@@ -764,7 +775,7 @@ ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表�
 
   * 节点插入：红黑树插入节点的时候需要考虑新节点的颜色是红色的还是黑色的，假设新节点缺省颜色是黑色的，那么只要插入进去，该路径上的黑色节点数比其他路径上的节点数多一个，这时就要对其他路径进行调整；如果插入的节点是红色节点，如果该节点父亲节点是黑色，直接插入，如果该节点父亲节点是红色，就只在该条路径上进行调整。
 
-### 6、ArrayList是否会越界？
+## ArrayList是否会越界？
 会的，ArrayList底层是数组实现，在执行add(int index， E element)操作时，给定的下标index可以在 0 到 size 之间，如果不在这个范围之内，则会出现数组下标越界问题： 
 
 ```java
@@ -784,23 +795,23 @@ public boolean add(E e) {
 ~~如果执行add++()方法的话，单线程环境下，当add一个元素时，size先会执行size++ 操作，之后将指定的元素添加到size+1的位置，如果是多线程环境下，也有可能出现下标越界问题，解释如下：由于add（E e）方法没有同步，若此时集合容量为15，当集合中已经添加了14个元素时，一个线程率先进入add()方法，在执行ensureCapacityInternal(size + 1)时，发现还可以添加一个元素，故数组没有扩容，但随后该线程被阻塞在此处。接着另一线程进入add()方法，执行ensureCapacityInternal(size + 1)，由于前一个线程并没有添加元素，故size依然为14，依然不需要扩容，所以该线程就开始添加元素，使得size++，变为15，数组已经满了。而刚刚阻塞在elementData[size++] = e语句之前的线程开始执行，它要在集合中添加第16个元素，而数组容量只有15个，所以就发生了数组下标越界异常。~~
 
 
-### 7、Java集合类框架的基本接口有哪些？
+## Java集合类框架的基本接口有哪些？
 总共有两大接口：Collection和Map ，一个元素集合，一个是键值对集合。 
 
 * List和Set接口继承了Collection接口，其中List是有序元素集合，必须按照插入顺序保存元素；Set是无序元素集合，不能有重复元素。 而ArrayList和 LinkedList 实现了List接口，HashSet、TreeSet、LinkedHashSet实现了Set接口，HashSet是最快获取元素的方式，TreeSet按照比较结果的升序保存对象，LinkedHashSet按照被添加的结果保存对象。Queue按照排队规则来确定对象产生的顺序。
 * HashMap、TreeMap、LinkedHashMap实现了Map接口，与HashSet一样，HashMap提供了最快的查询技术，TreeMap按照比较结果的升序保存键，LinkedHashMap按照插入顺序保存键
 
-### 8、为什么集合类没有实现Cloneable和Serializable接口？
+## 为什么集合类没有实现Cloneable和Serializable接口？
 克隆(cloning)或者是序列化(serialization)的语义和含义是跟具体的实现相关的。因此，应该由集合类的具体实现来决定如何被克隆或者是序列化。
 
 Collection表示一个集合，包含了一组对象。如何存储和维护这些对象是由具体实现来决定的。因为集合的具体形式多种多样，例如list允许重复，set则不允许。而克隆（clone）和序列化（serializable）只对于具体的实体，对象有意义，你不能说去把一个接口，抽象类克隆，序列化甚至反序列化。所以具体的collection实现类是否可以克隆，是否可以序列化应该由其自身决定，而不能由其超类强行赋予。
 
 如果collection继承了clone和serializable，那么所有的集合实现都会实现这两个接口，而如果某个实现它不需要被克隆，甚至不允许它序列化（序列化有风险），那么就与collection矛盾了。
 
-### 9、什么是迭代器？
+## 什么是迭代器？
 Iterator接口提供了很多对集合元素进行迭代的方法。每一个集合类都包含了可以返回迭代器实例的迭代方法。迭代器可以在迭代的过程中删除底层集合的元素,但是不可以直接调用集合的remove(Object Obj)删除，可以通过迭代器的remove()方法删除。
 
-### 10、Iterator和ListIterator的区别是什么？
+## Iterator和ListIterator的区别是什么？
 * 两个都是集合的迭代器。Iterator使用范围是集合，ListIterator的使用范围是List接口。而且ListIterator是继承于Iterator的接口：
 
 
@@ -818,7 +829,7 @@ public interface ListIterator<E> extends Iterator<E> {}
   2. 获取上一个元素； 
   3. 可以添加元素，但是Iterator不能添加元素
 
-### 11、快速失败(fail-fast)和安全失败(fail-safe)的区别是什么？
+## 快速失败(fail-fast)和安全失败(fail-safe)的区别是什么？
 * 快速失败（fail—fast）
   * 概念：在用迭代器遍历一个集合对象时，如果遍历过程中对集合对象的内容进行了修改（增加、删除修改），则会抛出Concurrent Modification Exception。
   * 原理：
@@ -831,79 +842,79 @@ public interface ListIterator<E> extends Iterator<E> {}
   * 缺点：基于拷贝内容的优点是避免了Concurrent Modification Exception，但同样地，迭代器并不能访问到修改后的内容，即：迭代器遍历的是开始遍历那一刻拿到的集合拷贝，在遍历期间原集合发生的修改迭代器是不知道的。
   * 场景：java.util.concurrent包下的容器都是安全失败，可以在多线程下并发使用，并发修改
 
-### 12、HashMap和Hashtable有什么区别？
+## HashMap和Hashtable有什么区别？
 1. HashMap线程不安全，操作速度较快；Hashtable使用 synchronized 来进行同步，线程安全，操作速度较慢。
 2. HashMap允许键值为空，Hashtable不允许
 3. HashMap 的迭代器是 fail-fast 迭代器
 
-### 13、ArrayList和LinkedList有什么区别？ 
+## ArrayList和LinkedList有什么区别？ 
 1. ArrayList和Linkedlist都实现List接口， ArrayList的实现用的是动态数组，LinkedList是基于链表
 2. ArrayList支持随机访问，LinkedList是以元素列表的形式存储它的数据，每一个元素都和它的前一个元素和后一个元素链接起来，查找某个元素的时间复杂度为O（n）；
 3. 相对于ArrayList，LinkedList的插入，增加，删除速度更快，因为其不需要像数组那样插入时需要重新计算索引；
 4. LinkedList比ArrayList占用更大的内存，因为Linkedlist为每个节点存储俩个引用，一个指向前一个元素，另一个指向后一个元素。
 
-### 14、ArrayList,Vector,LinkedList的存储性能和特性是什么？
+## ArrayList,Vector,LinkedList的存储性能和特性是什么？
 1. ArrayList 和Vector他们底层的实现都是一样的，都是使用数组方式存储数据，此数组元素数大于实际存储的数据以便增加和插入元素，它们都允许直接按序号索引元素，但是插入元素要涉及数组元素移动等内存操作，所以索引数据快而插入数据慢。
 2. LinkedList使用双向链表实现存储，按序号索引数据需要进行前向或后向遍历，但是插入数据时只需要记录本项的前后项即可，所以插入速度较快。
 3. Vector属于遗留容器， 已经不推荐使用，但是由于ArrayList和LinkedListed都是非线程安全的，如果遇到多个线程操作同一个容器的场景，则可以通过工具类Collections中的synchronizedList方法将其转换成线程安全的容器后再使用
 
-### 15、Collection 和 Collections的区别
+## Collection 和 Collections的区别
 1. Collection是集合类的上级接口，继承于它的接口主要有Set和List。
 2. Collections是针对集合类的一个帮助类，它提供了一系列静态方法实现了对各种集合的排序，搜索和线程安全等操作。
 
-### 16、List、Map、Set三个接口存取元素时，各有什么特点？
+## List、Map、Set三个接口存取元素时，各有什么特点？
 list数据有序允许数据重复，set数据无序不允许数据重复，map以键值对存，键不能重复，可以允许一个键为null，允许多个值为null
 
-## 5、JDK
-### 1、Java中的LongAdder和AtomicLong的区别
-### 2、JDK和JRE的区别是什么？
+# JDK
+## Java中的LongAdder和AtomicLong的区别
+## JDK和JRE的区别是什么？
 
 * jRE： (Java Runtime Environment) JRE顾名思义是java运行时环境，包含了java虚拟机，java基础类库。是使用java语言编写的程序运行所需要的软件环境，是提供给想运行java程序的用户使用的。
 * JDK：(Java Development Kit) JDK顾名思义是java开发工具包，是程序员使用java语言编写java程序所需的开发工具包，是提供给程序员使用的。JDK包含了JRE，同时还包含了编译java源码的编译器javac，还包含了很多java程序调试和分析的工具：jconsole，jvisualvm等工具软件，还包含了java程序编写所需的文档和demo例子程序。
 如果你需要运行java程序，只需安装JRE就可以了。如果你需要编写java程序，需要安装JDK。
 
-### 3、java的跨平台
+## java的跨平台
 
  java源程序先经过javac编译器编译成二进制的.class字节码文件（java的跨平台指的就是.class字节码文件的跨平台，.class字节码文件是与平台无关的），.class文件再运行在jvm上，java解释器（jvm的一部分）会将其解释成对应平台的机器码执行，所以java所谓的跨平台就是在不同平台上安装了不同的jvm，而在不同平台上生成的.class文件都是一样的，而.class文件再由对应平台的jvm解释成对应平台的机器码执行
 
-### 4、机器码和字节码的区别
+## 机器码和字节码的区别
 
 * 机器码，完全依附硬件而存在，并且不同硬件由于内嵌指令集不同，即使相同的0 1代码意思也可能是不同的，换句话说，根本不存在跨平台性。比如：不同型号的CPU,你给他个指令10001101，他们可能会解析为不同的结果；
 * java字节码是java的.class文件,我们知道JAVA是跨平台的，为什么呢？因为他有一个jvm,不论那种硬件，只要你装有jvm,那么他就认识这个JAVA字节码，至于底层的机器码，咱不用管，有jvm搞定，他会把字节码再翻译成所在机器认识的机器码
 
-## 6、反射
-### 1、反射的实现与作用
+# 反射
+## 反射的实现与作用
 
 JAVA语言编译之后会生成一个.class文件，反射就是通过字节码文件找到某一个类、类中的方法以及属性等。反射的实现主要借助以下四个类：Class：类的对象，Constructor：类的构造方法，Field：类中的属性对象，Method：类中的方法对象。 
 
 作用：反射机制指的是程序在运行时能够获取自身的信息。在JAVA中，只要给定类的名字，那么就可以通过反射机制来获取类的所有信息。
 
-## 7、IO和NIO、AIO
-### 1、怎么打印日志？
-### 2、运行时异常与一般异常有何异同？
-### 3、error和exception有什么区别?
+# IO和NIO、AIO
+## 怎么打印日志？
+## 运行时异常与一般异常有何异同？
+## error和exception有什么区别?
 
 
-### 4、给我一个你最常见到的runtime exception
+## 给我一个你最常见到的runtime exception
 
 * `Java.lang.NullPointerException`：空指针异常，应用程序试图在需要对象的地方使用 null 时
 * `Java.lang.IndexOutOfBoundsException`：索引超出异常
 * `ClassCastException`：类转换异常，试图将对象强制转换为不是实例的子类时
 * `ArithmeticException`：算术异常，例如：`int a = 5 / 0;`
 
-### 5、Java中的异常处理机制的简单原理和应用。
-### 6、java中有几种类型的流？JDK为每种类型的流提供了一些抽象类以供继承，请说出他们分别是哪些类？
+## Java中的异常处理机制的简单原理和应用。
+## java中有几种类型的流？JDK为每种类型的流提供了一些抽象类以供继承，请说出他们分别是哪些类？
 
 Java中的流分为两种，一种是字节流，另一种是字符流，分别由四个抽象类来表示（每种流包括输入和输出两种所以一共四个）:InputStream，OutputStream，InputStreamReader，OutputStreamWriter。二者区别：
 
 1. 字节流可用于任何类型的对象，包括二进制对象，而字符流只能处理字符或者字符串；
 2. 字节流提供了处理任何类型的IO操作的功能，但它不能直接处理Unicode字符，而字符流就可以。
 
-### 7、什么是java序列化，如何实现java序列化？
+## 什么是java序列化，如何实现java序列化？
 
 序列化指把 Java 对象转换为字节序列的过程；反序列化指把字节序列恢复为Java对象的过程。
 
 * java.io.ObjectOutputStream 代表对象输出流，它的 writeObject(Object obj) 方法可对参数指定的 obj 对象进行序列化，把得到的字节序列写到一个目标输出流中。
 * java.io.ObjectInputStream 代表对象输入流，它的 readObject() 方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。
 
-### 8、运行时异常与受检异常有什么区别？
+## 运行时异常与受检异常有什么区别？
