@@ -2,6 +2,8 @@
 
 - [项目介绍](#项目介绍)
     - [系统功能](#系统功能)
+        - [后台功能](#后台功能)
+        - [前台功能](#前台功能)
     - [项目架构](#项目架构)
 - [项目搭建](#项目搭建)
     - [使用 Maven 的好处](#使用-maven-的好处)
@@ -38,24 +40,44 @@
 
 ## 系统功能
 
-商城项目基于 SOA 架构，分为两部分：前台和后台。
+商城项目基于 SOA 架构，分为两部分：前台和后台。整体采用 Maven 聚合工程和 SSM 框架
 
-- 后台：给商城管理员使用，其主要功能是用于进行商品信息的添加修改，删除，以及内容发布。后台采用 Maven 聚合工程和 ssm 框架。
+### 后台功能
 
-  我们将商品的图片放在特殊的图片服务器中，将大文本信息放在文件服务器中，使用 nginx 反向代理管理图片服务器，文件服务器和数据库，由于后台访问量比较少因此不考虑缓存和分布式。
+给商城管理员使用，其主要功能是用于进行商品信息的添加修改，删除，以及内容发布。
 
-- 前台项目：采用 Maven 管理 jar 包和 ssm 框架，前台项目和后台公用同一个数据库，前台主要是供客户访问，包括商城页面的展示，搜索功能 ，商品详情展示，单点登陆系统，购物车和订单系统等。
+我们将商品的图片放在特殊的图片服务器中，将大文本信息放在文件服务器中，使用 nginx 反向代理管理图片服务器，文件服务器和数据库，由于后台访问量比较少因此不考虑缓存和分布式。
 
-  由于前台首页轮播图的访问量比较大，故此我们采用的是分布式架构，使用 redis 作用缓存，并搭建 redis 集群。我们将经常访问的数据放在 redis 中，并设置过期时间，以减缓大量访问时数据库的压力；对于商城项目而言，商品搜索时比较常见的，对于搜索的实现我们使用 solr 搜索引擎，只需要简单配置就可以实现全文搜索，由于 solr 中默认是没有中文分析器，因此需要我们配置，接下来将数据库中的数据导入，solr 自带缓存，所以不需要再配置 redis；单点登陆系统主要是 session 和 cookie，使用 redis 模拟 session，将用户信息传给前台，当再某些特殊业务时需要强制登陆。
+### 前台功能
+
+前台项目和后台公用同一个数据库，前台主要是供客户访问，包括商城页面的展示，搜索功能 ，商品详情展示，单点登陆系统，购物车和订单系统等。
+1. 由于前台首页轮播图的访问量比较大，故此我们采用的是分布式架构，使用 redis 作用缓存，并搭建 redis 集群。我们将经常访问的数据放在 redis 中，并设置过期时间，以减缓大量访问时数据库的压力；
+2. 对于商城项目而言，商品搜索时比较常见的，对于搜索的实现我们使用 solr 搜索引擎，只需要简单配置就可以实现全文搜索，由于 solr 中默认是没有中文分析器，因此需要我们配置，接下来将数据库中的数据导入，solr 自带缓存，所以不需要再配置 redis；
+3. 单点登陆系统主要是 session 和 cookie，使用 redis 模拟 session，将用户信息传给前台，当再某些特殊业务时需要强制登陆。
 
 ## 项目架构
 
-- 项目基于 SOA 架构，把工程都拆分成服务层工程、表现层工程和持久层。服务层中包含业务逻辑，只需要对外提供服务即可。表现层只需要处理和页面的交互，业务逻辑都是调用服务层的服务来实现
-- 表现层通过服务中间件 Dubbo 与服务层进行交互
-- 服务层与 redis 缓存交互，redis 缓存与持久层进行交互
-- Mysql 数据库通过 MyCat 数据库中间件进行整合
-- 服务层中的搜索服务使用 solr 搜索引擎
-  ![](https://ws1.sinaimg.cn/large/d4556b75ly1g3rg4tldhhj20o60eanpd.jpg)
+项目基于 SOA 架构（面向服务架构）
+
+**SOA概念**
+
+把工程都拆分成服务层工程、表现层工程。服务层中包含业务逻辑，只需要对外提供服务即可，表现层只需要处理和页面的交互，业务逻辑都是调用服务层的服务来实现。工程都可以独立部署。
+
+所有的服务是自包含的，合乎逻辑。他们就像黑盒子。总之，我们并不需要了解业务服务的内部工作细节。对于外部世界，它只是一个能够使用消息交互的黑盒子
+
+**SOA主要特点**
+
+1. SOA组件是松耦合的，服务调用交互是通过发布接口
+2. 便于测试，能并行开发，较高可靠性和良好可伸缩性
+
+**使用到的技术**
+
+1. 表现层通过服务中间件 Dubbo 与服务层进行交互
+2. 服务层的商品服务、购物车服务、订单服务和购物车服务先从 redis 缓存中拿数据，redis 缓存中没有数据，在到 MySQL 数据库中拿取数据
+3. Mysql 数据库通过 MyCat 数据库中间件进行整合
+4. 服务层中的搜索服务使用 solr 搜索引擎
+  
+![](https://ws1.sinaimg.cn/large/d4556b75ly1g3rg4tldhhj20o60eanpd.jpg)
 
 # 项目搭建
 
@@ -68,39 +90,61 @@
 
 ## 工程搭建
 
-**1. Maven 的常见打包方式：**
+**Maven 的常见打包方式：**
 
 三种：jar、war、pom。  
-pom 工程一般都是父工程，用在聚合工程，管理 jar 包的版本、maven 插件的版本、统一的依赖管理；  
-war 包主要部署 tomcat；  
-单一的工程打包成 jar 包，别人用它的时候只需要依赖它的坐标就好了
+* pom：打包的工程一般都是父工程，用在聚合工程，管理 jar 包的版本、maven 插件的版本、统一的依赖管理。服务层工程的的父工程打包成 pom 工程。
+* war：主要部署 tomcat，表现层的工程打包成 war 包形式。表现层打成 war 包进行发布好处是不会缺少目录，并且只管理好一个发布文件就好，并且 tomcat 服务器能够自动识别，将 war 包放在 tomcat 容器的 webapps 下，启动服务，即可运行该项目，该war 包会自动解压出一个同名的文件夹。
+* jar：用来打包单一的工程，别人用它的时候只需要依赖它的坐标就好了。服务层工程的的父工程打包成 pom 工程。
 
 ![](https://ws1.sinaimg.cn/large/d4556b75ly1g3p7m70vjbj20l807rt99.jpg)
 
-**2. 依赖结构**
+**工程之间的交互**
 
-`taotao-manager-web` 依赖 `taotao-manager-interface`
+我们在项目中先写了一个父工程 `taotao-parent`，parent 项目中不存放任何代码，在`properties` 中写入版本号变量及相应版本号来集中定义依赖版本号，这里并不需要依赖具体的 jar 包，只是做为一个版本的管理，例如 mybatis 的版本管理：
 
-`taotao-manager-service` 依赖 `taotao-manager-interface` 和 `taotao-manager-dao`
+```xml
+<properties>
+	<mybatis.spring.version>1.2.2</mybatis.spring.version>	
+</properties>
 
-`taotao-manager-interface` 依赖 `taotao-manager-pojo`
-
-`taotao-manager-dao` 依赖 `taotao-manager-pojo`
-
-在 pom 文件中依赖关系这样添加：
-
-```
-<dependencies>
-		<!-- 依赖taotao-manager-pojo -->
-		<dependency>
-			<groupId>com.taotao</groupId>
-			<artifactId>taotao-manager-pojo</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-<dependencies>
+<dependency>
+	<groupId>org.mybatis</groupId>
+	<artifactId>mybatis-spring</artifactId>
+	<version>${mybatis.spring.version}</version>
+</dependency>
 ```
 
-以上是 taotao-manager 工程下模块 taotao-manager-dao 的 pom.xml 文件中添加的依赖关系
+
+其它具体的子工程版本依赖时，需要在其 pom.xml 文件中添加`parent` 标签，在标签中把 parent 项目的 pom 坐标添加进去即可：
+
+```xml
+<parent>
+	<groupId>com.taotao</groupId>
+	<artifactId>taotao-manager</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</parent>
+```
+
+在一个项目中包含了多个模块，`modules` 标签用来管理同个项目中的各个模块。例如 taotao-manager 项目中包含四个模块，在 taotao-manager 中 pom.xml 文件中这样添加：
+
+```xml
+<modules>
+	<module>taotao-manager-dao</module>
+	<module>taotao-manager-pojo</module>
+	<module>taotao-manager-interface</module>
+	<module>taotao-manager-service</module>
+</modules>
+```
+
+如果一个项目要依赖其它的项目，那么需要在其 pom.xml 文件中使用 `dependency` 标签来添加,在标签中写入坐标和 id。taotao-manager 项目中依赖项目 taotao-common：
+```xml
+<dependency>
+	<groupId>com.taotao</groupId>
+	<artifactId>taotao-common</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
 
 # 系统功能分析
 

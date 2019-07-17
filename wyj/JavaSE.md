@@ -23,9 +23,9 @@
     - [你能比较一下Java和JavaSciprt吗？](#你能比较一下java和javasciprt吗)
     - [正则表达式](#正则表达式)
     - [请你说说Java和PHP的区别？](#请你说说java和php的区别)
+    - [Java 语法糖](#java-语法糖)
 - [关键字](#关键字)
     - [介绍一下Syncronized锁，如果用这个关键字修饰一个静态方法，锁住了什么？如果修饰成员方法，锁住了什么？](#介绍一下syncronized锁如果用这个关键字修饰一个静态方法锁住了什么如果修饰成员方法锁住了什么)
-    - [介绍一下volatile？](#介绍一下volatile)
     - [锁有了解嘛，说一下Synchronized和lock](#锁有了解嘛说一下synchronized和lock)
     - [讲一讲Java里面的final关键字怎么用的？](#讲一讲java里面的final关键字怎么用的)
 - [面向对象](#面向对象)
@@ -254,13 +254,68 @@ p.pattern();//返回 \w+
 5. PHP:就是为web而生的语言，除了web什么都做不了，这既是它的缺点，也是它的优点，语法简洁灵活，和java冗长的语法正好形成对比
 6. java已经是一门很成熟的语言，或者说其语言的进一步提升已经不可能能了，php是在web繁荣之后兴起的语言，所以语言成熟度没有java高。
 
+## Java 语法糖
+
+**switch 支持 String 与枚举**
+
+Java中的swith自身原本就支持基本类型。比如 int、char 等。对于 int 类型，直接进行数值的比较。对于 char 类型则是比较其ascii 码，Java 7 中 switch 开始支持 String。
+
+字符串的 switch 是通过 equals() 和 hashCode() 方法来实现的，反编译：
+```java
+public static void main(String args[])
+{
+    String str = "world";
+    String s;
+    switch((s = str).hashCode())
+    {
+    default:
+        break;
+    case 99162322:
+        if(s.equals("hello"))
+            System.out.println("hello");
+        break;
+    case 113318802:
+        if(s.equals("world"))
+            System.out.println("world");
+        break;
+    }
+}
+```
+
+**泛型**
+
+对于Java虚拟机来说，他根本不认识 Map<String, String> map 这样的语法。需要在编译阶段通过类型擦除的方式进行解语法糖。
+
+**自动装箱与拆箱**
+
+Integer 和 int 之间：在装箱的时候自动调用的是 Integer 的 `valueOf(int)` 方法。而在拆箱的时候自动调用的是 Integer 的 `intValue` 方法。
+
+**方法变长参数**
+
+可变参数在被使用的时候，他首先会创建一个数组，数组的长度就是调用该方法时传递的实参的个数，然后再把参数值全部放到这个数组当中，然后再把这个数组作为参数传递到被调用的方法中
+
+
+**枚举**
+
+当我们使用 enmu 来定义一个枚举类型的时候，编译器会自动帮我们创建一个 final 类型的类继承 Enum 类，所以枚举类型不能被继承
+
+
+**内部类**
+
+内部类之所以也是语法糖，是因为它仅仅是一个编译时的概念，outer.java 里面定义了一个内部类 inner，一旦编译成功，就会生成两个完全不同的 .class 文件了，分别是 outer.class 和 outer$inner.class。所以内部类的名字完全可以和它的外部类名字相同。
+
+**for-each**  
+
+for-each的实现原理其实就是使用了普通的for循环和迭代器。
+
+其它还有： 断言、条件编译、数值字面量、Lambda表达式等
+
+[Java 语法糖详解](https://www.hollischuang.com/archives/3655)
 
 # 关键字
 ## 介绍一下Syncronized锁，如果用这个关键字修饰一个静态方法，锁住了什么？如果修饰成员方法，锁住了什么？
 Syncronized锁是同步锁，如果关键字修饰静态方法的话是一个类锁（当前类的所有线程都必须等待同步线程执行）， 如果关键字修饰成员方法的话是一个对象锁（当前对象的所有进程必须等待同步进程执行完，释放锁）。
 
-## 介绍一下volatile？
-volatile关键字可以修饰共享变量。保证其他线程访问这个变量的时候始终是最新值。 也就是volatile会更新最新值到java主内存中去，其他线程使用这个变量的时候会从java主内存中去取得这个变量。（解决可见性和有序性）
 
 ## 锁有了解嘛，说一下Synchronized和lock
 1. Lock是一个接口，而synchronized是Java中的关键字，synchronized是内置的语言实现；
@@ -635,9 +690,9 @@ concurrenthashmap是hashmap的多线程版本
 是线程安全的有序的哈希表，适用于高并发的场景。
 
 ## hashMap？
-[hashmap参考1](https://zhuanlan.zhihu.com/p/21673805)
+[Java 8系列之重新认识HashMap](https://zhuanlan.zhihu.com/p/21673805)
 
-[hashmap参考2](http://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/)
+[Java HashMap工作原理及实现](http://yikun.github.io/2015/04/01/Java-HashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/)
 
 **概念：**
 1. HashMap是一个散列桶（数组和链表），它存储的内容是键值对(key-value)映射
@@ -653,8 +708,8 @@ HashMap的底层主要是基于数组和链表来实现的，HashMap底层是通
 
 **HashMap类中的一些关键属性：**
 
-Node[] table的初始化长度length默认值是16；loadFactor为负载因子(默认值是0.75)，threshold临界值大小,是HashMap所能容纳的最大数据量的Node(键值对)个数。threshold = length * loadFactor,；当实际大小超过临界值时，会进行扩容。loadFactor加载因子，其中加载因子是表示Hash表中元素的填满的程度.若加载因子越大,填满的元素越多,好处是,空间利用率高了,但冲突的机会加大了。反之,加载因子越小,填满的元素越少,好处是冲突的机会减小了,但空间浪费多了，取默认值0.75就好了；size就是HashMap中实际存在的键值对数量； 
-modCount字段主要用来记录HashMap内部结构发生变化的次数，主要用于迭代的快速失败。强调一点，内部结构发生变化指的是结构发生变化，例如put新键值对，但是某个key对应的value值被覆盖不属于结构变化。
+Node[] table的初始化长度 length 默认值是16；loadFactor 为负载因子(默认值是0.75)，threshold 临界值大小，是 HashMap 所能容纳的最大数据量的 Node (键值对)个数。threshold = length * loadFactor；当实际大小超过临界值时，会进行扩容。loadFactor 加载因子，其中加载因子是表示 Hash 表中元素的填满的程度。若加载因子越大，填满的元素越多，好处是，空间利用率高了，但冲突的机会加大了。反之，加载因子越小，填满的元素越少，好处是冲突的机会减小了，但空间浪费多了，取默认值 0.75 就好了；size 就是 HashMap 中实际存在的键值对数量； 
+modCount 字段主要用来记录 HashMap 内部结构发生变化的次数，主要用于迭代的快速失败。强调一点，内部结构发生变化指的是结构发生变化，例如 put 新键值对，但是某个 key 对应的 value 值被覆盖不属于结构变化。
 ```java
 int threshold;             // 所能容纳的key-value对极限
 final float loadFactor;    // 负载因子
@@ -717,13 +772,15 @@ static int indexFor(int h, int length) {  //jdk1.7的源码，jdk1.8没有这个
 
 1. 设置初始容量原因：
 
-   如果我们没有设置初始容量大小，随着元素的不断增加，HashMap会发生多次扩容，而HashMap中的扩容机制决定了每次扩容都需要重建hash表，是非常影响性能的。
+   如果我们没有设置初始容量大小，随着元素的不断增加，HashMap会发生多次扩容，而 HashMap 中的扩容机制决定了每次扩容都需要重建 hash 表，是非常影响性能的。
 
 2. 如何设置：
 
+[为什么阿里巴巴建议集合初始化时，指定集合容量大小](https://www.hollischuang.com/archives/3545)
+
    `initialCapacity = (需要存储的元素个数 / 负载因子) + 1`，负载因子默认0.75，如果暂时无法确定元素个数，先设置为16。
 
-   但是，JDK并不会直接拿用户传进来的数字当做默认容量，而是会进行一番运算，最终得到一个2的幂。得到这个数字的算法其实是使用了使用无符号右移和按位或运算来提升效率。
+   默认情况下，当我们设置 HashMap 的初始化容量时，实际上 HashMap 会采用第一个大于该数值的 2 的幂作为初始化容量。得到这个数字的算法其实是使用了使用无符号右移和按位或运算来提升效率。
 
 **hashmap在高并发场景下为什么会出现死循环：**
 
