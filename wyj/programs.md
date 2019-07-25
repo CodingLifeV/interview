@@ -2417,13 +2417,16 @@ public class Main {
 ```java
 public class Test {
     public int getLastRemaining(int n, int m) {
-        if(n < 1 || m < 1) {
+        if(n < 0 || m < 1) {
             return -1;
         }
 
         List<Integer> ret = new LinkedList<>();
+        for(int i = 0; i < n; i++) {
+            ret.add(i);
+        }
         //要删除的元素位置
-        int idx = 0;
+        int idx = -1;
         while(ret.size() > 1) {
             //只要移动 m-1 次就可以移动到下一个要删除的元素上
             for(int i = 1; i < m; i++) {
