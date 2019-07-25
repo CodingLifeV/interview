@@ -19,9 +19,8 @@
     - [spring 框架的优点？缺点？](#spring-框架的优点缺点)
     - [选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？](#选择使用-spring-框架的原因spring-框架为企业级开发带来的好处有哪些)
     - [持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？](#持久层设计要考虑的问题有哪些你用过的持久层框架有哪些)
-    - [Spring 声明式事务](#spring-声明式事务)
-    - [spring事务写在哪一部分，为什么不写在dao,controller层](#spring事务写在哪一部分为什么不写在daocontroller层)
-    - [Spring 事务传播机制](#spring-事务传播机制)
+    - [Spring 声明式事务，Spring 事务传播机制](#spring-声明式事务spring-事务传播机制)
+    - [Spring 事务写在哪一部分，为什么不写在 dao， controller层](#spring-事务写在哪一部分为什么不写在-dao-controller层)
     - [Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载](#spring-中如何让-a-和-b-两个-bean-按顺序加载-spring-中如何让-a-和-b-两个-bean-按顺序加载)
     - [Spring 源码总结](#spring-源码总结)
     - [Spring 中的设计模式](#spring-中的设计模式)
@@ -29,6 +28,7 @@
     - [解释一下 MyBatis 中命名空间（namespace）的作用。](#解释一下-mybatis-中命名空间namespace的作用)
     - [MyBatis 中的动态 SQL 是什么意思？](#mybatis-中的动态-sql-是什么意思)
     - [Mybatis 中 Mapper 接口编程原理](#mybatis-中-mapper-接口编程原理)
+    - [动态 SQL](#动态-sql)
 - [SpringMVC](#springmvc)
     - [Spring MVC 注解的优点](#spring-mvc-注解的优点)
     - [springmvc 和 spring-boot 区别？](#springmvc-和-spring-boot-区别)
@@ -331,9 +331,9 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 
 持久层框架有：Hibernate、MyBatis
 
-## Spring 声明式事务
+## Spring 声明式事务，Spring 事务传播机制
 
-1. 声明式事务允许自定义事务接口——TransactionDefinition,它可以由 XML 或者注解@Transactional 配置,XML 的形式较少用；
+1. 声明式事务允许自定义事务接口——TransactionDefinition，它可以由 XML 或者注解 @Transactional 配置，XML 的形式较少用；
 2. 声明式事务需要配置注解驱动；
 3. Transactional 二个关键配置项 isolation（隔离级别）和 propagation（传播行为）。
 
@@ -344,29 +344,31 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 3. 产生异常且满足事务回滚配置条件，事务回滚，否则事务提交；
 4. 事务资源释放。
 
-## spring事务写在哪一部分，为什么不写在dao,controller层
+**事务传播机制：**
+
+[Spring 的事务传播机制实例](https://www.jianshu.com/p/25c8e5a35ece)
+
+1. `Propagation.REQUIRED`：如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中，这是 Spring 默认的传播行为
+2. `Propagation.SUPPORTS`：支持当前事务，如果当前没有事务，就以非事务方式执行
+3. `Propagation.MANDATORY`：使用当前的事务，如果当前没有事务，就抛出异常
+4. `Propagation.REQUIRES_NEW`：无论是否存在当前事务，方法都会在新的事务中运行
+5. `Propagation.NOT_SUPPORTED`： 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起
+6. `Propagation.NEVER`： 以非事务方式执行，如果当前存在事务，则抛出异常
+7. `Propagation.NESTED`：嵌套事务，如果当前存在事务，则在嵌套事务内执行。也就是调用方法如果抛出异常只回滚自己内部执行的 SQL，而不回滚主方法的 SQL
+
+## Spring 事务写在哪一部分，为什么不写在 dao， controller层
 
 一般写在 service 层。
 
 原因：
 
-结合事务的特点，如果我们的事务注解 @Transactional 加在 dao 层，那么只要与数据库做增删改，就要提交一次事务，如此做事务的特性就发挥不出来，尤其是事务的一致性，当出现并发问题是，用户从数据库查到的数据都会有所偏差。
+结合事务的特点，如果我们的事务注解 `@Transactional` 加在 dao 层，那么只要与数据库做增删改，就要提交一次事务，如此做事务的特性就发挥不出来，尤其是事务的一致性，当出现并发问题是，用户从数据库查到的数据都会有所偏差。
 
-一般的时候，我们的 service 层可以调用多个 dao 层，我们只需要在 service层加一个事务注解 @Transactional，这样我们就可以一个事务处理多个请求，事务的特性也会充分的发挥出来。
+一般的时候，我们的 service 层可以调用多个 dao 层，我们只需要在 service层加一个事务注解 `@Transactional`，这样我们就可以一个事务处理多个请求，事务的特性也会充分的发挥出来。
 
 
 
-## Spring 事务传播机制
 
-[Spring 的事务传播机制实例](https://www.jianshu.com/p/25c8e5a35ece)
-
-1. Propagation.REQUIRED：如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中，这是 Spring 默认的传播行为
-2. Propagation.SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行
-3. Propagation.MANDATORY：使用当前的事务，如果当前没有事务，就抛出异常
-4. Propagation.REQUIRES_NEW：无论是否存在当前事务，方法都会在新的事务中运行
-5. Propagation.NOT_SUPPORTED： 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起
-6. Propagation.NEVER： 以非事务方式执行，如果当前存在事务，则抛出异常
-7. Propagation.NESTED：嵌套事务，如果当前存在事务，则在嵌套事务内执行。也就是调用方法如果抛出异常只回滚自己内部执行的 SQL，而不回滚主方法的 SQL
 
 ## Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载
 
@@ -783,6 +785,29 @@ MyBatis 中用于实现动态 SQL 的元素主要有：if、choose（when，othe
 1. 解析配置文件，获取 mapper 接口，将 Mapper 接口注册到 MapperRegistry 中，MapperRegistry 它是用来注册 Mapper 接口和获取 Mapper 接口代理类实例的工具类，完成这两个工作是通过 getMapper 方法和 addMapper 方法。
 2. 注册 Mapper 接口，获取生成代理类实例的工具类。Mapper 接口只会被加载一次，然后缓存在 HashMap 中，其中 key 是 mapper 接口类对象，value 是 mapper 接口对应的 代理工厂。需注意的是，每个 mapper 接口对应一个代理工厂。
 3. 获取 Mapper 接口的代理对象。通过 MapperRegistry 类中的 mapper 的 hashMap 中获取 mapper 代理工厂
+
+## 动态 SQL
+
+[MyBatis3-动态SQL语句](https://www.cnblogs.com/EasonJim/p/7057575.html)
+
+`if`：相当于 java 中的 if，常与 `test` 属性联合使用
+
+`choose` + `when` + `otherwise`：三者联合使用，相当于 java 中的 `switch` + `case` + `default`
+  ```sql
+    <choose>
+        <when> </when>
+        <when> </when>
+        <otherwise> </otherwise>
+    </choose>
+  ```
+
+`trim`：去掉一些特殊的字符串，`prefix` 代表的是语句的前缀，`prefixOverrides` 代表的是前缀需要去掉哪些字符串，`suffixOverrides` 代表的是后缀需要去掉哪些字符串
+  
+`where`：用来简化 SQL 语句中 `where` 条件判断的，能智能的处理 `and`、`or`，不必担心多余导致语法错误
+
+`set`：主要是用在更新操作的时候，它的主要功能和 `where` 元素其实是差不多的，主要是在包含的语句前输出一个 `set`，然后如果包含的语句是以逗号结束的话将会把该逗号忽略，如果 `set` 包含的内容为空的话则会出错。
+
+`foreach`：主要用在构建 `in` 条件中，它可以在 SQL 语句中进行迭代一个集合
 
 # SpringMVC
 

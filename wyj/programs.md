@@ -79,6 +79,9 @@
     - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5-1)
     - [圆圈中最后剩下的数](#圆圈中最后剩下的数)
     - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字-1)
+- [回溯法](#回溯法)
+    - [打印从 1 到最大的 n 个数](#打印从-1-到最大的-n-个数)
+    - [矩阵中的路径](#矩阵中的路径)
 - [其它](#其它)
     - [多线程死锁](#多线程死锁)
 
@@ -2434,6 +2437,64 @@ public class Test {
 ```
 
 ## 求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字
+
+# 回溯法
+
+## 打印从 1 到最大的 n 个数
+
+```java
+```
+
+## 矩阵中的路径
+
+**思想**
+
+回朔法。首先，在矩阵中任选一个格子作为路径的起点。如果路径上的第 i 个字符不是 ch，那么这个格子不可能处在路径上的第i个位置。如果路径上的第 i 个字符正好是 ch，那么往相邻的格子寻找路径上的第 i+1 个字符。除在矩阵边界上的格子之外，其他格子都有 4 个相邻的格子。重复这个过程直到路径上的所有字符都在矩阵中找到相应的位置。
+
+由于回朔法的递归特性，路径可以被开成一个栈。当在矩阵中定位了路径中前 n 个字符的位置之后，在与第 n 个字符对应的格子的周围都没有找到第 n+1 个字符，这个时候只要在路径上回到第 n-1 个字符，重新定位第 n 个字符。
+　　
+由于路径不能重复进入矩阵的格子，还需要定义和字符矩阵大小一样的布尔值矩阵，用来标识路径是否已经进入每个格子。 当矩阵中坐标为 (row,col) 的格子和路径字符串中相应的字符一样时，从 4 个相邻的格子 (row,col-1)，(row-1,col)，(row,col+1) 以及(row+1,col) 中去定位路径字符串中下一个字符。如果 4 个相邻的格子都没有匹配字符串中下一个的字符，表明当前路径字符串中字符在矩阵中的定位不正确，我们需要回到前一个，然后重新定位。
+　　一直重复这个过程，直到路径字符串上所有字符都在矩阵中找到合适的位置。
+```java
+
+//用一个状态数组保存之前访问过的字符，然后再分别按上，下，左，右递归
+public class Solution {
+    public boolean hasPath(char[] matrix, int rows, int cols, char[] str) {
+        int flag[] = new int[matrix.length];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (helper(matrix, rows, cols, i, j, str, 0, flag))
+                    return true;
+            }
+        }
+        return false;
+    }
+ 
+    private boolean helper(char[] matrix, int rows, int cols, int i, int j, char[] str, int k, int[] flag) {
+        // index (i, j) 元素在数组 matrix 中的位置
+        int index = i * cols + j;
+        // 路径上的第一个字符不是 matrix[index] : matrix[index] != str[k]
+        // 1 表示 index 位置访问过了， 0 表示没有访问过
+        if (i < 0 || i >= rows || j < 0 || j >= cols || matrix[index] != str[k] || flag[index] == 1)
+            return false;
+        // str数组访问完
+        if(k == str.length - 1) return true;
+
+        flag[index] = 1;
+        if (helper(matrix, rows, cols, i - 1, j, str, k + 1, flag)
+                || helper(matrix, rows, cols, i + 1, j, str, k + 1, flag)
+                || helper(matrix, rows, cols, i, j - 1, str, k + 1, flag)
+                || helper(matrix, rows, cols, i, j + 1, str, k + 1, flag)) {
+            return true;
+        }
+        // 上面 if 返回 0，说明以 index 为第一个起点是找不到一条完整的路径的，需要把 flag[index] 置为 0，开始下一个位置的回溯
+        flag[index] = 0;
+        return false;
+    }
+}
+```
+
+
 
 **思想：**
 

@@ -2,9 +2,6 @@
 
 - [SQL 基础](#sql-基础)
     - [数据库基本操作](#数据库基本操作)
-    - [写 SQL：找出每个城市的最新一条记录。](#写-sql找出每个城市的最新一条记录)
-    - [一个学生表，一个课程成绩表，怎么找出学生课程的最高分数](#一个学生表一个课程成绩表怎么找出学生课程的最高分数)
-    - [有一组合索引（A,B,C），会出现哪几种查询方式？tag:sql 语句](#有一组合索引abc会出现哪几种查询方式tagsql-语句)
 - [JDBC 基础](#jdbc-基础)
     - [数据库水平切分，垂直切分](#数据库水平切分垂直切分)
     - [数据库两种引擎以及区别？介绍一下什么时候用 Innodb 什么时候用 MyISAM。为什么查询操作 MyISAM 比 Innodb 快？](#数据库两种引擎以及区别介绍一下什么时候用-innodb-什么时候用-myisam为什么查询操作-myisam-比-innodb-快)
@@ -18,6 +15,7 @@
     - [leftjoin 和 rightjoin 的区别？](#leftjoin-和-rightjoin-的区别)
     - [数据库优化方法](#数据库优化方法)
     - [慢日志+explain 查询分析 SQL 语句进行优化](#慢日志explain-查询分析-sql-语句进行优化)
+    - [MySQL 字段类型](#mysql-字段类型)
     - [谈一下你对继承映射的理解。](#谈一下你对继承映射的理解)
     - [说出数据连接池的工作机制是什么?](#说出数据连接池的工作机制是什么)
     - [JDBC 中如何进行事务处理？](#jdbc-中如何进行事务处理)
@@ -84,14 +82,6 @@
   `SELETE 表1数据，表2数据 FROM 表1 INNER JOIN/LEFT JIOIN/RIGHT JOIN 表2 ON 表1参数=表2参数`
 
 [SQL 教程](https://www.runoob.com/mysql/mysql-tutorial.html)
-
-## 写 SQL：找出每个城市的最新一条记录。
-
-select \* , max(time) from table group by city
-
-## 一个学生表，一个课程成绩表，怎么找出学生课程的最高分数
-
-## 有一组合索引（A,B,C），会出现哪几种查询方式？tag:sql 语句
 
 # JDBC 基础
 
@@ -221,6 +211,8 @@ NNODB 在做 SELECT 的时候，要维护的东西比 MYISAM 引擎多很多；
 
 ## 数据库的隔离级别
 
+隔离级别：
+
 - 未提交读(Read Uncommitted)
   事务中的修改，即使没有提交，对其它事务也是可见的。读取未提交的数据，也被称之为脏读。
 - 提交读(Read Committed)
@@ -229,6 +221,7 @@ NNODB 在做 SELECT 的时候，要维护的东西比 MYISAM 引擎多很多；
   保证在同一个事务中多次读取同样数据的结果是一样的。
 - 可串行化(Serializable)
   强制事务串行执行。可串行化完全锁定字段，若一个事务来查询同一份数据就必须等待，直到前一个事务完成并解除锁定为止。是完整的隔离级别，会锁定对应的数据表格，因而会有效率的问题。
+
 
 ## 数据库乐观锁和悲观锁
 
@@ -274,9 +267,24 @@ NNODB 在做 SELECT 的时候，要维护的东西比 MYISAM 引擎多很多；
 
 ## 数据库的三范式？
 
-1. 第一范式(确保每列保持原子性)：数据库表的每一列都是不可分割的基本数据项，所有字段值都是不可分解的原子值
-2. 第二范式(确保表中的每列都和主键相关)：要求实体的属性完全依赖于主关键字。第二范式需要确保数据库表中的每一列都和主键相关，而不能只与主键的某一部分相关（主要针对联合主键而言）。也就是说在一个数据库表中，一个表中只能保存一种数据，不可以把多种数据保存在同一张数据库表中。
-3. 第三范式(确保每列都和主键列直接相关,而不是间接相关)：第三范式需要确保数据表中的每一列数据都和主键直接相关，而不能间接相关。满足第三范式（3NF）必须先满足第二范式（2NF）。简而言之，第三范式（3NF）要求一个数据库表中不包含已在其它表中已包含的非主关键字信息。
+**第一范式(确保每列保持原子性)**
+
+数据库表中的所有字段都是单一属性，不可在分的，这个单一属性是由基本的数据类型所构成，如整数，浮点数，字符串等
+
+数据库表的每一列都是不可分割的基本数据项，所有字段值都是不可分解的原子值
+   
+
+**第二范式(确保表中的每列都和主键相关)**
+
+要求数据库表中的每个实例或行必须可以被**惟一**地区分。为实现区分通常需要我们设计一个主键来实现(这里的主键不包含业务逻辑)
+
+要求实体的属性完全依赖于主关键字。第二范式需要确保数据库表中的每一列都和主键相关，而不能只与主键的某一部分相关（主要针对联合主键而言）。也就是说在一个数据库表中，一个表中只能保存一种数据，不可以把多种数据保存在同一张数据库表中。
+
+
+**第三范式(确保每列都和主键列直接相关，而不是间接相关)**
+
+
+第三范式需要确保数据表中的每一列数据都和主键直接相关，而不能间接相关。满足第三范式（3NF）必须先满足第二范式（2NF）。简而言之，第三范式（3NF）要求一个数据库表中不包含已在其它表中已包含的非主关键字信息。
 
 ## 讲一下数据库 ACID 的特性？
 
@@ -395,26 +403,55 @@ left 保留左表的值，右表无值填 null，right 相反
 
 通过开启慢日志功能来优化查询语句：
 
-long_query_time     ：  设定慢查询的阀值，超出次设定值的 SQL 即被记录到慢查询日志，缺省值为 10s
+`slow_query_log_file` ：  指定慢日志文件存放位置，可以为空，系统会给一个缺省的文件 host_name-slow.log
 
-slow_query_log      ：  指定是否开启慢查询日志
+`min_examined_row_limit`：查询语句的执行行数检查返回少于该参数指定行的 SQL 不被记录到慢查询日志
 
-log_slow_queries    ：  指定是否开启慢查询日志(该参数要被 slow_query_log 取代，做兼容性保留)
-
-slow_query_log_file ：  指定慢日志文件存放位置，可以为空，系统会给一个缺省的文件 host_name-slow.log
-
-min_examined_row_limit：查询语句的执行行数检查返回少于该参数指定行的 SQL 不被记录到慢查询日志
-
-log_queries_not_using_indexes: 不使用索引的慢查询日志是否记录到索引
+`log_queries_not_using_indexes`: 不使用索引的慢查询日志是否记录到索引
 
 步骤：
 
-1. 查看慢查询日志是否开启：SHOW VARIABLES LIKE '%slow_query_log%
-2. 开启慢日志：SET GLOBAL slow_query_log=1
-3. 查看慢查询日志阙值：SHOW GLOBAL VARIABLES LIKE '%long_query_time%
-4. 设置慢查询日志阙值：SET GLOBAL long_query_time=3
-5. 查看多少 SQL 语句超过了阙值：SHOW GLOBAL STATUS LIKE '%Slow_queries%
-6. MySQL 提供的日志分析工具 mysqldumpslow，可以得到返回次数最多、访问次数最多的 SQL 语句等功能
+1. 查看慢查询日志是否开启：`show variables like '%slow_query_log%' `  
+   ```sql
+    mysql> show variables  like '%slow_query_log%';
+
+    +---------------------+----------------------------------------+
+    | Variable_name       | Value                                  |
+    +---------------------+----------------------------------------+
+    | slow_query_log      | ON                                     |
+    | slow_query_log_file | /usr/local/mysql/var/huosuSDK-slow.log |
+    +---------------------+----------------------------------------+
+    2 rows in set (0.00 sec)
+   ```
+2. 开启慢日志：`set global slow_query_log=1`
+   
+3. 查看慢查询日志阙值：` show global variables like '%long_query_time%` `
+4. 设置慢查询日志阙值：`set global long_query_time=3`，超出次设定值的 SQL 即被记录到慢查询日志，缺省值为 10s 
+5. 查看多少 SQL 语句超过了阙值：`show global status like '%Slow_queries%` `
+   
+MySQL 提供的日志分析工具 mysqldumpslow，可以得到返回次数最多、访问次数最多的 SQL 语句等功能
+
+```sql
+c : 访问计数
+l : 锁定时间
+r : 返回记录
+t : 查询时间
+al:平均锁定时间
+ar:平均返回记录数
+at:平均查询时间
+```
+
+`-t`， 是 `top n` 的意思，即为返回前面多少条的数据；`-s` 是表示按照何种方式排序
+
+得到返回记录集最多的 10 个 SQL：  
+`mysqldumpslow -s r -t 10 /database/mysql/mysql06_slow.log`
+
+得到访问次数最多的 10 个 SQL：  
+`mysqldumpslow -s c -t 10 /database/mysql/mysql06_slow.log`
+
+得到按照时间排序的前 10 条里面含有左连接的查询语句：  
+`mysqldumpslow -s t -t 10 -g “left join” /database/mysql/mysql06_slow.log`
+
 
 [慢日志](https://www.cnblogs.com/sunss/p/6548588.html)
 
@@ -433,6 +470,91 @@ log_queries_not_using_indexes: 不使用索引的慢查询日志是否记录到�
    1. eq_ref：唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配；
    2. ref：非唯一性索引扫描，返回匹配某个单独值的所有行；
    3. range：只检索给定范围的行，使用一个索引来选择行；
+
+
+当我们优化了一条 SQL 语句时后，可以通过 `show profiles` 看到其执行时间和效率。默认的是关闭的，可以通过 `SET profiling = 1;` 开启，之后运行一个查询语句之后使用 `show profiles` 进行查看。
+
+为了防止 MySQL 缓存对查询结果的影响，我们可以临时关闭缓存，使用命令：
+> `set global query_cache_size=0`;  
+> `set global query_cache_type=0`;  
+
+`query_cache_size` 表示缓存的大小，`query_cache_type` 表示缓存那种类型的 select 结果集。之后可以查看缓存是否关闭：
+
+> `show variables like '%query_cache%';`
+
+[MYSQL中使用SHOW PROFILE命令分析性能的用法整理](https://www.cnblogs.com/mydriverc/p/7086523.html)
+
+[Mysql 查询缓存](https://www.csdn.net/gather_28/MtTaEg2sNzAyNS1ibG9n.html)
+
+
+## MySQL 字段类型
+
+**整型**
+
+在 MySQL 中支持的 5 个主要整数类型是 tinyint，smallint，mediumint，int 和 bigint。这些类型在很大程度上是相同的，只有它们存储的值的大小是不相同的
+
+数值数据类型要比字符串执行更快，尤其是在比较运算时，所以我们应该选择最简单的数据类型。区间小的数据类型占用空间更少，处理速度更快，如 tinyint 比 bigint 要快的多
+
+整数类型很多比如 tinyint、int、smallint、bigint 等，那么我们要根据自己需要存储的数据长度决定使用的类型
+
+![image](https://ws1.sinaimg.cn/large/d4556b75ly1g5b1dp2pa3j20ot0jawgf.jpg)
+
+> 为什么 MySQL 存储的值要分有符号和无符号呢？因为一个字节占 8bit，也就 1 个 bit 有 0 和 1 两种可能，8 个 bit 就是 2^8 = 256种可能，也就是 0~255; 但如果是有符号的话，就得拿一个 1bit 来存储这个负号，本来 8bit 只剩 7bit，2^7 = 128，也就是 -128~127(正数部分包含一个0);
+
+**浮点型**
+
+MySQL 支持的三个浮点类型是 float、double 和 decimal 类型。float 数值类型用于表示单精度浮点数值，而 double 数值类型用于表示双精度浮点数值。一般不会使用 double 类型
+
+浮点数float在储存空间及运行效率上要优于精度数值类型decimal，但float与double会有舍入错误而decimal则可以提供更加准确的小数级精确运算不会有错误产生计算更精确，适用于金融类型数据的存储。
+
+**字符串类型**
+
+MySQL 提供了 8 个基本的字符串类型，可以存储的范围从简单的一个字符到巨大的文本块或二进制字符串数据。
+
+* char 与 varchar 
+   
+  char 固定长度的字符串保存类型，会去掉尾部的空格。在数据长度相近时使用 char 类型比较合适，比如 md5 加密的密码用户名等。并且必须在圆括号内用一个大小修饰符来定义。这个大小修饰符的范围从 0-255。比指定长度大的值将被截短，而比指定长度小的值将会用空格作填补。char 与 varchar 范围大小都为 0-255。
+
+  varchar 是可变长度字符串类型，由于 varchar 是根据储存的值来保存数据，所以可以大大节约磁盘空间。
+
+    ![image](https://ws1.sinaimg.cn/large/d4556b75ly1g5b0f39uroj20rq0dcdh5.jpg)
+
+* text 与 blob
+  对于字段长度要求超过 255 个的情况下，MySQL 提供了 text 和 blob 两种类型。这些大型的数据用于存储文本块或图像、声音文件等二进制数据类型。
+
+
+
+**时间类型**
+
+![image](https://ws1.sinaimg.cn/large/d4556b75ly1g5b0vchlh9j20s70a2aaz.jpg)
+
+* date、time 和 year
+  
+  MySQL 用 date 和 year 类型存储简单的日期值，使用 time 类型存储时间值。
+
+* datetime 和 timestamp
+  
+  二者可以把日期和时间作为单个的值进行存储。这两种类型通常用于自动存储包含当前日期和时间的时间戳，并可在需要执行大量数据库事务和需要建立一个调试和审查用途的审计跟踪的应用程序中发挥良好作用。
+  
+**字段总结**
+
+1. 最常用也就是 varchar(255)，char(255)，text，tinyint(4)，smallint(6)，mediumint，int(11)几种。
+2. 复合类型我们一般用 tinyint，更快的时间更省的空间以及更容易扩展
+3. 不要使用 null，因为 MySQL 对 null 字段索引优化不佳，增加更多的计算难度，同时在保存与处理 null 类形时，也会做更多的工作，所以从效率上来说，不建议用过多的 null。有些值他确实有可能没有值，怎么办呢？解决方法是数值弄用整数 0，字符串用空来定义默认值即可。
+4. 保存数值类型最好不要用字符串数据类型，这样存储的空间显然是会更大，而且在排序时字符串的 9 是大于 22 的，其实如果进行运算时 MySQL 会将字符串转换为数值类型，大大降低效果，而且这种转换是不会走原有的索引的
+5. 字符串数据类型是一个万能数据类型，可以储存数值、字符串、日期等。
+6. 关于手机号，推荐用char(11)，char(11)在查询上更有效率，因为手机号是一个活跃字段参与逻辑会很多。
+
+**常用字段举例**
+
+* 姓名：char(20)
+* 价格：DECIMAL(7, 3)
+* 产品序列号：SMALLINT(5) unsigned
+* 文章内容: TEXT
+* MD5: CHAR(32)
+* ip: char(15)
+* time: int(10)
+* email char(32)
 
 ## 谈一下你对继承映射的理解。
 
