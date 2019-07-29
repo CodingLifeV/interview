@@ -1,39 +1,39 @@
 <!-- TOC -->
 
 - [Spring](#spring)
-    - [IOC 和 AOP?](#ioc-和-aop)
-    - [bean 的生命周期](#bean-的生命周期)
-    - [Spring 注解 autowired 和 resource 区别](#spring-注解-autowired-和-resource-区别)
-    - [@Controller 和@RestController 的区别？](#controller-和restcontroller-的区别)
-    - [依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？](#依赖注入的方式有几种哪几种bean-的装配方式有几种哪几种)
-    - [springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？](#springioc-原理自己实现-ioc-要怎么做哪些步骤)
-    - [Spring 中 BeanFactory 和 ApplicationContext 的区别？BeanFactory 和 FactoryBean 的区别？](#spring-中-beanfactory-和-applicationcontext-的区别beanfactory-和-factorybean-的区别)
-    - [请问 Spring 中 Bean 的作用域有哪些？](#请问-spring-中-bean-的作用域有哪些)
-    - [谈谈 Spring 中自动装配的方式有哪些？](#谈谈-spring-中自动装配的方式有哪些)
-    - [aop 的应用场景？日志记录和异常处理如何使用？](#aop-的应用场景日志记录和异常处理如何使用)
-    - [AOP 的原理是什么？](#aop-的原理是什么)
-    - [你如何理解 AOP 中的连接点（Joinpoint）、切点（Pointcut）、增强（Advice）、引介（Introduction）、织入（Weaving）、切面（Aspect）这些概念？](#你如何理解-aop-中的连接点joinpoint切点pointcut增强advice引介introduction织入weaving切面aspect这些概念)
-    - [Spring 支持的事务管理类型有哪些？你在项目中使用哪种方式？](#spring-支持的事务管理类型有哪些你在项目中使用哪种方式)
-    - [介绍一下 spring？](#介绍一下-spring)
-    - [Struts 拦截器和 Spring AOP 区别？](#struts-拦截器和-spring-aop-区别)
-    - [spring 框架的优点？缺点？](#spring-框架的优点缺点)
-    - [选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？](#选择使用-spring-框架的原因spring-框架为企业级开发带来的好处有哪些)
-    - [持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？](#持久层设计要考虑的问题有哪些你用过的持久层框架有哪些)
-    - [Spring 声明式事务，Spring 事务传播机制](#spring-声明式事务spring-事务传播机制)
-    - [Spring 事务写在哪一部分，为什么不写在 dao， controller层](#spring-事务写在哪一部分为什么不写在-dao-controller层)
-    - [Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载](#spring-中如何让-a-和-b-两个-bean-按顺序加载-spring-中如何让-a-和-b-两个-bean-按顺序加载)
-    - [Spring 源码总结](#spring-源码总结)
-    - [Spring 中的设计模式](#spring-中的设计模式)
+  - [IOC 和 AOP?](#ioc-和-aop)
+  - [bean 的生命周期](#bean-的生命周期)
+  - [Spring 注解 autowired 和 resource 区别](#spring-注解-autowired-和-resource-区别)
+  - [@Controller 和@RestController 的区别？](#controller-和restcontroller-的区别)
+  - [依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？](#依赖注入的方式有几种哪几种bean-的装配方式有几种哪几种)
+  - [springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？](#springioc-原理自己实现-ioc-要怎么做哪些步骤)
+  - [Spring 中 BeanFactory 和 ApplicationContext 的区别？BeanFactory 和 FactoryBean 的区别？](#spring-中-beanfactory-和-applicationcontext-的区别beanfactory-和-factorybean-的区别)
+  - [请问 Spring 中 Bean 的作用域有哪些？](#请问-spring-中-bean-的作用域有哪些)
+  - [谈谈 Spring 中自动装配的方式有哪些？](#谈谈-spring-中自动装配的方式有哪些)
+  - [aop 的应用场景？日志记录和异常处理如何使用？](#aop-的应用场景日志记录和异常处理如何使用)
+  - [AOP 的原理是什么？](#aop-的原理是什么)
+  - [你如何理解 AOP 中的连接点（Joinpoint）、切点（Pointcut）、增强（Advice）、引介（Introduction）、织入（Weaving）、切面（Aspect）这些概念？](#你如何理解-aop-中的连接点joinpoint切点pointcut增强advice引介introduction织入weaving切面aspect这些概念)
+  - [Spring 支持的事务管理类型有哪些？你在项目中使用哪种方式？](#spring-支持的事务管理类型有哪些你在项目中使用哪种方式)
+  - [介绍一下 spring？](#介绍一下-spring)
+  - [Struts 拦截器和 Spring AOP 区别？](#struts-拦截器和-spring-aop-区别)
+  - [spring 框架的优点？缺点？](#spring-框架的优点缺点)
+  - [选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？](#选择使用-spring-框架的原因spring-框架为企业级开发带来的好处有哪些)
+  - [持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？](#持久层设计要考虑的问题有哪些你用过的持久层框架有哪些)
+  - [Spring 声明式事务，Spring 事务传播机制](#spring-声明式事务spring-事务传播机制)
+  - [Spring 事务写在哪一部分，为什么不写在 dao， controller 层](#spring-事务写在哪一部分为什么不写在-dao-controller-层)
+  - [Spring 中如何让 A 和 B 两个 bean 按顺序加载](#spring-中如何让-a-和-b-两个-bean-按顺序加载)
+  - [Spring 源码总结](#spring-源码总结)
+  - [Spring 中的设计模式](#spring-中的设计模式)
 - [Mybatis](#mybatis)
-    - [解释一下 MyBatis 中命名空间（namespace）的作用。](#解释一下-mybatis-中命名空间namespace的作用)
-    - [MyBatis 中的动态 SQL 是什么意思？](#mybatis-中的动态-sql-是什么意思)
-    - [Mybatis 中 Mapper 接口编程原理](#mybatis-中-mapper-接口编程原理)
-    - [动态 SQL](#动态-sql)
+  - [解释一下 MyBatis 中命名空间（namespace）的作用。](#解释一下-mybatis-中命名空间namespace的作用)
+  - [MyBatis 中的动态 SQL 是什么意思？](#mybatis-中的动态-sql-是什么意思)
+  - [Mybatis 中 Mapper 接口编程原理](#mybatis-中-mapper-接口编程原理)
+  - [动态 SQL](#动态-sql)
 - [SpringMVC](#springmvc)
-    - [Spring MVC 注解的优点](#spring-mvc-注解的优点)
-    - [springmvc 和 spring-boot 区别？](#springmvc-和-spring-boot-区别)
-    - [SpringMVC 的运行机制，运行机制的每一部分的相关知识？](#springmvc-的运行机制运行机制的每一部分的相关知识)
-    - [谈谈 Spring MVC 的工作原理是怎样的？](#谈谈-spring-mvc-的工作原理是怎样的)
+  - [Spring MVC 注解的优点](#spring-mvc-注解的优点)
+  - [springmvc 和 spring-boot 区别？](#springmvc-和-spring-boot-区别)
+  - [SpringMVC 的运行机制，运行机制的每一部分的相关知识？](#springmvc-的运行机制运行机制的每一部分的相关知识)
+  - [谈谈 Spring MVC 的工作原理是怎样的？](#谈谈-spring-mvc-的工作原理是怎样的)
 
 <!-- /TOC -->
 
@@ -291,12 +291,12 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 
 ## 介绍一下 spring？
 
-1. Spring 的核心是一个轻量级（Lightweight）的容器（Container）.轻量级是指它的创建和销毁不需要消耗太多的资源，意味着可以在程序中经常创建和销毁 session 的对象；重量级意味不能随意的创建和销毁它的实例，会占用很多的资源。
+1. Spring 的核心是一个轻量级（Lightweight）的容器（Container）。轻量级是指它的创建和销毁不需要消耗太多的资源，意味着可以在程序中经常创建和销毁 session 的对象；重量级意味不能随意的创建和销毁它的实例，会占用很多的资源。
 2. Spring 是实现 Ioc（Inversion of Control）容器和非入侵性（No intrusive）的框架
 3. Spring 提供 AOP（Aspect-oriented programming）概念的实现方式
 4. Spring 提供对持久层（Persistence）、事务（Transaction）的支持
 5. Spring 提供 MVC Web 框架的是实现，并对一些常用的企业服务 api 提供一致的模型封装
-   6.Spring 提供了对现存的各种框架（Structs、JSF、Hibernate、Ibatis、Webwork 等）相整合的方案
+6. Spring 提供了对现存的各种框架（Structs、JSF、Hibernate、Ibatis、Webwork 等）相整合的方案
 
 ## Struts 拦截器和 Spring AOP 区别？
 
@@ -356,7 +356,7 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 6. `Propagation.NEVER`： 以非事务方式执行，如果当前存在事务，则抛出异常
 7. `Propagation.NESTED`：嵌套事务，如果当前存在事务，则在嵌套事务内执行。也就是调用方法如果抛出异常只回滚自己内部执行的 SQL，而不回滚主方法的 SQL
 
-## Spring 事务写在哪一部分，为什么不写在 dao， controller层
+## Spring 事务写在哪一部分，为什么不写在 dao， controller 层
 
 一般写在 service 层。
 
@@ -364,13 +364,9 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 
 结合事务的特点，如果我们的事务注解 `@Transactional` 加在 dao 层，那么只要与数据库做增删改，就要提交一次事务，如此做事务的特性就发挥不出来，尤其是事务的一致性，当出现并发问题是，用户从数据库查到的数据都会有所偏差。
 
-一般的时候，我们的 service 层可以调用多个 dao 层，我们只需要在 service层加一个事务注解 `@Transactional`，这样我们就可以一个事务处理多个请求，事务的特性也会充分的发挥出来。
+一般的时候，我们的 service 层可以调用多个 dao 层，我们只需要在 service 层加一个事务注解 `@Transactional`，这样我们就可以一个事务处理多个请求，事务的特性也会充分的发挥出来。
 
-
-
-
-
-## Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载
+## Spring 中如何让 A 和 B 两个 bean 按顺序加载
 
 1. 依赖关系
 
@@ -788,21 +784,22 @@ MyBatis 中用于实现动态 SQL 的元素主要有：if、choose（when，othe
 
 ## 动态 SQL
 
-[MyBatis3-动态SQL语句](https://www.cnblogs.com/EasonJim/p/7057575.html)
+[MyBatis3-动态 SQL 语句](https://www.cnblogs.com/EasonJim/p/7057575.html)
 
 `if`：相当于 java 中的 if，常与 `test` 属性联合使用
 
 `choose` + `when` + `otherwise`：三者联合使用，相当于 java 中的 `switch` + `case` + `default`
-  ```sql
-    <choose>
-        <when> </when>
-        <when> </when>
-        <otherwise> </otherwise>
-    </choose>
-  ```
+
+```sql
+  <choose>
+      <when> </when>
+      <when> </when>
+      <otherwise> </otherwise>
+  </choose>
+```
 
 `trim`：去掉一些特殊的字符串，`prefix` 代表的是语句的前缀，`prefixOverrides` 代表的是前缀需要去掉哪些字符串，`suffixOverrides` 代表的是后缀需要去掉哪些字符串
-  
+
 `where`：用来简化 SQL 语句中 `where` 条件判断的，能智能的处理 `and`、`or`，不必担心多余导致语法错误
 
 `set`：主要是用在更新操作的时候，它的主要功能和 `where` 元素其实是差不多的，主要是在包含的语句前输出一个 `set`，然后如果包含的语句是以逗号结束的话将会把该逗号忽略，如果 `set` 包含的内容为空的话则会出错。
