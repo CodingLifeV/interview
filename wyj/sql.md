@@ -3,48 +3,54 @@
 <!-- TOC -->
 
 - [Sql 语句](#sql-语句)
-  - [一、单表操作](#一单表操作)
-    - [1. 查找最晚入职员工的所有信息](#1-查找最晚入职员工的所有信息)
-      - [`max()`](#max)
-    - [2.查找入职员工时间排名倒数第三的员工所有信息](#2查找入职员工时间排名倒数第三的员工所有信息)
-      - [`select distinct`](#select-distinct)
-      - [`order by`](#order-by)
-      - [`limit m,n`](#limit-mn)
-      - [`limit n`](#limit-n)
-    - [3. 查找薪水涨幅超过 15 次的员工号 emp_no 以及其对应的涨幅次数 t](#3-查找薪水涨幅超过-15-次的员工号-emp_no-以及其对应的涨幅次数-t)
-      - [`count(*)`](#count)
-      - [`count(column_name)`](#countcolumn_name)
-      - [`having`](#having)
-      - [`group by`](#group-by)
-    - [4. 找出所有员工当前(to_date='9999-01-01')具体的薪水 salary 情况，对于相同的薪水只显示一次,并按照逆序显示](#4-找出所有员工当前to_date9999-01-01具体的薪水-salary-情况对于相同的薪水只显示一次并按照逆序显示)
-      - [order by](#order-by)
-      - [`group by` 代替 `distinct`](#group-by-代替-distinct)
-    - [5. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。](#5-从-titles-表获取按照-title-进行分组每组个数大于等于-2给出-title-以及对应的数目-t)
-      - [`count`、`group by`和 `having` 搭配使用](#countgroup-by和-having-搭配使用)
-    - [6. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。注意对于重复的 emp_no 进行忽略。](#6-从-titles-表获取按照-title-进行分组每组个数大于等于-2给出-title-以及对应的数目-t注意对于重复的-emp_no-进行忽略)
-      - [`count` 内部搭配 `distinct` 使用](#count-内部搭配-distinct-使用)
-    - [7. 查找 employees 表所有 emp_no 为奇数，且 last_name 不为 Mary 的员工信息，并按照 hire_date 逆序排列](#7-查找-employees-表所有-emp_no-为奇数且-last_name-不为-mary-的员工信息并按照-hire_date-逆序排列)
-  - [二、多表操作](#二多表操作)
-    - [1. 查找各个部门当前(to_date='9999-01-01')领导当前薪水详情以及其对应部门编号](#1-查找各个部门当前to_date9999-01-01领导当前薪水详情以及其对应部门编号)
-      - [`join`](#join)
-    - [2. 查找所有已经分配部门的员工的 last_name 和 first_name](#2-查找所有已经分配部门的员工的-last_name-和-first_name)
-      - [`inner join`](#inner-join)
-    - [3. 查找所有员工的 last_name 和 first_name 以及对应部门编号 dept_no，也包括展示没有分配具体部门的员工](#3-查找所有员工的-last_name-和-first_name-以及对应部门编号-dept_no也包括展示没有分配具体部门的员工)
-      - [`left join`](#left-join)
-    - [4. 查找所有员工入职时候的薪水情况，给出 emp_no 以及 salary， 并按照 emp_no 进行逆序](#4-查找所有员工入职时候的薪水情况给出-emp_no-以及-salary-并按照-emp_no-进行逆序)
-      - [inner join](#inner-join)
-      - [order by](#order-by-1)
-    - [5. 获取所有部门当前 manager 的当前薪水情况，给出 dept_no, emp_no 以及 salary，当前表示 to_date='9999-01-01'](#5-获取所有部门当前-manager-的当前薪水情况给出-dept_no-emp_no-以及-salary当前表示-to_date9999-01-01)
-      - [inner join](#inner-join-1)
-    - [6. 获取所有非 manager 的员工 emp_no](#6-获取所有非-manager-的员工-emp_no)
-      - [`is null`](#is-null)
-      - [`left join` 替换 `in`](#left-join-替换-in)
-    - [7. 获取所有员工当前的 manager，如果当前的 manager 是自己的话结果不显示，当前表示 to_date='9999-01-01'。结果第一列给出当前员工的 emp_no,第二列给出其 manager 对应的 manager_no](#7-获取所有员工当前的-manager如果当前的-manager-是自己的话结果不显示当前表示-to_date9999-01-01结果第一列给出当前员工的-emp_no第二列给出其-manager-对应的-manager_no)
-      - [`<>`](#)
-      - [inner join](#inner-join-2)
-    - [8. 获取所有部门中当前员工薪水最高的相关信息，给出 dept_no, emp_no 以及其对应的 salary](#8-获取所有部门中当前员工薪水最高的相关信息给出-dept_no-emp_no-以及其对应的-salary)
-      - [inner join](#inner-join-3)
-      - [group by](#group-by)
+    - [一、单表操作](#一单表操作)
+        - [1. 查找最晚入职员工的所有信息](#1-查找最晚入职员工的所有信息)
+            - [`max()`](#max)
+        - [2.查找入职员工时间排名倒数第三的员工所有信息](#2查找入职员工时间排名倒数第三的员工所有信息)
+            - [`select distinct`](#select-distinct)
+            - [`order by`](#order-by)
+            - [`limit m,n`](#limit-mn)
+            - [`limit n`](#limit-n)
+        - [3. 查找薪水涨幅超过 15 次的员工号 emp_no 以及其对应的涨幅次数 t](#3-查找薪水涨幅超过-15-次的员工号-emp_no-以及其对应的涨幅次数-t)
+            - [`count(*)`](#count)
+            - [`count(column_name)`](#countcolumn_name)
+            - [`having`](#having)
+            - [`group by`](#group-by)
+        - [4. 找出所有员工当前(to_date='9999-01-01')具体的薪水 salary 情况，对于相同的薪水只显示一次,并按照逆序显示](#4-找出所有员工当前to_date9999-01-01具体的薪水-salary-情况对于相同的薪水只显示一次并按照逆序显示)
+            - [order by](#order-by)
+            - [`group by` 代替 `distinct`](#group-by-代替-distinct)
+        - [5. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。](#5-从-titles-表获取按照-title-进行分组每组个数大于等于-2给出-title-以及对应的数目-t)
+            - [`count`、`group by`和 `having` 搭配使用](#countgroup-by和-having-搭配使用)
+        - [6. 从 titles 表获取按照 title 进行分组，每组个数大于等于 2，给出 title 以及对应的数目 t。注意对于重复的 emp_no 进行忽略。](#6-从-titles-表获取按照-title-进行分组每组个数大于等于-2给出-title-以及对应的数目-t注意对于重复的-emp_no-进行忽略)
+            - [`count` 内部搭配 `distinct` 使用](#count-内部搭配-distinct-使用)
+        - [7. 查找 employees 表所有 emp_no 为奇数，且 last_name 不为 Mary 的员工信息，并按照 hire_date 逆序排列](#7-查找-employees-表所有-emp_no-为奇数且-last_name-不为-mary-的员工信息并按照-hire_date-逆序排列)
+            - [where 中使用条件判断](#where-中使用条件判断)
+        - [8. 获取当前（to_date='9999-01-01'）薪水第二多的员工的emp_no以及其对应的薪水salary](#8-获取当前to_date9999-01-01薪水第二多的员工的emp_no以及其对应的薪水salary)
+            - [order by、limit m,n](#order-bylimit-mn)
+    - [二、多表操作](#二多表操作)
+        - [1. 查找各个部门当前(to_date='9999-01-01')领导当前薪水详情以及其对应部门编号](#1-查找各个部门当前to_date9999-01-01领导当前薪水详情以及其对应部门编号)
+            - [`join`](#join)
+        - [2. 查找所有已经分配部门的员工的 last_name 和 first_name](#2-查找所有已经分配部门的员工的-last_name-和-first_name)
+            - [`inner join`](#inner-join)
+        - [3. 查找所有员工的 last_name 和 first_name 以及对应部门编号 dept_no，也包括展示没有分配具体部门的员工](#3-查找所有员工的-last_name-和-first_name-以及对应部门编号-dept_no也包括展示没有分配具体部门的员工)
+            - [`left join`](#left-join)
+        - [4. 查找所有员工入职时候的薪水情况，给出 emp_no 以及 salary， 并按照 emp_no 进行逆序](#4-查找所有员工入职时候的薪水情况给出-emp_no-以及-salary-并按照-emp_no-进行逆序)
+            - [inner join](#inner-join)
+            - [order by](#order-by-1)
+        - [5. 获取所有部门当前 manager 的当前薪水情况，给出 dept_no, emp_no 以及 salary，当前表示 to_date='9999-01-01'](#5-获取所有部门当前-manager-的当前薪水情况给出-dept_no-emp_no-以及-salary当前表示-to_date9999-01-01)
+            - [inner join](#inner-join-1)
+        - [6. 获取所有非 manager 的员工 emp_no](#6-获取所有非-manager-的员工-emp_no)
+            - [`is null`](#is-null)
+            - [`left join` 替换 `in`](#left-join-替换-in)
+        - [7. 获取所有员工当前的 manager，如果当前的 manager 是自己的话结果不显示，当前表示 to_date='9999-01-01'。结果第一列给出当前员工的 emp_no,第二列给出其 manager 对应的 manager_no](#7-获取所有员工当前的-manager如果当前的-manager-是自己的话结果不显示当前表示-to_date9999-01-01结果第一列给出当前员工的-emp_no第二列给出其-manager-对应的-manager_no)
+            - [`<>`](#)
+            - [inner join](#inner-join-2)
+        - [8. 获取所有部门中当前员工薪水最高的相关信息，给出 dept_no, emp_no 以及其对应的 salary](#8-获取所有部门中当前员工薪水最高的相关信息给出-dept_no-emp_no-以及其对应的-salary)
+            - [inner join](#inner-join-3)
+            - [group by](#group-by)
+        - [9. 统计出当前各个title类型对应的员工当前薪水对应的平均工资。结果给出title以及平均工资avg。](#9-统计出当前各个title类型对应的员工当前薪水对应的平均工资结果给出title以及平均工资avg)
+            - [出现`出前`，要将二张表中的 `to_date` 字段约束](#出现出前要将二张表中的-to_date-字段约束)
+        - [10. 查找当前薪水(to_date='9999-01-01')排名第二多的员工编号emp_no、薪水salary、last_name以及first_name，不准使用order by](#10-查找当前薪水to_date9999-01-01排名第二多的员工编号emp_no薪水salarylast_name以及first_name不准使用order-by)
 
 <!-- /TOC -->
 
@@ -160,9 +166,25 @@ having t >= 2
 
 ### 7. 查找 employees 表所有 emp_no 为奇数，且 last_name 不为 Mary 的员工信息，并按照 hire_date 逆序排列
 
+#### where 中使用条件判断 
+
 ```sql
+select * from employees
+where emp_no % 2 = 1
+and last_name != 'Mary'
+order by hire_date desc
+```
 
+### 8. 获取当前（to_date='9999-01-01'）薪水第二多的员工的emp_no以及其对应的薪水salary
 
+#### order by、limit m,n
+
+```sql
+select emp_no, salary 
+from salaries 
+where to_date='9999-01-01'
+order by salary desc
+limit 1,1
 ```
 
 ## 二、多表操作
@@ -300,4 +322,23 @@ on d.emp_no = s.emp_no
 where d.to_date = '9999-01-01'
 and s.to_date = '9999-01-01'
 group by d.dept_no
+```
+
+### 9. 统计出当前各个title类型对应的员工当前薪水对应的平均工资。结果给出title以及平均工资avg。
+
+#### 出现`出前`，要将二张表中的 `to_date` 字段约束 
+
+```sql
+select t.title, avg(s.salary) 
+from titles t inner join salaries s 
+on t.emp_no = s.emp_no
+AND s.to_date = '9999-01-01'
+AND t.to_date = '9999-01-01'
+group by title
+```
+
+### 10. 查找当前薪水(to_date='9999-01-01')排名第二多的员工编号emp_no、薪水salary、last_name以及first_name，不准使用order by
+
+```sql
+
 ```

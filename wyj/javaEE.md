@@ -1,10 +1,9 @@
 <!-- TOC -->
 
-- [javaEE](#javaee)
-  - [Spring](#spring)
-    - [说一下 IOC 和 AOP?](#说一下-ioc-和-aop)
-    - [介绍一下 bean 的生命周期](#介绍一下-bean-的生命周期)
-    - [Spring 里面注解用过没有？autowired 和 resource 区别？](#spring-里面注解用过没有autowired-和-resource-区别)
+- [Spring](#spring)
+    - [IOC 和 AOP?](#ioc-和-aop)
+    - [bean 的生命周期](#bean-的生命周期)
+    - [Spring 注解 autowired 和 resource 区别](#spring-注解-autowired-和-resource-区别)
     - [@Controller 和@RestController 的区别？](#controller-和restcontroller-的区别)
     - [依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？](#依赖注入的方式有几种哪几种bean-的装配方式有几种哪几种)
     - [springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？](#springioc-原理自己实现-ioc-要怎么做哪些步骤)
@@ -20,16 +19,17 @@
     - [spring 框架的优点？缺点？](#spring-框架的优点缺点)
     - [选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？](#选择使用-spring-框架的原因spring-框架为企业级开发带来的好处有哪些)
     - [持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？](#持久层设计要考虑的问题有哪些你用过的持久层框架有哪些)
-    - [Spring 声明式事务](#spring-声明式事务)
-    - [Spring 事务传播机制](#spring-事务传播机制)
+    - [Spring 声明式事务，Spring 事务传播机制](#spring-声明式事务spring-事务传播机制)
+    - [Spring 事务写在哪一部分，为什么不写在 dao， controller层](#spring-事务写在哪一部分为什么不写在-dao-controller层)
     - [Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载](#spring-中如何让-a-和-b-两个-bean-按顺序加载-spring-中如何让-a-和-b-两个-bean-按顺序加载)
-    - [Spring 源码了解吗？能讲一下大致过程吗？](#spring-源码了解吗能讲一下大致过程吗)
+    - [Spring 源码总结](#spring-源码总结)
     - [Spring 中的设计模式](#spring-中的设计模式)
-  - [Mybatis](#mybatis)
+- [Mybatis](#mybatis)
     - [解释一下 MyBatis 中命名空间（namespace）的作用。](#解释一下-mybatis-中命名空间namespace的作用)
     - [MyBatis 中的动态 SQL 是什么意思？](#mybatis-中的动态-sql-是什么意思)
     - [Mybatis 中 Mapper 接口编程原理](#mybatis-中-mapper-接口编程原理)
-  - [SpringMVC](#springmvc)
+    - [动态 SQL](#动态-sql)
+- [SpringMVC](#springmvc)
     - [Spring MVC 注解的优点](#spring-mvc-注解的优点)
     - [springmvc 和 spring-boot 区别？](#springmvc-和-spring-boot-区别)
     - [SpringMVC 的运行机制，运行机制的每一部分的相关知识？](#springmvc-的运行机制运行机制的每一部分的相关知识)
@@ -37,21 +37,19 @@
 
 <!-- /TOC -->
 
-# javaEE
-
-## Spring
+# Spring
 
 [博客大致写了 Spring 的主要代码流程](https://www.jianshu.com/p/5c781f264467?from=groupmessage)
 
 [博主自己动手写了一个 Spring IOC](https://www.cnblogs.com/jeysin/p/10091269.html)
 
-### 说一下 IOC 和 AOP?
+## IOC 和 AOP?
 
 IOC：控制反转，控制权的转移，应用程序本身不负责依赖对象的创建和维护，而是由外部容器负责创建和维护。 许多应用都是通过彼此间的相互合作来实现业务逻辑的，如类 A 要调用类 B 的方法，以前我们都是在类 A 中，通过自身 new 一个类 B，然后在调用类 B 的方法，现在我们把 new 类 B 的事情交给 spring 来做，在我们调用的时候，容器会为我们实例化。
 
 AOP： 面向切面编程，它利用一种称为“横切”的技术，剖解开封装的对象内部，并将那些影响了多个类的公共行为封装到一个可重用模块，并将其名为“Aspect”，即切面。所谓“切面”，简单地说，就是将那些与业务无关，却为业务模块所共同调用的逻辑或责任封装起来，便于减少系统的重复代码，降低模块间的耦合度，并有利于未来的可操作性和可维护性。主要的功能是：日志记录，性能统计，安全控制，事务处理，异常处理。
 
-### 介绍一下 bean 的生命周期
+## bean 的生命周期
 
 [spring 生命周期最详解](https://blog.csdn.net/qq_23473123/article/details/76610052)
 
@@ -81,7 +79,7 @@ AOP： 面向切面编程，它利用一种称为“横切”的技术，剖解�
 
 BeanPostProcessor 有一个不同于其他 3 个的点，实现 BeanPostProcessor 接口后，容器中的对象，在初始化前和初始化后，都会调用 postProcessBeforeInitialization 方法和 postProcessAfterInitialization 方法。即使这个对象并未实现 BeanPostProcessor 接口。而其他如@PostConstruct 注解等的实现方式中，仅作用在当前的 bean 上。因此 BeanPostProcessor 是全局性的，对容器中所有的对象都有效。
 
-### Spring 里面注解用过没有？autowired 和 resource 区别？
+## Spring 注解 autowired 和 resource 区别
 
 [@Autowired 与@Resource 的区别（详细）](https://blog.csdn.net/weixin_40423597/article/details/80643990)
 
@@ -94,7 +92,7 @@ BeanPostProcessor 有一个不同于其他 3 个的点，实现 BeanPostProcesso
 1. @Autowired 按 byType 自动注入，默认情况下它要求依赖对象必须存在，如果允许 null 值，可以设置它的 required 属性为 false。如果我们想使用按照名称（byName）来装配，可以结合@Qualifier 注解一起使用
 2. @Resource 默认按 byName 自动注入，@Resource 有两个属性是比较重要的，分是 name 和 type，Spring 将@Resource 注解的 name 属性解析为 bean 的名字，而 type 属性则解析为 bean 的类型。所以如果使用 name 属性，则使用 byName 的自动注入策略，而使用 type 属性时则使用 byType 自动注入策略。如果既不指定 name 也不指定 type 属性，这时将通过反射机制使用 byName 自动注入策略。 如果指定了 name，则从上下文中查找名称（id）匹配的 bean 进行装配，找不到则抛出异常；如果指定了 type，则从上下文中找到类型匹配的唯一 bean 进行装配，找不到或者找到多个，都会抛出异常
 
-### @Controller 和@RestController 的区别？
+## @Controller 和@RestController 的区别？
 
 [@Controller 和@RestController 源码解析](https://www.cnblogs.com/sgh1023/p/10165470.html)
 
@@ -108,7 +106,7 @@ BeanPostProcessor 有一个不同于其他 3 个的点，实现 BeanPostProcesso
 2. 使用 @Controller 注解，在对应的方法上，视图解析器可以解析 return 的 jsp, html 页面，并且跳转到相应页面，若返回 json 等内容到页面，则需要加@ResponseBody 注解；
 3. 相当于@Controller + @ResponseBody 两个注解的结合，返回 json 数据不需要在方法前面加@ResponseBody 注解了，但使用@RestController 这个注解，就不能返回 jsp,html 页面，视图解析器无法解析 jsp,html 页面
 
-### 依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？
+## 依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？
 
 依赖注入方式：
 
@@ -123,7 +121,7 @@ BeanPostProcessor 有一个不同于其他 3 个的点，实现 BeanPostProcesso
    1. 组件扫描，@Component
    2. 自动装配，@Autowired
 
-### springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？
+## springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？
 
 [自己动手实现一个轻量级 Spring IOC 容器](https://www.cnblogs.com/jeysin/p/10091269.html)
 
@@ -140,7 +138,7 @@ IOC：控制反转，控制权的转移，应用程序本身不负责依赖对�
 7. 定义一个 BeanFactory 接口以及接口的实现。BeanFactory 用来创建 Bean 并进行依赖注入，Bean 的创建主要是拿到上文 beanDifinitionMap 解析的 bean，之后通过反射机制创建一个相应的 bean，创建 bean 之后，在通过注入属性的方式来解决依赖循环问题；
 8. 定义 ApplicationContext 接口以及相应的实现 ClassPathXmlApplicationContext.java。ClassPathXmlApplicationContext 实现一个 refresh 方法，该方法实现了将 XmlBeanDefinitionReader 中读取到的 bean 的定义向 BeanFactory 中转移的过程。
 
-### Spring 中 BeanFactory 和 ApplicationContext 的区别？BeanFactory 和 FactoryBean 的区别？
+## Spring 中 BeanFactory 和 ApplicationContext 的区别？BeanFactory 和 FactoryBean 的区别？
 
 **BeanFactory 和 ApplicationContext 的区别：**
 
@@ -167,7 +165,7 @@ FactoryBean 支持泛型，即接口声明改为 FactoryBean<T>的形式。一�
 
 [spring 中 BeanFactory 和 FactoryBean 的区别](https://blog.csdn.net/qiesheng/article/details/72875315)
 
-### 请问 Spring 中 Bean 的作用域有哪些？
+## 请问 Spring 中 Bean 的作用域有哪些？
 
 1. singleton 原型模式，默认值，IOC 容器中仅存在一个 Bean 实例，Bean 都以单例模式存在
 2. prototype 原型模式，在每次请求获取 Bean 的时候，都会创建一个新的实例，它在容器初始化的时候不会创建实例，采用的是延迟加载的形式注入 Bean，当你使用的时候，才会进行实例化，每次实例化获取的对象都不是同一个，就像 BeanFactory 的实例化模式实例不唯一
@@ -177,7 +175,7 @@ FactoryBean 支持泛型，即接口声明改为 FactoryBean<T>的形式。一�
 
 如果不指定 Bean 的作用域，Spring 默认使用 singleton 作用域。Java 在创建 Java 实例时，需要进行内存申请；销毁实例时，需要完成垃圾回收，这些工作都会导致系统开销的增加。因此，prototype 作用域 Bean 的创建、销毁代价比较大。而 singleton 作用域的 Bean 实例一旦创建成功，可以重复使用。因此，除非必要，否则尽量避免将 Bean 被设置成 prototype 作用域。
 
-### 谈谈 Spring 中自动装配的方式有哪些？
+## 谈谈 Spring 中自动装配的方式有哪些？
 
 1. no：不进行自动装配，手动设置 Bean 的依赖关系；
 2. byName：根据 Bean 的名字进行自动装配；
@@ -185,7 +183,7 @@ FactoryBean 支持泛型，即接口声明改为 FactoryBean<T>的形式。一�
 4. constructor：使用构造方法完成对象注入，其实也是根据构造方法的参数类型进行对象查找，相当于采用 byType 的方式；
 5. autodetect：如果有默认的构造器，则通过 constructor 的方式进行自动装配，否则使用 byType 的方式进行自动装配。
 
-### aop 的应用场景？日志记录和异常处理如何使用？
+## aop 的应用场景？日志记录和异常处理如何使用？
 
 [Spring AOP 进行统一的异常处理和日志记录](https://segmentfault.com/a/1190000014827136)
 
@@ -262,7 +260,7 @@ public class ExceptionAndLogAspect {
 }
 ```
 
-### AOP 的原理是什么？
+## AOP 的原理是什么？
 
 [Java 动态代理技术](https://app.yinxiang.com/fx/63f8a49e-f979-4743-83f6-1bceb15b242b)
 
@@ -270,7 +268,7 @@ public class ExceptionAndLogAspect {
 
 动态代理实现主要是实现 InvocationHandler 接口，并且将目标对象注入到代理对象中，利用反射机制来执行目标对象的方法。目标对象的方法执行主要是通过调用 InvocationHandler 类的 method.invoke()方法，在 invoke()方法前后加入拦截器链来实现 aop 的横切技术。
 
-### 你如何理解 AOP 中的连接点（Joinpoint）、切点（Pointcut）、增强（Advice）、引介（Introduction）、织入（Weaving）、切面（Aspect）这些概念？
+## 你如何理解 AOP 中的连接点（Joinpoint）、切点（Pointcut）、增强（Advice）、引介（Introduction）、织入（Weaving）、切面（Aspect）这些概念？
 
 1. 连接点（Joinpoint）：是程序执行中的一个精确执行点，例如类中的一个方法。它是一个抽象的概念，在实现 AOP 时，并不需要去定义一个 join point；
 
@@ -287,11 +285,11 @@ public class ExceptionAndLogAspect {
 
 6. 切面（Aspect）： 切面是由切点和增强（引介）组成的，它包括了对横切关注功能的定义，也包括了对连接点的定义。
 
-### Spring 支持的事务管理类型有哪些？你在项目中使用哪种方式？
+## Spring 支持的事务管理类型有哪些？你在项目中使用哪种方式？
 
 Spring 支持编程式事务管理和声明式事务管理。选择声明式事务管理， 因为这种方式和应用程序的关联较少，因此更加符合轻量级容器的概念。
 
-### 介绍一下 spring？
+## 介绍一下 spring？
 
 1. Spring 的核心是一个轻量级（Lightweight）的容器（Container）.轻量级是指它的创建和销毁不需要消耗太多的资源，意味着可以在程序中经常创建和销毁 session 的对象；重量级意味不能随意的创建和销毁它的实例，会占用很多的资源。
 2. Spring 是实现 Ioc（Inversion of Control）容器和非入侵性（No intrusive）的框架
@@ -300,9 +298,9 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 5. Spring 提供 MVC Web 框架的是实现，并对一些常用的企业服务 api 提供一致的模型封装
    6.Spring 提供了对现存的各种框架（Structs、JSF、Hibernate、Ibatis、Webwork 等）相整合的方案
 
-### Struts 拦截器和 Spring AOP 区别？
+## Struts 拦截器和 Spring AOP 区别？
 
-### spring 框架的优点？缺点？
+## spring 框架的优点？缺点？
 
 **优点：**
 
@@ -318,11 +316,11 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 1. jsp 中要写很多代码、控制器过于灵活，缺少一个公用控制器；
 2. Spring 不支持分布式，这也是 EJB 仍然在用的原因之一。
 
-### 选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？
+## 选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？
 
 从（1）IoC 容器（2） AOP（3） MVC（4）事务管理四方面将
 
-### 持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？
+## 持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？
 
 所谓”持久”就是将数据保存到可掉电式存储设备中以便今后使用，简单的说，就是将内存中的数据保存到关系型数据库、文件系统、消息队列等提供持久化支持的设备中。持久层就是系统中专注于实现数据持久化的相对独立的层面。持久层设计的目标包括：
 
@@ -333,9 +331,9 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 
 持久层框架有：Hibernate、MyBatis
 
-### Spring 声明式事务
+## Spring 声明式事务，Spring 事务传播机制
 
-1. 声明式事务允许自定义事务接口——TransactionDefinition,它可以由 XML 或者注解@Transactional 配置,XML 的形式较少用；
+1. 声明式事务允许自定义事务接口——TransactionDefinition，它可以由 XML 或者注解 @Transactional 配置，XML 的形式较少用；
 2. 声明式事务需要配置注解驱动；
 3. Transactional 二个关键配置项 isolation（隔离级别）和 propagation（传播行为）。
 
@@ -346,19 +344,33 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 3. 产生异常且满足事务回滚配置条件，事务回滚，否则事务提交；
 4. 事务资源释放。
 
-### Spring 事务传播机制
+**事务传播机制：**
 
 [Spring 的事务传播机制实例](https://www.jianshu.com/p/25c8e5a35ece)
 
-1. Propagation.REQUIRED：如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中，这是 Spring 默认的传播行为
-2. Propagation.SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行
-3. Propagation.MANDATORY：使用当前的事务，如果当前没有事务，就抛出异常
-4. Propagation.REQUIRES_NEW：无论是否存在当前事务，方法都会在新的事务中运行
-5. Propagation.NOT_SUPPORTED： 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起
-6. Propagation.NEVER： 以非事务方式执行，如果当前存在事务，则抛出异常
-7. Propagation.NESTED：嵌套事务，如果当前存在事务，则在嵌套事务内执行。也就是调用方法如果抛出异常只回滚自己内部执行的 SQL，而不回滚主方法的 SQL
+1. `Propagation.REQUIRED`：如果当前没有事务，就新建一个事务，如果已经存在一个事务中，加入到这个事务中，这是 Spring 默认的传播行为
+2. `Propagation.SUPPORTS`：支持当前事务，如果当前没有事务，就以非事务方式执行
+3. `Propagation.MANDATORY`：使用当前的事务，如果当前没有事务，就抛出异常
+4. `Propagation.REQUIRES_NEW`：无论是否存在当前事务，方法都会在新的事务中运行
+5. `Propagation.NOT_SUPPORTED`： 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起
+6. `Propagation.NEVER`： 以非事务方式执行，如果当前存在事务，则抛出异常
+7. `Propagation.NESTED`：嵌套事务，如果当前存在事务，则在嵌套事务内执行。也就是调用方法如果抛出异常只回滚自己内部执行的 SQL，而不回滚主方法的 SQL
 
-### Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载
+## Spring 事务写在哪一部分，为什么不写在 dao， controller层
+
+一般写在 service 层。
+
+原因：
+
+结合事务的特点，如果我们的事务注解 `@Transactional` 加在 dao 层，那么只要与数据库做增删改，就要提交一次事务，如此做事务的特性就发挥不出来，尤其是事务的一致性，当出现并发问题是，用户从数据库查到的数据都会有所偏差。
+
+一般的时候，我们的 service 层可以调用多个 dao 层，我们只需要在 service层加一个事务注解 `@Transactional`，这样我们就可以一个事务处理多个请求，事务的特性也会充分的发挥出来。
+
+
+
+
+
+## Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载
 
 1. 依赖关系
 
@@ -373,7 +385,7 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 <bean id=d Class="com.twovv.D" />
 ```
 
-### Spring 源码了解吗？能讲一下大致过程吗？
+## Spring 源码总结
 
 [死磕 Spring（此人的博客写的超级棒，有很多值得参考的内容）](http://cmsblogs.com/?cat=206)
 
@@ -589,7 +601,7 @@ Spring 关于 singleton bean 循环依赖的大致方案：Spring 在创建 bean
 
 无论是从单例缓存中获取的 bean 实例 还是通过 `createBean()` 创建的 bean 实例，最终都会调用 `getObjectForBeanInstance()` ，该方法是根据传入的 bean 实例获取对象，真正的实现逻辑是委托给 `getObjectFromFactoryBean()` 实现。
 
-### Spring 中的设计模式
+## Spring 中的设计模式
 
 [这些 Spring 中的设计模式，你都知道吗？](https://mp.weixin.qq.com/s/Hy-qxNT0nJzcAkanbH93eA)
 
@@ -746,19 +758,19 @@ spring 中 Observer 模式常用的地方是 listener 的实现。如 Applicatio
 
 **模板方法**
 
-## Mybatis
+# Mybatis
 
-### 解释一下 MyBatis 中命名空间（namespace）的作用。
+## 解释一下 MyBatis 中命名空间（namespace）的作用。
 
 在 mybatis 中，映射文件中的 namespace 是用于绑定 Dao 接口的， 当你的 namespace 绑定接口后，你可以不用写接口实现类，mybatis 会通过该绑定自动帮你找到对应要执行的 SQL 语句。Mapper 的 XML 文件的命名空间对应的是这个接口的全限定名，而方法就是那条 SQL 语句的 id，这样 mybatis 就可以根据全路径名和方法名，将其和代理对象绑定起来，通过动态代理技术，让这个接口运行起来。
 
-### MyBatis 中的动态 SQL 是什么意思？
+## MyBatis 中的动态 SQL 是什么意思？
 
 传统 jdbc 方法中，在写组合的多表复杂 sql 语句时，需要去拼接 sql 语句，稍不注意少写一个空格或“”，就会导致报错。 Mybatis 动态 sql 的功能，就拥有有效的解决了这个问题，Mybatis 动态 sql 语言可以被用在任意的 sql 语句映射中， 它可以帮助我们方便的在 SQL 语句中实现某些逻辑。
 
 MyBatis 中用于实现动态 SQL 的元素主要有：if、choose（when，otherwise）、trim、where、set、foreach
 
-### Mybatis 中 Mapper 接口编程原理
+## Mybatis 中 Mapper 接口编程原理
 
 [Mybatis：Mapper 接口编程原理分析（一）](https://www.jianshu.com/p/7529fe7508cf)
 
@@ -774,17 +786,40 @@ MyBatis 中用于实现动态 SQL 的元素主要有：if、choose（when，othe
 2. 注册 Mapper 接口，获取生成代理类实例的工具类。Mapper 接口只会被加载一次，然后缓存在 HashMap 中，其中 key 是 mapper 接口类对象，value 是 mapper 接口对应的 代理工厂。需注意的是，每个 mapper 接口对应一个代理工厂。
 3. 获取 Mapper 接口的代理对象。通过 MapperRegistry 类中的 mapper 的 hashMap 中获取 mapper 代理工厂
 
-## SpringMVC
+## 动态 SQL
 
-### Spring MVC 注解的优点
+[MyBatis3-动态SQL语句](https://www.cnblogs.com/EasonJim/p/7057575.html)
+
+`if`：相当于 java 中的 if，常与 `test` 属性联合使用
+
+`choose` + `when` + `otherwise`：三者联合使用，相当于 java 中的 `switch` + `case` + `default`
+  ```sql
+    <choose>
+        <when> </when>
+        <when> </when>
+        <otherwise> </otherwise>
+    </choose>
+  ```
+
+`trim`：去掉一些特殊的字符串，`prefix` 代表的是语句的前缀，`prefixOverrides` 代表的是前缀需要去掉哪些字符串，`suffixOverrides` 代表的是后缀需要去掉哪些字符串
+  
+`where`：用来简化 SQL 语句中 `where` 条件判断的，能智能的处理 `and`、`or`，不必担心多余导致语法错误
+
+`set`：主要是用在更新操作的时候，它的主要功能和 `where` 元素其实是差不多的，主要是在包含的语句前输出一个 `set`，然后如果包含的语句是以逗号结束的话将会把该逗号忽略，如果 `set` 包含的内容为空的话则会出错。
+
+`foreach`：主要用在构建 `in` 条件中，它可以在 SQL 语句中进行迭代一个集合
+
+# SpringMVC
+
+## Spring MVC 注解的优点
 
 1. 它可以充分利用 Java 的反射机制获取类结构信息，这些信息可以有效减少配置的工作。
 2. 注释和 Java 代码位于一个文件中， 有助于增强程序的内聚性。
 3. 编译期校验，错误的注解在编译期间就会报错。注解在 java 代码中，从而避免了额外的文件维护工作。
 
-### springmvc 和 spring-boot 区别？
+## springmvc 和 spring-boot 区别？
 
-### SpringMVC 的运行机制，运行机制的每一部分的相关知识？
+## SpringMVC 的运行机制，运行机制的每一部分的相关知识？
 
 ![](https://ws1.sinaimg.cn/large/d4556b75ly1g41oivbz5rj20s90ga3zj.jpg)
 
@@ -798,7 +833,7 @@ MyBatis 中用于实现动态 SQL 的元素主要有：if、choose（when，othe
 8. 步骤 ⑩⑪, 渲染视图时, 将 Model 数据传入视图中, 这里的 Model 数据是一个 Map, 容易与各种视图类型相结合.
 9. 步骤 ⑫, 最后, 由 DispatcherServlet 将最终的响应结果返回给用户.
 
-### 谈谈 Spring MVC 的工作原理是怎样的？
+## 谈谈 Spring MVC 的工作原理是怎样的？
 
 1. 用户发送请求至前端控制器 DispatcherServlet。
 2. DispatcherServlet 收到请求调用 HandlerMapping 处理器映射器。

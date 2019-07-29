@@ -1,102 +1,154 @@
 <!-- TOC -->
 
-- [淘淘商城](#淘淘商城)
-    - [一、项目介绍](#一项目介绍)
-        - [1. 系统功能](#1-系统功能)
-        - [2. 项目架构](#2-项目架构)
-    - [二、项目搭建](#二项目搭建)
-        - [1. 使用 Maven 的好处](#1-使用-maven-的好处)
-        - [2. 工程搭建](#2-工程搭建)
-    - [三、系统功能分析](#三系统功能分析)
-        - [1、首页轮播图功能分析](#1首页轮播图功能分析)
-        - [2、首页轮播图数据库表结构分析](#2首页轮播图数据库表结构分析)
-    - [四、redis 项目相关](#四redis-项目相关)
-        - [1、redis 集群搭建](#1redis-集群搭建)
-        - [2、Jedis 的使用](#2jedis-的使用)
-    - [五、Solr 集群](#五solr-集群)
-        - [1. solr 服务搭建](#1-solr-服务搭建)
-    - [六、Zookeeper 集群](#六zookeeper-集群)
-        - [1、zookeeper 集群搭建](#1zookeeper-集群搭建)
-    - [七、ActiveMQ消息队列](#七activemq消息队列)
-        - [**1、消息模型**](#1消息模型)
-        - [**2、使用场景**](#2使用场景)
-        - [**3、可靠性**](#3可靠性)
+- [项目介绍](#项目介绍)
+    - [系统功能](#系统功能)
+        - [后台功能](#后台功能)
+        - [前台功能](#前台功能)
+    - [项目架构](#项目架构)
+- [项目搭建](#项目搭建)
+    - [使用 Maven 的好处](#使用-maven-的好处)
+    - [工程搭建](#工程搭建)
+- [系统功能分析](#系统功能分析)
+    - [首页轮播图功能分析](#首页轮播图功能分析)
+    - [首页轮播图数据库表结构分析](#首页轮播图数据库表结构分析)
+- [redis 项目相关](#redis-项目相关)
+    - [redis 集群搭建](#redis-集群搭建)
+    - [Jedis 的使用](#jedis-的使用)
+- [Solr 集群](#solr-集群)
+    - [solr 服务搭建](#solr-服务搭建)
+- [Zookeeper 集群](#zookeeper-集群)
+    - [zookeeper 集群搭建](#zookeeper-集群搭建)
+- [ActiveMQ 消息队列](#activemq-消息队列)
+    - [概念](#概念)
+    - [消息模型](#消息模型)
+    - [使用场景](#使用场景)
+    - [可靠性](#可靠性)
+- [ActiveMQ 消息队列项目相关](#activemq-消息队列项目相关)
+    - [环境搭建](#环境搭建)
+    - [代码实例](#代码实例)
+        - [点对点生产者](#点对点生产者)
+        - [点对点消费者](#点对点消费者)
+        - [发布/订阅生产者消费者](#发布订阅生产者消费者)
+    - [ActiveMQ 整合 Spring](#activemq-整合-spring)
+    - [ActiveMQ 整合到项目](#activemq-整合到项目)
+        - [生产者 Producer](#生产者-producer)
+        - [消费者 Consumer](#消费者-consumer)
 
 <!-- /TOC -->
 
-# 淘淘商城
+# 项目介绍
 
-## 一、项目介绍
+## 系统功能
 
-### 1. 系统功能
+商城项目基于 SOA 架构，分为两部分：前台和后台。整体采用 Maven 聚合工程和 SSM 框架
 
-商城项目基于 SOA 架构，分为两部分：前台和后台。
+### 后台功能
 
-- 后台：给商城管理员使用，其主要功能是用于进行商品信息的添加修改，删除，以及内容发布。后台采用 Maven 聚合工程和 ssm 框架。
+给商城管理员使用，其主要功能是用于进行商品信息的添加修改，删除，以及内容发布。
 
-  我们将商品的图片放在特殊的图片服务器中，将大文本信息放在文件服务器中，使用 nginx 反向代理管理图片服务器，文件服务器和数据库，由于后台访问量比较少因此不考虑缓存和分布式。
+我们将商品的图片放在特殊的图片服务器中，将大文本信息放在文件服务器中，使用 nginx 反向代理管理图片服务器，文件服务器和数据库，由于后台访问量比较少因此不考虑缓存和分布式。
 
-- 前台项目：采用 Maven 管理 jar 包和 ssm 框架，前台项目和后台公用同一个数据库，前台主要是供客户访问，包括商城页面的展示，搜索功能 ，商品详情展示，单点登陆系统，购物车和订单系统等。
+### 前台功能
 
-  由于前台首页轮播图的访问量比较大，故此我们采用的是分布式架构，使用 redis 作用缓存，并搭建 redis 集群。我们将经常访问的数据放在 redis 中，并设置过期时间，以减缓大量访问时数据库的压力；对于商城项目而言，商品搜索时比较常见的，对于搜索的实现我们使用 solr 搜索引擎，只需要简单配置就可以实现全文搜索，由于 solr 中默认是没有中文分析器，因此需要我们配置，接下来将数据库中的数据导入，solr 自带缓存，所以不需要再配置 redis；单点登陆系统主要是 session 和 cookie，使用 redis 模拟 session，将用户信息传给前台，当再某些特殊业务时需要强制登陆。
+前台项目和后台公用同一个数据库，前台主要是供客户访问，包括商城页面的展示，搜索功能 ，商品详情展示，单点登陆系统，购物车和订单系统等。
+1. 由于前台首页轮播图的访问量比较大，故此我们采用的是分布式架构，使用 redis 作用缓存，并搭建 redis 集群。我们将经常访问的数据放在 redis 中，并设置过期时间，以减缓大量访问时数据库的压力；
+2. 对于商城项目而言，商品搜索时比较常见的，对于搜索的实现我们使用 solr 搜索引擎，只需要简单配置就可以实现全文搜索，由于 solr 中默认是没有中文分析器，因此需要我们配置，接下来将数据库中的数据导入，solr 自带缓存，所以不需要再配置 redis；
+3. 单点登陆系统主要是 session 和 cookie，使用 redis 模拟 session，将用户信息传给前台，当再某些特殊业务时需要强制登陆。
 
-### 2. 项目架构
+## 项目架构
 
-- 项目基于 SOA 架构，把工程都拆分成服务层工程、表现层工程和持久层。服务层中包含业务逻辑，只需要对外提供服务即可。表现层只需要处理和页面的交互，业务逻辑都是调用服务层的服务来实现
-- 表现层通过服务中间件 Dubbo 与服务层进行交互
-- 服务层与 redis 缓存交互，redis 缓存与持久层进行交互
-- Mysql 数据库通过 MyCat 数据库中间件进行整合
-- 服务层中的搜索服务使用 solr 搜索引擎
-  ![](https://ws1.sinaimg.cn/large/d4556b75ly1g3rg4tldhhj20o60eanpd.jpg)
+项目基于 SOA 架构（面向服务架构）
 
-## 二、项目搭建
+**SOA概念**
 
-### 1. 使用 Maven 的好处
+把工程都拆分成服务层工程、表现层工程。服务层中包含业务逻辑，只需要对外提供服务即可，表现层只需要处理和页面的交互，业务逻辑都是调用服务层的服务来实现。工程都可以独立部署。
+
+所有的服务是自包含的，合乎逻辑。他们就像黑盒子。总之，我们并不需要了解业务服务的内部工作细节。对于外部世界，它只是一个能够使用消息交互的黑盒子
+
+**SOA主要特点**
+
+1. SOA组件是松耦合的，服务调用交互是通过发布接口
+2. 便于测试，能并行开发，较高可靠性和良好可伸缩性
+
+**使用到的技术**
+
+1. 表现层通过服务中间件 Dubbo 与服务层进行交互
+2. 服务层的商品服务、购物车服务、订单服务和购物车服务先从 redis 缓存中拿数据，redis 缓存中没有数据，在到 MySQL 数据库中拿取数据
+3. Mysql 数据库通过 MyCat 数据库中间件进行整合
+4. 服务层中的搜索服务使用 solr 搜索引擎
+  
+![](https://ws1.sinaimg.cn/large/d4556b75ly1g3rg4tldhhj20o60eanpd.jpg)
+
+# 项目搭建
+
+## 使用 Maven 的好处
 
 1. Jar 包的管理
 2. 工程之间的依赖管理
 3. 自动打包
 4. 统一的版本的控制
 
-### 2. 工程搭建
+## 工程搭建
 
-**1. Maven 的常见打包方式：**
+**Maven 的常见打包方式：**
 
 三种：jar、war、pom。  
-pom 工程一般都是父工程，用在聚合工程，管理 jar 包的版本、maven 插件的版本、统一的依赖管理；  
-war 包主要部署 tomcat；  
-单一的工程打包成 jar 包，别人用它的时候只需要依赖它的坐标就好了
+* pom：打包的工程一般都是父工程，用在聚合工程，管理 jar 包的版本、maven 插件的版本、统一的依赖管理。服务层工程的的父工程打包成 pom 工程。
+* war：主要部署 tomcat，表现层的工程打包成 war 包形式。表现层打成 war 包进行发布好处是不会缺少目录，并且只管理好一个发布文件就好，并且 tomcat 服务器能够自动识别，将 war 包放在 tomcat 容器的 webapps 下，启动服务，即可运行该项目，该war 包会自动解压出一个同名的文件夹。
+* jar：用来打包单一的工程，别人用它的时候只需要依赖它的坐标就好了。服务层工程的的父工程打包成 pom 工程。
 
 ![](https://ws1.sinaimg.cn/large/d4556b75ly1g3p7m70vjbj20l807rt99.jpg)
 
-**2. 依赖结构**
+**工程之间的交互**
 
-`taotao-manager-web` 依赖 `taotao-manager-interface`
+我们在项目中先写了一个父工程 `taotao-parent`，parent 项目中不存放任何代码，在`properties` 中写入版本号变量及相应版本号来集中定义依赖版本号，这里并不需要依赖具体的 jar 包，只是做为一个版本的管理，例如 mybatis 的版本管理：
 
-`taotao-manager-service` 依赖 `taotao-manager-interface` 和 `taotao-manager-dao`
+```xml
+<properties>
+	<mybatis.spring.version>1.2.2</mybatis.spring.version>	
+</properties>
 
-`taotao-manager-interface` 依赖 `taotao-manager-pojo`
-
-`taotao-manager-dao` 依赖 `taotao-manager-pojo`
-
-在 pom 文件中依赖关系这样添加：
-
-```
-<dependencies>
-		<!-- 依赖taotao-manager-pojo -->
-		<dependency>
-			<groupId>com.taotao</groupId>
-			<artifactId>taotao-manager-pojo</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-<dependencies>
+<dependency>
+	<groupId>org.mybatis</groupId>
+	<artifactId>mybatis-spring</artifactId>
+	<version>${mybatis.spring.version}</version>
+</dependency>
 ```
 
-以上是 taotao-manager 工程下模块 taotao-manager-dao 的 pom.xml 文件中添加的依赖关系
 
-## 三、系统功能分析
+其它具体的子工程版本依赖时，需要在其 pom.xml 文件中添加`parent` 标签，在标签中把 parent 项目的 pom 坐标添加进去即可：
 
-### 1、首页轮播图功能分析
+```xml
+<parent>
+	<groupId>com.taotao</groupId>
+	<artifactId>taotao-manager</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</parent>
+```
+
+在一个项目中包含了多个模块，`modules` 标签用来管理同个项目中的各个模块。例如 taotao-manager 项目中包含四个模块，在 taotao-manager 中 pom.xml 文件中这样添加：
+
+```xml
+<modules>
+	<module>taotao-manager-dao</module>
+	<module>taotao-manager-pojo</module>
+	<module>taotao-manager-interface</module>
+	<module>taotao-manager-service</module>
+</modules>
+```
+
+如果一个项目要依赖其它的项目，那么需要在其 pom.xml 文件中使用 `dependency` 标签来添加,在标签中写入坐标和 id。taotao-manager 项目中依赖项目 taotao-common：
+```xml
+<dependency>
+	<groupId>com.taotao</groupId>
+	<artifactId>taotao-common</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+# 系统功能分析
+
+## 首页轮播图功能分析
 
 首页轮播图的展示只需要后台提供轮播图图片数据，将图片数据转化为一个 json 数据之后提供给前端，便可以进行展示。
 
@@ -297,7 +349,7 @@ public class PageController {
 
   ```
 
-### 2、首页轮播图数据库表结构分析
+## 首页轮播图数据库表结构分析
 
 ![](https://ws1.sinaimg.cn/large/d4556b75ly1g3rg4bp7ywj20yp0jgwko.jpg)
 
@@ -369,9 +421,9 @@ CREATE TABLE `tb_content` (
 
 设计二个字段`pic`，`pic2`，为了在不同的电脑展示（有的横屏，有的宽屏）
 
-## 四、redis 项目相关
+# redis 项目相关
 
-### 1、redis 集群搭建
+## redis 集群搭建
 
 **redis 集群概念：**
 
@@ -445,7 +497,7 @@ CREATE TABLE `tb_content` (
 
 > `redis01/redis-cli -p 7001 -c`
 
-### 2、Jedis 的使用
+## Jedis 的使用
 
 redis 集群在代码中的使用需要在 taotao-content 工程下的模块 taotao-content-service 的 pom.xml 文件中添加 Jedis 依赖：
 
@@ -559,9 +611,11 @@ Spring 的自动注入需要配置 xml 文件，项目中我们单独写了一�
 </beans>
 ```
 
-## 五、Solr 集群
+# Solr 集群
 
-### 1. solr 服务搭建
+## solr 服务搭建
+
+[Solr 环境搭建（linux）](https://segmentfault.com/a/1190000014779011)
 
 在 5.0 版本之前，solr 无法作为独立的服务器进行使用，需要将其打包为 war 包部署在任何 Servlet 容器内才能使用
 
@@ -600,9 +654,9 @@ Spring 的自动注入需要配置 xml 文件，项目中我们单独写了一�
 10. 访问地址：`http://127.0.0.1:8080/solr`，查看 solr 的管控台
     ![image](https://segmentfault.com/img/bVbaaQQ?w=1085&h=721)
 
-## 六、Zookeeper 集群
+# Zookeeper 集群
 
-### 1、zookeeper 集群搭建
+## zookeeper 集群搭建
 
 真实的集群是需要部署在不同的服务器上的，但是在我们测试时同时启动十几个虚拟机内存会吃不消，所以这里我们搭建伪集群，重新部署一台虚拟机作为我们搭建集群的测试服务器。
 
@@ -642,12 +696,27 @@ Spring 的自动注入需要配置 xml 文件，项目中我们单独写了一�
 10. 查看 zookeeper 状态
     > `zookeeper01/bin/zkServer.sh status`
 
-
-## 七、ActiveMQ消息队列
+# ActiveMQ 消息队列
 
 [消息队列](https://github.com/CyC2018/CS-Notes/blob/master/notes/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97.md)
 
-### **1、消息模型**
+[消息中间件及 ActiveMQ 介绍](https://segmentfault.com/a/1190000014958916)
+
+## 概念
+
+> JMS 即 Java 消息服务（Java Message Service）应用程序接口，是一个 Java 平台中关于面向消息中间件（MOM）的 API，用于在两个应用程序之间，或分布式系统中发送消息，进行异步通信
+
+JMS 定义了五种不同的消息正文格式，以及调用的消息类型，允许你发送并接收以一些不同形式的数据，提供现有消息格式的一些级别的兼容性：
+
+- StreamMessage：Java 原始值的数据流
+- MapMessage：一套名称-值对
+- TextMessage：一个字符串对象
+- ObjectMessage：一个序列化的 Java 对象
+- BytesMessage：一个字节的数据流
+
+ActiveMQ 是 Apache 软件基金下的一个开源软件，它遵循 JMS1.1 规范（Java Message Service），是消息驱动中间件软件（MOM）。
+
+## 消息模型
 
 **点对点**
 
@@ -661,23 +730,32 @@ Spring 的自动注入需要配置 xml 文件，项目中我们单独写了一�
 
 ![image](https://ws1.sinaimg.cn/large/d4556b75ly1g4uu6m501nj20k007ejrn.jpg)
 
-
 发布与订阅模式和观察者模式有以下不同：
-* 观察者模式中，观察者和主题都知道对方的存在；而在发布与订阅模式中，生产者与消费者不知道对方的存在，它们之间通过频道进行通信。
-* 观察者模式是同步的，当事件触发时，主题会调用观察者的方法，然后等待方法返回；而发布与订阅模式是异步的，生产者向频道发送一个消息之后，就不需要关心消费者何时去订阅这个消息，可以立即返回。
+
+- 观察者模式中，观察者和主题都知道对方的存在；而在发布与订阅模式中，生产者与消费者不知道对方的存在，它们之间通过频道进行通信。
+- 观察者模式是同步的，当事件触发时，主题会调用观察者的方法，然后等待方法返回；而发布与订阅模式是异步的，生产者向频道发送一个消息之后，就不需要关心消费者何时去订阅这个消息，可以立即返回。
   ![image](https://ws1.sinaimg.cn/large/d4556b75ly1g4uu6v3hg7j20i60cx74p.jpg)
 
-### **2、使用场景**
+## 使用场景
 
 [MQ(Message Queue)应用场景分析](https://my.oschina.net/bigdataer/blog/1923150)
+
+[消息中间件及 ActiveMQ 介绍](https://segmentfault.com/a/1190000014958916)
 
 **异步处理**
 
 发送者将消息发送给消息队列之后，不需要同步等待消息接收者处理完毕，而是立即返回进行其它操作。消息接收者从消息队列中订阅消息之后异步处理。
 
 应用场景：
-注册流程中通常需要发送验证邮件来确保注册用户身份的合法性，可以使用消息队列使发送验证邮件的操作异步处理，用户在填写完注册信息之后就可以完成注册，而将发送验证邮件这一消息发送到消息队列中。
+新用户注册之后发放100积分，180元新手大礼包，激活会员卡  
+* 传统方式：
   
+  ![image](https://segmentfault.com/img/bVbamXP?w=639&h=101)
+
+* 使用消息队列：
+  
+  ![image](https://segmentfault.com/img/bVbamZn?w=674&h=249)
+
 只有在业务流程允许异步处理的情况下才能这么做，例如上面的注册流程中，如果要求用户对验证邮件进行点击之后才能完成注册的话，就不能再使用消息队列。
 
 **应用解耦**
@@ -687,8 +765,9 @@ Spring 的自动注入需要配置 xml 文件，项目中我们单独写了一�
 通过使用消息队列，一个模块只需要向消息队列中发送消息，其它模块可以选择性地从消息队列中订阅消息从而完成调用
 
 应用场景：
-* 订单系统：用户下单后，订单系统完成持久化处理，将消息写入消息队列，返回用户，下单成功
-* 库存系统：订阅下单的消息，获取下单信息，库存系统根据下单信息，进行库存操作
+
+- 订单系统：用户下单后，订单系统完成持久化处理，将消息写入消息队列，返回用户，下单成功
+- 库存系统：订阅下单的消息，获取下单信息，库存系统根据下单信息，进行库存操作
 
 **流量削锋**
 
@@ -698,15 +777,458 @@ Spring 的自动注入需要配置 xml 文件，项目中我们单独写了一�
 
 应用场景：秒杀活动，一般会因为流量过大，导致流量暴增，应用挂掉。为解决这个问题，一般需要在应用前端加入消息队列。可以控制活动的人数，可以缓解短时间内高流量压垮应用
 
-### **3、可靠性**
+## 可靠性
 
-* 发送端的可靠性
+- 发送端的可靠性
   发送端完成操作后一定能将消息成功发送到消息队列中。
 
   实现方法：在本地数据库建一张消息表，将消息数据与业务数据保存在同一数据库实例里，这样就可以利用本地数据库的事务机制。事务提交成功后，将消息表中的消息转移到消息队列中，若转移消息成功则删除消息表中的数据，否则继续重传。
-* 接收端的可靠性
+
+- 接收端的可靠性
   接收端能够从消息队列成功消费一次消息。
 
   两种实现方法：
+
   1. 保证接收端处理消息的业务逻辑具有幂等性：只要具有幂等性，那么消费多少次消息，最后处理的结果都是一样的。
   2. 保证消息具有唯一编号，并使用一张日志表来记录已经消费的消息编号。
+
+# ActiveMQ 消息队列项目相关
+
+## 环境搭建
+
+[Linux 下安装 ActiveMQ-5.15.8](https://yq.aliyun.com/articles/672413)
+
+1. 下载解压
+   > `tar -xzvf apache-activemq-5.8.0-bin.tar.gz`
+2. 启动 bin 目录下的 activemq 命令
+   > `./activemq start`
+3. 关闭并查看状态
+   > `./activemq stop`  
+   > `./activemq status`
+4. 网页登录 ActiveMQ 管控台
+   > `http://192.168.0.115:8161/admin/`
+
+## 代码实例
+
+### 点对点生产者
+
+主要流程：
+1. 创建 ConnectionFactory 对象，需要指定服务端 ip 及端口号
+2. 使用 ConnectionFactory 对象创建一个 Connection 对象
+3. 开启连接
+4. 创建一个 session 对象，提供发送消息等方法
+5. 使用 Session 对象创建一个发送消息的目的地（Destination）对象
+   * Queue：点对点
+   * Topic：发布/订阅
+6. 使用 Session 对象创建一个生产者 Producer 对象
+7. 构建消息的内容
+8. 发送消息
+9. 关闭资源
+
+代码如下：
+
+```java
+public class QueueProducer {
+	//生产者发送消息
+	@Test
+	public void send() throws Exception{
+		// 1.创建ConnectionFactory对象，需要指定服务端 ip 及端口号
+		ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://192.168.25.130:61616");
+		//2.使用 ConnectionFactory 对象创建一个 Connection 对象
+		Connection connection = factory.createConnection();
+		//3.开启连接
+		connection.start();
+		//4.创建一个session对象，提供发送消息等方法
+		//第一个参数：表示是否开启分布式事务（JTA）  一般是false 不开启。
+		//第二个参数：就是设置消息的应答模式，如果第一个参数为false时，第二个参数设置才有意义。用的是自动应答
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);//
+		//5.使用Session对象创建一个Destination对象（topic、queue），此处创建一个Queue对象。
+		//参数：目的地的名称
+		Queue queue = session.createQueue("queue-test");
+		//6.使用Session对象创建一个Producer对象。
+		MessageProducer producer = session.createProducer(queue);
+		//7.构建消息的内容
+		TextMessage textMessage = session.createTextMessage("queue测试发送的消息");
+		//TextMessage message = session.createTextMessage();
+		//message.setText("queue测试发送的消息");
+		//8.发送消息
+		producer.send(textMessage);
+		//9.关闭资源
+		producer.close();
+		session.close();
+		connection.close();
+	}
+}
+
+```
+
+### 点对点消费者
+
+主要流程：
+1. 创建连接工厂
+2. 创建连接
+3. 开启连接
+4. 创建 Session
+5. 创建接收消息的一个目的地
+6. 创建消费者
+7. 接受消息
+8. 关闭资源
+
+代码如下：
+
+```java
+public class QueueCustomer {
+	@Test
+	public void recieve() throws Exception {
+		//1.创建连接的工厂
+		ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://192.168.25.130:61616");
+		//2.创建连接
+		Connection connection = factory.createConnection();
+		//3.开启连接
+		connection.start();
+		//4.创建session
+		//第一个参数：表示是否开启分布式事务（JTA）  一般是false 不开启。
+		//第二个参数：就是设置消息的应答模式   如果 第一个参数为false时，第二个参数设置才有意义。用的是自动应答
+		Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+		//5.创建接收消息的一个目的地
+		Queue queue = session.createQueue("queue-test");
+		//6.创建消费者
+		MessageConsumer consumer = session.createConsumer(queue);
+		//7.接收消息 打印
+		//第一种
+		/*while(true){
+			Message message = consumer.receive(1000000);//设置接收消息的超时时间
+			//没有接收到消息就跳出循环
+			if(message==null){
+				break;
+			}
+			if(message instanceof TextMessage){
+				TextMessage message2 = (TextMessage) message;
+				System.out.println("接收的消息为"+message2.getText());
+			}
+		}*/
+
+		//第二种：设置一个监听器
+		//这里其实开辟了一个新的线程
+		consumer.setMessageListener(new MessageListener() {
+
+			//当有消息的时候会执行以下的逻辑
+			@Override
+			public void onMessage(Message message) {
+				if(message instanceof TextMessage){
+					TextMessage message2 = (TextMessage) message;
+					try {
+						System.out.println("接收的消息为"+message2.getText());
+					} catch (JMSException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		Thread.sleep(199999);
+		//8.关闭资源
+		consumer.close();
+		session.close();
+		connection.close();
+	}
+}
+```
+
+### 发布/订阅生产者消费者
+
+发布/订阅模式代码实现类似点对点模式，不同的是：
+1. 发布/订阅模式创建目的地的时候使用类 `Topic`
+   ```java
+	Topic createTopic = session.createTopic("topic-test");
+   ```
+2. Queue 默认是存在于 MQ 的服务器中的，发送消息之后，消费者随时取。但是一定是一个消费者取，消费完消息也就没有了。Topic 默认是不存在于 MQ 服务器中的，一旦发送之后，如果没有订阅，消息则丢失。
+
+## ActiveMQ 整合 Spring
+
+整合 Spring 主要是将消息端和发送端中的一些对象配置到 Spring 配置文件中，创建一个 Spring 配置文件 `applicationContext-activemq.xml`，主要需要配置的内容有：
+* 连接工厂 SingleConnectionFactory
+* 接收和发送消息时使用的模板对象类 JmsTemplate
+* 接收和发送消息的目的地：ActiveMQTopic（发布/订阅）或者ActiveMQQueue（一对一）
+* 监听器，用于消费者接收消息 MyMessageListener
+* 监听容器，用于启动线程做监听
+
+配置文件内容如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ...//省略">
+	
+	<bean id="targetConnection" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://192.168.25.130:61616"></property>
+	</bean>
+	<!-- 通用的connectionfacotry 指定真正使用的连接工厂 -->
+	<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="targetConnection"></property>
+	</bean>
+	<!-- 接收和发送消息时使用的类 模板对象-->
+	<bean class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+	</bean>
+	<!-- <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg name="name" value="item-change-queue"></constructor-arg>
+	</bean> -->
+	<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg name="name" value="item-change-topic"></constructor-arg>
+	</bean>
+	
+	<!-- 监听器 -->
+	<bean id="myMessageListener" class="com.itheima.activemq.spring.MyMessageListener"></bean>
+	<!-- 监听容器，作用：启动线程做监听 -->
+	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<property name="destination" ref="topicDestination"></property>
+		<property name="messageListener" ref="myMessageListener"></property>
+	</bean>
+	
+	<bean id="myMessageListener2" class="com.itheima.activemq.spring.MyMessageListener"></bean>
+	<!-- 监听容器，作用：启动线程做监听 -->
+	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+		<property name="destination" ref="topicDestination"></property>
+		<property name="messageListener" ref="myMessageListener2"></property>
+	</bean>
+</beans>
+
+```
+
+此时生产者需要实现简单的代码即可，主要流程：
+
+1. 初始化 Spring 容器
+2. 获取 JmsTemplate 对象
+3. 发送消息
+
+
+```java
+public class Producer {
+	@Test
+	public void send() throws Exception{
+		//1.初始化spring容器
+		ApplicationContext context = new ClassPathXmlApplicationContext("classpath:applicationContext-activemq.xml");
+		//2.获取到 Jmstemplate 的对象
+		JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
+		//3.获取destination
+		Destination destination = (Destination) context.getBean(Destination.class);
+		//4.发送消息
+		jmsTemplate.send(destination, new MessageCreator() {
+			
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				return session.createTextMessage("通过spring发送的消息123");
+			}
+		});
+		Thread.sleep(100000);
+	}
+}
+```
+消费者监听容器也只需要实现 MessageListener 类并重写 `onMessage()` 方法即可：
+
+```java
+public class MyMessageListener implements MessageListener {
+
+	@Override
+	public void onMessage(Message message) {
+		//获取消息
+		if(message instanceof TextMessage){
+			TextMessage textMessage = (TextMessage)message;
+			String text;
+			try {
+				text = textMessage.getText();
+				System.out.println(text);
+			} catch (JMSException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+}
+```
+
+## ActiveMQ 整合到项目
+
+功能分析：
+* 当添加一个商品之后，需要发送一个 TextMessage，该 TextMessage 只需包含一个商品 id 即可。在 taotao-manager 的子工程 taotao-manager-service 工程中发送消息。
+* 接收端收到商品 id 通过数据库查询到商品的信息（搜索的结果商品的信息）再同步索引库。在 taotao-search 的子工程 taotao-search-service 工程中接收消息。
+  
+### 生产者 Producer
+
+**applicationContext-activemq.xml 配置内容**
+
+* 连接工厂 SingleConnectionFactory
+* 接收和发送消息时使用的模板对象类 JmsTemplate
+* 接收和发送消息的目的地 ActiveMQTopic（发布/订阅）
+
+```xml
+	<bean id="targetConnection" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://192.168.25.130:61616"></property>
+	</bean>
+	<!-- 通用的connectionfacotry 指定真正使用的连接工厂 -->
+	<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+		<property name="targetConnectionFactory" ref="targetConnection"></property>
+	</bean>
+	<!-- 接收和发送消息时使用的类 -->
+	<bean class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory"></property>
+	</bean>
+	<bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg name="name" value="item-change-topic"></constructor-arg>
+	</bean> 
+```
+
+**发送消息**
+
+消息的发送添加在 taotao-manager-service 工程中 ItemServiceImpl 类的 `saveItem()` 方法。
+* ItemServiceImpl 类：商品服务的实现类。商品服务的实现类主要实现了 ItemService 的以下方法：
+  ```java
+	public interface ItemService {
+	
+        //根据当前的页码和每页的行数进行分页查询
+		public EasyUIDataGridResult getItemList(Integer page,Integer rows);
+
+		//添加商品基本数据和描述数据	
+		public TaotaoResult saveItem(TbItem item,String desc);
+
+		//根据商品的id查询商品的数据
+		public TbItem  getItemById(Long itemId);
+		
+		//根据商品的id查询商品的描述
+		public TbItemDesc getItemDescById(Long itemId);
+	}
+  ```
+  为了消息发送
+* saveItem() 方法：用于把商品添加到数据中并发送添加的商品 Id 号到 ActiiveMQ 中，代码实现如下：
+  ```java
+	@Override
+	public TaotaoResult saveItem(TbItem item, String desc) {
+		// 生成商品的id
+		final long itemId = IDUtils.genItemId();
+		//补全item 的其他属性
+		item.setId(itemId);
+		item.setCreated(new Date());
+		// 1-正常，2-下架，3-删除',
+		item.setStatus((byte) 1);
+		item.setUpdated(item.getCreated());
+		// 插入到item表 商品的基本信息表
+		mapper.insertSelective(item);
+		//补全商品描述中的属性
+		TbItemDesc desc2 = new TbItemDesc();
+		desc2.setItemDesc(desc);
+		desc2.setItemId(itemId);
+		desc2.setCreated(item.getCreated());
+		desc2.setUpdated(item.getCreated());
+		// 4.插入商品描述数据
+		// 注入tbitemdesc的mapper
+		descmapper.insertSelective(desc2);
+
+		// 添加发送消息的业务逻辑
+		jmstemplate.send(destination, new MessageCreator() {
+			
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				//发送的消息
+				return session.createTextMessage(itemId+"");
+			}
+		});
+		// 5.返回taotaoresult
+		return TaotaoResult.ok();
+	}
+  ```
+  
+
+### 消费者 Consumer
+
+在 taotao-search-service 中消费消息。需要加入 ActiveMQ 的依赖。
+
+功能分析：
+
+1. 接收消息，创建 MessageListener 接口的实现类
+
+**MessageListener 接口的实现类：**
+
+在 taotao-search-service 下创建一个类 ItemChangeMessageListener，实现了 MessageListener，用于消息的接收，接收的数据为新添加的商品的 `id` 号。实现接口的消息接收方法 `onMessage()`，该方法流程如下：
+
+1. 判断消息的类型是否为 TextMessage
+2. 如果是，获取商品的 id
+3. 通过商品的 id 查询数据，需要开发 Mapper，通过 id 查询商品搜索时的数据
+
+代码如下：
+
+```java
+public class ItemChangeListener implements MessageListener {	
+	
+	@Autowired
+	private SearchItemService searchItemService;
+
+	@Override
+	public void onMessage(Message message) {
+		try {
+			TextMessage textMessage = null;
+			Long itemId = null; 
+			//取商品id
+			if (message instanceof TextMessage) {
+				textMessage = (TextMessage) message;
+				itemId = Long.parseLong(textMessage.getText());
+			}
+			//向索引库添加文档
+            searchservice.updateItemById(itemId);						
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+}
+```
+
+
+**服务层：**
+
+服务层主要调用 dao 层方法 `updateSearchItemById(itemId)`，通过商品 id 来更新搜索商品信息。
+
+代码如下：
+
+```java
+@Service
+public class SearchServiceImpl implements SearchService {
+
+	@Override
+	public TaotaoResult updateSearchItemById(Long itemId) throws Exception {
+		return searchdao.updateSearchItemById(itemId);
+	}
+}
+
+```
+
+**Dao 层：**
+
+根据商品 id 查询商品信息。需要在 SearchItemMapper 接口中添加方法 `getSearchItemById(itemId)`，该方法通过商品的 id 来查询商品的数据。代码如下：
+
+```java
+public interface SearchItemMapper {
+	//查询所有的商品的数据
+	public  List<SearchItem> getSearchItemList();
+	
+	//根据商品的id查询商品的数据
+	public SearchItem getSearchItemById(Long itemId);
+}
+```
+
+Mapper 的映射 xml 文件 SearchItemMapper.xml 需要添加相对应的 select 语句：
+
+```sql
+<mapper namespace="com.taotao.search.mapper.SearchItemMapper" >
+ 	<select id="getSearchItemById" parameterType="long" resultType="com.taotao.common.pojo.SearchItem">
+ 		select a.id, a.title, a.image, a.price, a.sell_point, b.`name` as category_name, c.item_desc
+		from tb_item a, tb_item_cat b, tb_item_desc c
+		where a.cid = b.id
+		and a.id = c.item_id
+		and a.id = #{itemId}
+ 	</select>
+</mapper>
+```
+
+
+
+
