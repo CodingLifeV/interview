@@ -13,7 +13,7 @@
 
 ## [数据库](https://github.com/wyjPro/interview/blob/master/wyj/database.md)
 
-## [数据库](https://github.com/wyjPro/interview/blob/master/wyj/javaweb.md)
+## [JavaWeb](https://github.com/wyjPro/interview/blob/master/wyj/javaweb.md)
 
 ## [SQL语句](https://github.com/wyjPro/interview/blob/master/wyj/sql.md)
 
