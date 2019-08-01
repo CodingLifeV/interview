@@ -7,6 +7,7 @@
 - [如何 TDD](#如何-tdd)
   - [TDD 规则](#tdd-规则)
 - [实例](#实例)
+- [idea 测试驱动开发](#idea-测试驱动开发)
 
 <!-- /TOC -->
 
@@ -157,3 +158,5 @@ word_frequency(words) {
     return format(frequency)
 }
 ```
+
+# idea 测试驱动开发
