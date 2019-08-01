@@ -44,7 +44,7 @@ Redis 的主要缺点是数据库容量受到物理内存的限制，不能用�
 
 ### 2. redis 数据类型
 
-Redis 支持五种数据类型：string（字符串），list（列表），set（集合），hash（哈希）及 zset(sorted set：有序集合)。redis 中的数据都是字符串,redis 是单线程，不适合存储比较大的数据
+Redis 支持五种数据类型：string（字符串），list（列表），set（集合），hash（哈希）及 zset(sorted set：有序集合)。redis 中的数据都是字符串，redis 是单线程，不适合存储比较大的数据
 
 - string：存储字符串、整数、浮点数
 
