@@ -31,6 +31,11 @@
   - [最小的 k 个数](#最小的-k-个数)
   - [数据流中的中位数](#数据流中的中位数)
   - [冒泡](#冒泡)
+  - [选择排序](#选择排序)
+  - [插入排序](#插入排序)
+  - [希尔排序](#希尔排序)
+  - [桶排序](#桶排序)
+  - [基数排序](#基数排序)
 - [栈](#栈)
   - [用二个栈实现队列](#用二个栈实现队列)
   - [包含 min 函数的栈](#包含-min-函数的栈)
@@ -744,15 +749,22 @@ public TreeNode getLowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 
 [面试时写不出排序算法？看这篇就够了。](https://juejin.im/post/5cb6b8f551882532c334bcf2)
 
-|      | 排序类别 | 平均时间复杂度 | 最好时间复杂度 | 最坏时间复杂度 | 空间复杂度 | 复杂性 |
-| ---- | -------- | -------------- | -------------- | -------------- | ---------- | ------ |
-| 冒泡 | 交换排序 | O(N2)          | O(N3)          | O(N)           | O(1)       | 稳定   | 简单 |
+|              | 排序类别 | 平均时间复杂度 | 最好时间复杂度 | 最坏时间复杂度 | 空间复杂度 | 复杂性 |
+| ------------ | -------- | -------------- | -------------- | -------------- | ---------- | ------ |
+| 冒泡排序     | 交换排序 | O(N2)          | O(N)           | O(N2)          | O(1)       | 稳定   | 简单 |
+| 简单选择排序 | 选择排序 | O(N2)          | O(N2)          | O(N2)          | O(1)       | 不稳定 | 简单 |
+| 直接插入排序 | 插入排序 | O(N2)          | O(N)           | O(N2)          | O(1)       | 稳定   | 简单 |
+| 希尔排序     | 插入排序 | O(Nlog2N)      |                | O(N1.5)        | O(1)       | 不稳定 | 较复杂 |
+| 归并排序     | 归并排序 | O(nlog2n)      | O(nlog2n)      | O(nlog2n)      | O(n)       | 稳定   | 较复杂 |
+| 快速排序     | 快速排序 | O(Nlog2N)      | O(Nlog2N)      | O(N2)          | O(Nlog2N)  | 不稳定 | 较复杂 |
+| 堆排序       | 堆排序   | O(nlog2n)      | O(nlog2n)      | O(nlog2n)      | O(1)       | 不稳定 | 较复杂 |
+| 基数排序     | 基数排序 | O(d(n+r))      | O(d(n+r))      | O(d(n+r))      | O(n+r)     | 稳定   | 较复杂 |
 
 ## 归并排序
 
 **思想：**
 
-归并排序是利用归并的思想实现的排序方法，采用经典的分治算法实现，这里的分就是把问题无序的数分解成一些小的组并使其有序，而治就是将这些有序的组进行有序的组合实现整个数列有序，其是通过归并实现的。
+归并排序是利用归并的思想实现的排序方法，将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为二路归并。
 
 **代码实现：**
 
@@ -804,11 +816,14 @@ public class Main {
 > 对于长度为 N 的数组，$2^n$ = N，k $\in$[0, n-1]，
 > 第 k 层有 $2^k$ 个子数组，每个子数组的长度为$2^{n-k}$，归并最多需要 $2^{n-k}$ 次比较。因此每层的比较次数为 $2^k$ \* $2^{n-k}$ = $2^n$，n 层总共为 n$2^n$ = N$\log$N
 
+归并排序的形式就是一棵二叉树，它需要遍历的次数就是二叉树的深度，而根据完全二叉树的可以得出它的时间复杂度是 O(n\*log2n)
+
 ## 快速排序
 
 **思想：**
 
-通过选取一个基准（理论上是可以任意取序列中的一个元素），通过基准将一个序列分割成独立的两部分，将小于基准的所有数据都和大于基准的另外一部分的所有数据分开，然后再按此方法对这两部分数据分别进行类似的排序，最终整个序列就可以实现有序，整个排序过程可以递归进行。
+通过一趟排序将要排序的数据分割成独立的两部分：分割点左边都是比它小的数，右边都是比它大的数。
+然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列。
 
 **代码实现：**
 
@@ -849,7 +864,11 @@ public class Main {
 
 最好情况下每次都将数组对半分，最好平均为 O(N$\log$N)
 
-最坏情况数组本身有序，最坏 O($N^2$)
+最坏情况数组本身有序，以第一个关键字为基准分为两个子序列，前一个子序列为空，此时执行效率最差，最坏 O($N^2$)
+
+**空间复杂度：**
+
+快速排序在每次分割的过程中，需要 1 个空间存储基准值。而快速排序的大概需要 Nlog2N 次的分割处理，所以占用空间也是 Nlog2N 个。
 
 ## 堆排序
 
@@ -857,39 +876,55 @@ public class Main {
 
 分两个阶段：
 
-- 堆的构造阶段：从右至左用 sink()函数构造大顶堆
-- 下层排序阶段：将堆中的最大元素删除，然后放入堆缩小后数组中空出的位置
+1. 根据初始数组去构造初始堆（构建一个完全二叉树，保证所有的父结点都比它的孩子结点数值大）。
+2. 每次交换第一个和最后一个元素，输出最后一个元素（最大值），然后把剩下元素重新调整为大根堆。
 
 **代码实现：**
 
 ```java
-public class Main{
-    public void sort(int[] arr) {
-        int arrIndex = arr.length - 1;
-        //构造大顶堆
-        for(int i = (arrIndex - 1) / 2 ; i >= 0; i--) {
-            sink(arr, i, arrIndex);
-        }
+public class HeapSort {
+    public static void sort(int[] arr) {
+        int length = arr.length;
+        buildHeap(arr, length);
 
-        //下层排序阶段
-        while(arrLength > 0) {
-            swap(arr, 0, arrLength--);
-            sink(arr, 0, arrLength);
+        // 进行n-1次循环，完成排序
+        for (int i = length - 1; i > 0; i--) {
+            //将堆顶元素与末位元素交换
+            swap(arr, 0, i);
+            // 数组长度 -1 隐藏堆尾元素
+            length--;
+            // 将堆顶元素下沉,目的是将最大的元素浮到堆顶来
+            sink(arr, 0,length);
         }
     }
-    //下沉元素
-    private void sink(int[] arr, int index, int arrIndex) {
-        while((2 * index + 1) <= arrIndex) {
+
+    /**
+     * 构建初始堆
+     */
+    public static void buildHeap(int[] arr, int length) {
+        for (int i = length / 2; i >= 0; i--) {
+            sink(arr, i, length);
+        }
+    }
+
+    /**
+     * 下沉堆元素
+     */
+    public static void sink(int[] arr, int index, int length) {
+        while (2 * index + 1 < length) {
             int j = 2 * index + 1;
-            if(j < arrIndex && arr[j] < arr[j+1]) j++;
-            if(arr[index] >= arr[j]) break;
+            if (j < length - 1 && arr[j] < arr[j + 1]) j++;
+            if (arr[index] >= arr[j]) {
+                break;
+            }
             swap(arr, index, j);
         }
     }
-    private void swap(int[] arr, int i, int j) {
+
+    public static void swap(int[] arr, int i, int j) {
         int temp = arr[i];
-        arr[i]   = arr[j];
-        arr[j]   = temp;
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }
 ```
@@ -897,6 +932,8 @@ public class Main{
 **时间复杂度：**
 
 最好最坏平均情况下都为 O(N$\log$N)
+
+当想得到一个序列中第 k 个最小的元素之前的部分排序序列，最好采用堆排序。
 
 ## 数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数
 
@@ -1139,7 +1176,7 @@ public void bubbleSort(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
             for (int j = 0; j < array.length - 1 - i; j++) {
                 if (array[j] > array[j + 1]) {
-                    swap(array, i, j);
+                    swap(array, j, j + 1);
                 }
             }
         }
@@ -1152,6 +1189,262 @@ public void bubbleSort(int[] array) {
     }
 }
 ```
+
+**优化：**
+
+如果有序，停止遍历
+
+```java
+public void bubbleSortOptimized(int[] array) {
+    if (array.length == 0 || array == null) {
+        return;
+    }
+
+    for (int i = 0; i < array.length - 1; i++) {
+        boolean isSorted = true;
+        for (int j = 0; j < array.length - 1 - i; j++) {
+            if (array[j] > array[j + 1]) {
+                swap(array, j, j + 1);
+                isSorted = false;
+            }
+        }
+        if (isSorted) {
+            return;
+        }
+
+    }
+}
+```
+
+**时间复杂度**
+
+## 选择排序
+
+**思想：**
+
+每趟从待排序的记录中选出关键字最小的记录，顺序放在已排序的记录序列末尾，直到全部排序结束为止。
+
+```java
+public void selectSort(int[] arr) {
+    if (arr.length == 0 || arr == null) {
+        return;
+    }
+
+    for (int i = 0; i < arr.length; i++) {
+        int min = i;
+        for (int j = i + 1; j < arr.length; j++) {
+            if (arr[j] < arr[min]) {
+                min = j;
+            }
+        }
+        swap(arr, i, min);
+    }
+}
+```
+
+**时间复杂度**
+
+1. 简单选择排序的比较次数与序列的初始排序无关。假设待排序的序列有 N 个元素，则比较次数总是 N (N - 1) / 2；
+2. 而移动次数与序列的初始排序有关。当序列正序时，移动次数最少，为 0。当序列反序时，移动次数最多，为 3N (N - 1) / 2。
+
+综合以上，简单排序的时间复杂度为 O(N2)。
+
+## 插入排序
+
+**思想：**
+
+每一趟将一个待排序的记录，按照其关键字的大小插入到有序队列的合适位置里，直到全部插入完成。
+
+```java
+public void insertSort(int[] arr) {
+    if (arr.length == 0 || arr == null) {
+        return;
+    }
+
+    for (int i = 1; i < arr.length; i++) {
+        int j = 0;//插入的位置
+        int temp = arr[i];// 取出第i个数，和前i-1个数比较后，插入合适位置
+        for (j = i - 1; j >= 0; j--) {
+            if (arr[j] > temp) {
+                arr[j + 1] = arr[j];
+            }
+        }
+        arr[j + 1] = temp;
+    }
+}
+```
+
+**时间复杂度**
+
+1. 当数据正序时，执行效率最好，每次插入都不用移动前面的元素，时间复杂度为 O(N)。
+2. 当数据反序时，执行效率最差，每次插入都要前面的元素后移，时间复杂度为 O(N2)。
+
+所以，数据越接近正序，直接插入排序的算法性能越好。
+
+## 希尔排序
+
+**思想：**
+
+它是一种插入排序。把记录按步长 gap 分组，对每组记录采用直接插入排序方法进行排序。 随着步长逐渐减小，所分成的组包含的记录越来越多，当步长的值减小到 1 时，整个数据合成为一组，构成一组有序记录，则完成排序。
+
+```java
+public void shellSort(int[] arr) {
+    if (arr.length == 0 || arr == null) {
+        return;
+    }
+
+    int gap = arr.length / 2;
+    while (gap >= 1) {
+        for (int i = gap; i < arr.length; i++) {
+            int j = 0;
+            int temp = arr[i];
+
+            for (j = i - gap; j >= 0; j -= gap) {
+                if (arr[j] > temp) {
+                    arr[j + gap] = arr[j];
+                }
+            }
+            arr[j + gap] = temp;
+        }
+        gap = gap / 2;
+    }
+}
+```
+
+## 桶排序
+
+**思想**
+
+将要排的数据分到多个有序的桶里，每个桶里的数据再单独排序，再把每个桶的数据依次取出，即可完成排序。
+
+**代码**
+
+```java
+public class BucketSort {
+    public void bucketSort(int[] arr) {
+        int max = arr[0], min = arr[0];
+        int length = arr.length;
+
+        //最大值和最小值的差
+        for (int i = 0; i < length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            } else if (arr[i] < min) {
+                min = arr[i];
+            }
+        }
+        int diff = max - min;
+
+        //桶列表
+        ArrayList<ArrayList<Integer>> bucketList = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            bucketList.add(new ArrayList<>());
+        }
+
+        //每个桶的存数区间
+        float section = (float) diff / (float) (length - 1);
+
+        //数据如桶
+        for (int i = 0; i < length; i++) {
+            //当前数除以区间得出存放桶的位置 减1后得出桶的下标
+            int num = (int) (arr[i] / section) - 1;
+            if (num < 0) {
+                num = 0;
+            }
+            bucketList.get(num).add(arr[i]);
+        }
+
+        //桶内排序
+        for (int i = 0; i < bucketList.size(); i++) {
+            Collections.sort(bucketList.get(i));
+        }
+
+        //写入原数组
+        int index= 0;
+        for (ArrayList<Integer> arrayList : bucketList) {
+            for (Integer value : arrayList) {
+                arr[index++] = value;
+            }
+        }
+    }
+}
+
+```
+
+**时间复杂度**
+
+在额外空间充足的情况下，尽量增大桶的数量，极限情况下每个桶只有一个数据时，或者是每只桶只装一个值时，完全避开了桶内排序的操作，桶排序的最好时间复杂度就能够达到 O(n)。
+
+如果所有得数据都放在了一个桶内，这是非常影响效率的情况，会使时间复杂度下降到 O(nlogn)
+
+## 基数排序
+
+**思想**
+
+将数据按位数切割成不同的数字，然后按每个位数分别比较。不管你的数字有多大，按照一位一位的排，0 - 9 最多也就十个桶：先按权重小的位置排序，然后按权重大的位置排序。
+
+基数排序可以看成桶排序的扩展，也是用桶来辅助排序
+
+**代码**
+
+```java
+public class RadixSort {
+    public static void radixSort(int[] arr) {
+        int length = arr.length;
+        int max = arr[0];
+
+        //最大值
+        for (int i = 1; i < length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+
+        //当前排序位置
+        int location = 1;
+        //桶列表
+        ArrayList<ArrayList<Integer>> bucketList = new ArrayList<>();
+        //长度为10 装入余数0-9的数据
+        for (int i = 0; i < 10; i++) {
+            bucketList.add(new ArrayList<>());
+        }
+
+        while (true) {
+            //判断是否排完
+            double dd = Math.pow(10, location - 1);
+            if (max < dd) {
+                break;
+            }
+
+            //数据入桶
+            for (int i = 0; i < length; i++) {
+                int number = (int) (arr[i] / dd) % 10;
+                bucketList.get(number).add(arr[i]);
+            }
+
+            //写回数组
+            int nn = 0;
+            for (int i=0;i<10;i++){
+                int size = bucketList.get(i).size();
+                for(int ii = 0;ii < size;ii ++){
+                    arr[nn++] = bucketList.get(i).get(ii);
+                }
+                bucketList.get(i).clear();
+            }
+            location++;
+        }
+    }
+}
+
+```
+
+**时间复杂度**
+
+假设在基数排序中，r 为基数，d 为位数。则基数排序的时间复杂度为 O(d(n+r))。
+
+**空间复杂度**
+
+在基数排序过程中，对于任何位数上的基数进行装桶操作时，都需要 n+r 个临时空间。
 
 # 栈
 

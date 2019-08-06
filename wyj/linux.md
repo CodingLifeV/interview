@@ -90,7 +90,6 @@
     - `:wq!`：保存修改退出
     - `fx` 在当前行找 x 字符并光标跳过去
 
-
 **解压缩**
 
 - `tar -xvzf file.tar.gz`：解压文件
@@ -222,7 +221,7 @@
 
 ## 六、包管理
 
-- `apt-get`：软件的安装、卸载和升级
+- `apt-get`：软件的安装、卸载和升级 （Ubtu 得 Linux 系统）
   - `apt-get install xxx`：安装 xxx 安装包
   - `sudo apt-get remove xxx`：卸载 xxx 安装包
   - `apt-get update`：将所有包的来源更新
