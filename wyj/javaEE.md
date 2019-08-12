@@ -770,12 +770,12 @@ CGLIB 代理是基于继承目标类实现的，所以不能被继承的方法�
 
 在 Spring 配置文件中 `< aop : aspectj-autoproxy / >` 使得整个 Spring 项目拥有了 AOP 的功能。Spring 解析配置文件时，`aspectj-autoproxy` 字段被类 AspectJAutoProxyBeanDefinitionParser 解析，该类调用其方法 `parse()` 中的相关方法，来初始化一个 AOP 专用的 Bean，并注册到 Spring 容器中。
 
-![image](http://ss1.sinaimg.cn/large/d4556b75ly1g5wpsg2pfwj20m8044n0d&690)
+![image](https://segmentfault.com/img/remote/1460000016398367)
 
 步骤如下：
 
 1. 第一句，注册一个 AnnotationAwareAspectJAutoProxyCreator（称它为自动代理器），这个 Creator 是 AOP 的操作核心，也是扫描 Bean，代理 Bean 的操作所在。
-2. 第二句，解析配置元素，决定代理的模式。其中有 JDK 动态代理，还有 CGLIB 代理，这部分后续会再细讲。
+2. 第二句，解析配置元素，决定代理的模式。其中有 JDK 动态代理，还有 CGLIB 代理。
 3. 第三句，作为系统组件，把 Creator 这个 Bean，放到 Spring 容器中。让 Spring 实例化，启动这个 Creator。
 
 **AnnotationAwareAspectJAutoProxyCreator（称它为自动代理器）**
@@ -783,7 +783,15 @@ CGLIB 代理是基于继承目标类实现的，所以不能被继承的方法�
 其父类 AbstractAutoProxyCreator **里面实现了 BeanPostProceesor 接口的 `postProcessAfterInitialization` 方法**。
 
 当一个 bean 加载完后，执行了方法 `postProcessAfterInitialization`，该方法会判断是否有必要对该 bean 进行包装返回一个
-被代理包装过后的 bean
+被代理包装过后的 bean，这个 bean 即是新的代理对象：
+
+![image](https://segmentfault.com/img/remote/1460000016398368?w=1698&h=558)
+
+**wrapIfNecessary() 方法**
+
+该方法是整个 AOP 的核心流程。
+
+![image](https://segmentfault.com/img/remote/1460000016398369)
 
 # Mybatis
 

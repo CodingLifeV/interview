@@ -1,32 +1,40 @@
-# Java面试知识点总结
-# (图片不显示问题：把文档下载下之后用vsCode或者有道云笔记打开)
+# <font face="微软雅黑" >面试知识点总结</font>Java
 
-# 目录
+## <font face="微软雅黑" >目录</font>
 
-## [JavaSE](https://github.com/wyjPro/interview/blob/master/wyj/JavaSE.md)
+<font face="微软雅黑" >
 
-## [Java并发](https://github.com/wyjPro/interview/blob/master/wyj/concurrent.md)
+### [JavaSE](https://github.com/wyjPro/interview/blob/master/wyj/JavaSE.md)
 
-## [JVM](https://github.com/wyjPro/interview/blob/master/wyj/Jvm.md)
+### [Java 并发](https://github.com/wyjPro/interview/blob/master/wyj/concurrent.md)
 
-## [JavaEE](https://github.com/wyjPro/interview/blob/master/wyj/javaEE.md)
+### [JVM](https://github.com/wyjPro/interview/blob/master/wyj/Jvm.md)
 
-## [数据库](https://github.com/wyjPro/interview/blob/master/wyj/database.md)
+### [JavaEE](https://github.com/wyjPro/interview/blob/master/wyj/javaEE.md)
 
-## [数据库](https://github.com/wyjPro/interview/blob/master/wyj/javaweb.md)
+### [数据库](https://github.com/wyjPro/interview/blob/master/wyj/database.md)
 
-## [SQL语句](https://github.com/wyjPro/interview/blob/master/wyj/sql.md)
+### [Javaweb](https://github.com/wyjPro/interview/blob/master/wyj/javaweb.md)
 
-## [网络](https://github.com/wyjPro/interview/blob/master/wyj/networks.md)
+### [SQL 语句](https://github.com/wyjPro/interview/blob/master/wyj/sql.md)
 
-## [数据结构算法](https://github.com/wyjPro/interview/blob/master/wyj/programs.md)
+### [网络](https://github.com/wyjPro/interview/blob/master/wyj/networks.md)
 
-## [设计模式](https://github.com/wyjPro/interview/blob/master/wyj/designpattern.md)
+### [数据结构算法](https://github.com/wyjPro/interview/blob/master/wyj/programs.md)
 
-## [redis、分布式](https://github.com/wyjPro/interview/blob/master/wyj/redis.md)
+### [设计模式](https://github.com/wyjPro/interview/blob/master/wyj/designpattern.md)
 
-## [Git操作](https://github.com/wyjPro/interview/blob/master/wyj/git.md)
+### [redis、分布式](https://github.com/wyjPro/interview/blob/master/wyj/redis.md)
 
-## [linux基本操作](https://github.com/wyjPro/interview/blob/master/wyj/linux.md)
+### [Git 操作](https://github.com/wyjPro/interview/blob/master/wyj/git.md)
 
-## [TDD](https://github.com/wyjPro/interview/blob/dev/wyj/TDD.md)
+### [linux 基本操作](https://github.com/wyjPro/interview/blob/master/wyj/linux.md)
+
+### [面试杂记](https://github.com/wyjPro/interview/blob/dev/wyj/面试杂记.md)
+
+### [TDD](https://github.com/wyjPro/interview/blob/dev/wyj/TDD.md)
+
+### [idea快捷键](https://github.com/wyjPro/interview/blob/dev/wyj/idea.md)
+
+
+</font>
