@@ -24,6 +24,7 @@
   - [Spring 中如何让 A 和 B 两个 bean 按顺序加载](#spring-中如何让-a-和-b-两个-bean-按顺序加载)
   - [Spring 源码总结](#spring-源码总结)
   - [Spring 中的设计模式](#spring-中的设计模式)
+  - [Spring AOP 源码](#spring-aop-源码)
 - [Mybatis](#mybatis)
   - [解释一下 MyBatis 中命名空间（namespace）的作用。](#解释一下-mybatis-中命名空间namespace的作用)
   - [MyBatis 中的动态 SQL 是什么意思？](#mybatis-中的动态-sql-是什么意思)
@@ -753,6 +754,36 @@ spring 中 Observer 模式常用的地方是 listener 的实现。如 Applicatio
 2. spring 中在实例化对象的时候用到 Strategy 模式。
 
 **模板方法**
+
+## Spring AOP 源码
+
+Spring 提供了 JDK 动态代理和 CGLIB 代理两种方式为目标类创建代理，默认情况下，如果目标类实现了一个以上的用户自定义的接口或者目标类本身就是接口，就会使用 JDK 动态代理，如果目标类本身不是接口并且没有实现任何接口，就会使用 CGLIB 代理
+
+JDK 动态代理是基于实现目标类的接口来创建代理类的，所以只有接口方法会被代理，其他方法不会被代理
+
+CGLIB 代理是基于继承目标类实现的，所以不能被继承的方法（例如 final 修饰的方法、private 修饰的方法等）是不能被代理的
+
+- 如果想强制使用 CGLIB 代理，则可以将 `proxy-target-class` 设置 true
+- `expose-proxy` 用来解决对象内部 this 调用无法被切面增强的问题
+
+[从源码入手，一文带你读懂 Spring AOP 面向切面编程](https://segmentfault.com/a/1190000016398359)
+
+在 Spring 配置文件中 `< aop : aspectj-autoproxy / >` 使得整个 Spring 项目拥有了 AOP 的功能。Spring 解析配置文件时，`aspectj-autoproxy` 字段被类 AspectJAutoProxyBeanDefinitionParser 解析，该类调用其方法 `parse()` 中的相关方法，来初始化一个 AOP 专用的 Bean，并注册到 Spring 容器中。
+
+![image](http://ss1.sinaimg.cn/large/d4556b75ly1g5wpsg2pfwj20m8044n0d&690)
+
+步骤如下：
+
+1. 第一句，注册一个 AnnotationAwareAspectJAutoProxyCreator（称它为自动代理器），这个 Creator 是 AOP 的操作核心，也是扫描 Bean，代理 Bean 的操作所在。
+2. 第二句，解析配置元素，决定代理的模式。其中有 JDK 动态代理，还有 CGLIB 代理，这部分后续会再细讲。
+3. 第三句，作为系统组件，把 Creator 这个 Bean，放到 Spring 容器中。让 Spring 实例化，启动这个 Creator。
+
+**AnnotationAwareAspectJAutoProxyCreator（称它为自动代理器）**
+
+其父类 AbstractAutoProxyCreator **里面实现了 BeanPostProceesor 接口的 `postProcessAfterInitialization` 方法**。
+
+当一个 bean 加载完后，执行了方法 `postProcessAfterInitialization`，该方法会判断是否有必要对该 bean 进行包装返回一个
+被代理包装过后的 bean
 
 # Mybatis
 
