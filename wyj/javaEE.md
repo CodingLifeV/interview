@@ -5,6 +5,7 @@
   - [bean 的生命周期](#bean-的生命周期)
   - [Spring 注解 autowired 和 resource 区别](#spring-注解-autowired-和-resource-区别)
   - [@Controller 和@RestController 的区别？](#controller-和restcontroller-的区别)
+  - [@Component 和 @Bean 的区别是什么](#component-和-bean-的区别是什么)
   - [依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？](#依赖注入的方式有几种哪几种bean-的装配方式有几种哪几种)
   - [springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？](#springioc-原理自己实现-ioc-要怎么做哪些步骤)
   - [Spring 中 BeanFactory 和 ApplicationContext 的区别？BeanFactory 和 FactoryBean 的区别？](#spring-中-beanfactory-和-applicationcontext-的区别beanfactory-和-factorybean-的区别)
@@ -104,16 +105,22 @@ BeanPostProcessor 有一个不同于其他 3 个的点，实现 BeanPostProcesso
 **总结：**
 
 1. @RestController 相当于 @ResponseBody ＋ @Controller 一起作用。
-2. 使用 @Controller 注解，在对应的方法上，视图解析器可以解析 return 的 jsp, html 页面，并且跳转到相应页面，若返回 json 等内容到页面，则需要加@ResponseBody 注解；
-3. 相当于@Controller + @ResponseBody 两个注解的结合，返回 json 数据不需要在方法前面加@ResponseBody 注解了，但使用@RestController 这个注解，就不能返回 jsp,html 页面，视图解析器无法解析 jsp,html 页面
+2. 使用 @Controller 注解，在对应的方法上，视图解析器可以解析 return 的 jsp, html 页面，并且跳转到相应页面，若返回 json 等内容到页面，则需要加 @ResponseBody 注解；
+3. 相当于 @Controller + @ResponseBody 两个注解的结合，返回 json 数据不需要在方法前面加 @ResponseBody 注解了，但使用@RestController 这个注解，就不能返回 jsp、html 页面，视图解析器无法解析 jsp、html 页面
+
+## @Component 和 @Bean 的区别是什么
+
+1. @Component 注解作用于类，而 @Bean 注解作用于方法。
+2. @Component 通常是通过类路径扫描来自动侦测以及自动装配到 Spring 容器中；@Bean 注解通常是我们在标有该注解的方法中定义产生这个 bean，@Bean 告诉了 Spring 这是某个类的示例，当我需要用它的时候还给我。
 
 ## 依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？
 
 依赖注入方式：
 
-1. 构造器注入；
-2. setter 注入。首先把构造方法声明为无参数的，然后使用 setter 注入为其设置对应的值；
-3. 接口注入。例如外部的数据库连接资源，通过 JNDI 获取的数据源，通过 Spring 的接口注入实现
+1. 构造器注入，通过 xml 定义的 bean 中使用 `<constructor-arg>` 标签来进行属性注入；
+2. setter 注入。首先把构造方法声明为无参数的，然后使用 setter 注入为其设置对应的值，通过 xml 定义的 bean 中使用 `<property>` 标签来进行属性注入
+3. 静态工厂的方法注入
+4. 实例工厂的方法注入
 
 装配方式：
 
@@ -782,8 +789,7 @@ CGLIB 代理是基于继承目标类实现的，所以不能被继承的方法�
 
 其父类 AbstractAutoProxyCreator **里面实现了 BeanPostProceesor 接口的 `postProcessAfterInitialization` 方法**。
 
-当一个 bean 加载完后，执行了方法 `postProcessAfterInitialization`，该方法会判断是否有必要对该 bean 进行包装返回一个
-被代理包装过后的 bean，这个 bean 即是新的代理对象：
+当一个 bean 加载完后，执行了方法 `postProcessAfterInitialization`，此方法即为 AOP 代理的入口，该方法会判断是否有必要对该 bean 进行包装返回一个被代理包装过后的 bean，这个 bean 即是新的代理对象：
 
 ![image](https://segmentfault.com/img/remote/1460000016398368?w=1698&h=558)
 
@@ -791,7 +797,28 @@ CGLIB 代理是基于继承目标类实现的，所以不能被继承的方法�
 
 该方法是整个 AOP 的核心流程。
 
-![image](https://segmentfault.com/img/remote/1460000016398369)
+```java
+protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+    //省略部分代码...
+    //寻找符合此 Bean 的增强方法（通知方法）
+    Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+    if (specificInterceptors != DO_NOT_PROXY) {
+        //标记为已代理
+        this.advisedBeans.put(cacheKey, Boolean.TRUE);
+        //根据找到的增强方法，对此 Bean 进行动态代理
+        Object proxy = createProxy(
+            bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+        this.proxyTypes.put(cacheKey, proxy.getClass());
+        //将代理对象作为 Bean 返回给 IOC 容器
+        return proxy;
+    }
+	//如果走到这里，说明代理失败，标记为代理失败
+    this.advisedBeans.put(cacheKey, Boolean.FALSE);
+    return bean;
+}
+```
+
+**创建代理 createProxy()**
 
 # Mybatis
 
