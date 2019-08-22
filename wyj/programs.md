@@ -9,6 +9,7 @@
   - [合并二个排序的链表](#合并二个排序的链表)
   - [反转链表](#反转链表)
   - [两个链表的第一个公共结点](#两个链表的第一个公共结点)
+  - [复杂链表的复制](#复杂链表的复制)
 - [树](#树)
   - [根据前序中序遍历结果重建二叉树](#根据前序中序遍历结果重建二叉树)
   - [给定二叉树其中的一个节点，返回中序遍历顺序的下一个结点](#给定二叉树其中的一个节点返回中序遍历顺序的下一个结点)
@@ -21,6 +22,8 @@
   - [二叉查找树的第 K 个节点](#二叉查找树的第-k-个节点)
   - [二叉树的深度](#二叉树的深度)
   - [平衡二叉树](#平衡二叉树)
+  - [二叉搜索树的后续遍历序列](#二叉搜索树的后续遍历序列)
+  - [二叉树中和为某一值的路径](#二叉树中和为某一值的路径)
   - [树中二个节点的最低公共祖先](#树中二个节点的最低公共祖先)
 - [排序](#排序)
   - [归并排序](#归并排序)
@@ -53,6 +56,7 @@
   - [和为 S 的连续正数序列](#和为-s-的连续正数序列)
   - [滑动窗口中的最大值](#滑动窗口中的最大值)
   - [5 张扑克牌能否组成顺子](#5-张扑克牌能否组成顺子)
+  - [顺时针打印矩阵](#顺时针打印矩阵)
 - [动态规划](#动态规划)
   - [连续子数组的最大和](#连续子数组的最大和)
   - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
@@ -391,6 +395,55 @@ public class Main {
 }
 ```
 
+## 复杂链表的复制
+
+[复杂链表的复制](https://www.nowcoder.com/questionTerminal/f836b2c43afc4b35ad6adc41ec941dba?f=discussion)
+
+**思想：**
+
+1. 遍历链表，复制每个结点，如复制结点 A 得到 A1，将结点 A1 插到结点 A 后面；
+2. 重新遍历链表，复制老结点的随机指针给新结点，如 A1.random = A.random.next;
+3. 拆分链表，将链表拆分为原链表和复制后的链表
+
+```java
+public class Solution {
+    public RandomListNode Clone(RandomListNode pHead) {
+        if(pHead == null) {
+            return null;
+        }
+
+        RandomListNode currentNode = pHead;
+        //1、复制每个结点，如复制结点A得到A1，将结点A1插到结点A后面；
+        while(currentNode != null){
+            RandomListNode cloneNode = new RandomListNode(currentNode.label);
+            RandomListNode nextNode = currentNode.next;
+            currentNode.next = cloneNode;
+            cloneNode.next = nextNode;
+            currentNode = nextNode;
+        }
+
+        currentNode = pHead;
+        //2、重新遍历链表，复制老结点的随机指针给新结点，如A1.random = A.random.next;
+        while(currentNode != null) {
+            currentNode.next.random = currentNode.random==null?null:currentNode.random.next;
+            currentNode = currentNode.next.next;
+        }
+
+        //3、拆分链表，将链表拆分为原链表和复制后的链表
+        currentNode = pHead;
+        RandomListNode pCloneHead = pHead.next;
+        while(currentNode != null) {
+            RandomListNode cloneNode = currentNode.next;
+            currentNode.next = cloneNode.next;
+            cloneNode.next = cloneNode.next==null?null:cloneNode.next.next;
+            currentNode = currentNode.next;
+        }
+
+        return pCloneHead;
+    }
+}
+```
+
 # 树
 
 ## 根据前序中序遍历结果重建二叉树
@@ -556,7 +609,7 @@ public class Main {
 public class Main {
     public ArrayList<Integer> printBinaryTree(TreeNode pRoot) {
         if(pRoot == null) {
-            return null;
+            return new ArrayList<>();
         }
 
         Queue<TreeNode> queue = new LinkedList<>();
@@ -565,12 +618,12 @@ public class Main {
         while(!queue.isEmpty()) {
             int size = queue.size();
             while(size-- > 0) {
-                //队列的poll()方法,返回并删除
+                //队列的 poll()方法，返回并删除
                 TreeNode t = queue.poll();
                 if(t == null) {
                     continue;
                 }
-                ret.add(t);
+                ret.add(t.val);
                 queue.add(t.left);
                 queue.add(t.right);
             }
@@ -716,6 +769,80 @@ public class Main{
             isBalance = false;
         }
         return 1 + Math.max(l, r);
+    }
+}
+```
+
+## 二叉搜索树的后续遍历序列
+
+**思想：**
+
+采用分治法的思想，找到根结点、左子树的序列、右子树的序列，分别判断左右子序列是否为二叉树的后序序列。
+
+由题意可得：
+
+1. 后序遍历序列的最后一个元素为二叉树的根节点；
+2. 二叉搜索树左子树上所有的结点均小于根结点、右子树所有的结点均大于根结点。
+
+算法步骤如下：
+
+1. 找到根结点；
+2. 遍历序列，找到第一个大于等于根结点的元素 i，则 i 左侧为左子树、i 右侧为右子树；
+3. 我们已经知道 i 左侧所有元素均小于根结点，那么再依次遍历右侧，看是否所有元素均大于根结点；若出现小于根结点的元素，则直接返回 false；若右侧全都大于根结点，则：
+4. 分别递归判断左/右子序列是否为后序序列；
+
+```java
+public class Solution {
+    public boolean VerifySquenceOfBST(int [] sequence) {
+        if(sequence.length == 0)
+            return false;
+        if(sequence.length == 1)
+            return true;
+        return judge(sequence, 0, sequence.length-1);
+
+    }
+    public boolean judge(int[] a,int start,int root){
+        if(start >= root)
+            return true;
+        int i = root;
+        //从后面开始找
+        while(i > start && a[i-1] > a[root])
+            i--;//找到比根小的坐标
+
+        //从前面开始找 star到i-1应该比根小
+        for(int j = star;j<i-1;j++)
+            if(a[j]>a[root])
+                return false;
+
+        return judge(a, star, i-1) && judge(a, i, root-1);
+    }
+}
+
+```
+
+## 二叉树中和为某一值的路径
+
+**思想：**
+
+递归实现
+
+```java
+public class Solution {
+    ArrayList<ArrayList<Integer>> ret = new ArrayList<>();
+    ArrayList<Integer> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> FindPath(TreeNode root, int target) {
+        if (root == null) {
+            return ret;
+        }
+        list.add(root.val);
+        target -= root.val;
+        if (target == 0 && root.left == null && root.right == null) {
+            ret.add(new ArrayList<>(list));
+        }
+        FindPath(root.left, target);
+        FindPath(root.right, target);
+        list.remove(list.size() - 1);
+        return ret;
     }
 }
 ```
@@ -1498,8 +1625,8 @@ public class Main {
 
 ```java
 public class Main{
-    private Stack<Integer> dataStack;
-    private Stack<Integer> minStack;
+    private Stack<Integer> dataStack = new Stack<>();
+    private Stack<Integer> minStack = new Stack<>();
 
     public void push(int node) {
         dataStack.push(node);
@@ -1940,6 +2067,41 @@ public class Main {
         }
         return cnt >= 0;
     }
+}
+```
+
+## 顺时针打印矩阵
+
+**思想：**
+
+用四个变量分别控制矩阵的上下左右角变量，进行打印输出，还需要判断矩阵是否是单行或者单列。
+
+```java
+public ArrayList<Integer> printMatrix(int [][] matrix) {
+    ArrayList<Integer> ret = new ArrayList<>();
+
+    int r1 = 0, r2 = matrix.length - 1, c1 = 0, c2 = matrix[0].length - 1;
+
+    while (r1 <= r2 && c1 <= c2) {
+        for (int i = c1; i <= c2; i++) {
+            ret.add(matrix[r1][i]);
+        }
+        for (int i = r1 + 1; i <= r2; i++) {
+            ret.add(matrix[i][c2]);
+        }
+        if (r1 != r2) {
+            for (int i = c2 - 1; i >= c1; i--) {
+                ret.add(matrix[r2][i]);
+            }
+        }
+        if (c1 != c2) {
+            for (int i = r2 - 1; i > r1; i--) {
+                ret.add(matrix[i][c1]);
+            }
+        }
+        r1++; r2--; c1++; c2--;
+    }
+    return ret;
 }
 ```
 
