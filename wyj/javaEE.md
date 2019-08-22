@@ -1,39 +1,41 @@
 <!-- TOC -->
 
 - [Spring](#spring)
-    - [IOC 和 AOP?](#ioc-和-aop)
-    - [bean 的生命周期](#bean-的生命周期)
-    - [Spring 注解 autowired 和 resource 区别](#spring-注解-autowired-和-resource-区别)
-    - [@Controller 和@RestController 的区别？](#controller-和restcontroller-的区别)
-    - [依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？](#依赖注入的方式有几种哪几种bean-的装配方式有几种哪几种)
-    - [springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？](#springioc-原理自己实现-ioc-要怎么做哪些步骤)
-    - [Spring 中 BeanFactory 和 ApplicationContext 的区别？BeanFactory 和 FactoryBean 的区别？](#spring-中-beanfactory-和-applicationcontext-的区别beanfactory-和-factorybean-的区别)
-    - [请问 Spring 中 Bean 的作用域有哪些？](#请问-spring-中-bean-的作用域有哪些)
-    - [谈谈 Spring 中自动装配的方式有哪些？](#谈谈-spring-中自动装配的方式有哪些)
-    - [aop 的应用场景？日志记录和异常处理如何使用？](#aop-的应用场景日志记录和异常处理如何使用)
-    - [AOP 的原理是什么？](#aop-的原理是什么)
-    - [你如何理解 AOP 中的连接点（Joinpoint）、切点（Pointcut）、增强（Advice）、引介（Introduction）、织入（Weaving）、切面（Aspect）这些概念？](#你如何理解-aop-中的连接点joinpoint切点pointcut增强advice引介introduction织入weaving切面aspect这些概念)
-    - [Spring 支持的事务管理类型有哪些？你在项目中使用哪种方式？](#spring-支持的事务管理类型有哪些你在项目中使用哪种方式)
-    - [介绍一下 spring？](#介绍一下-spring)
-    - [Struts 拦截器和 Spring AOP 区别？](#struts-拦截器和-spring-aop-区别)
-    - [spring 框架的优点？缺点？](#spring-框架的优点缺点)
-    - [选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？](#选择使用-spring-框架的原因spring-框架为企业级开发带来的好处有哪些)
-    - [持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？](#持久层设计要考虑的问题有哪些你用过的持久层框架有哪些)
-    - [Spring 声明式事务，Spring 事务传播机制](#spring-声明式事务spring-事务传播机制)
-    - [Spring 事务写在哪一部分，为什么不写在 dao， controller层](#spring-事务写在哪一部分为什么不写在-dao-controller层)
-    - [Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载](#spring-中如何让-a-和-b-两个-bean-按顺序加载-spring-中如何让-a-和-b-两个-bean-按顺序加载)
-    - [Spring 源码总结](#spring-源码总结)
-    - [Spring 中的设计模式](#spring-中的设计模式)
+  - [IOC 和 AOP?](#ioc-和-aop)
+  - [bean 的生命周期](#bean-的生命周期)
+  - [Spring 注解 autowired 和 resource 区别](#spring-注解-autowired-和-resource-区别)
+  - [@Controller 和@RestController 的区别？](#controller-和restcontroller-的区别)
+  - [@Component 和 @Bean 的区别是什么](#component-和-bean-的区别是什么)
+  - [依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？](#依赖注入的方式有几种哪几种bean-的装配方式有几种哪几种)
+  - [springIOC 原理？自己实现 IOC 要怎么做，哪些步骤？](#springioc-原理自己实现-ioc-要怎么做哪些步骤)
+  - [Spring 中 BeanFactory 和 ApplicationContext 的区别？BeanFactory 和 FactoryBean 的区别？](#spring-中-beanfactory-和-applicationcontext-的区别beanfactory-和-factorybean-的区别)
+  - [请问 Spring 中 Bean 的作用域有哪些？](#请问-spring-中-bean-的作用域有哪些)
+  - [谈谈 Spring 中自动装配的方式有哪些？](#谈谈-spring-中自动装配的方式有哪些)
+  - [aop 的应用场景？日志记录和异常处理如何使用？](#aop-的应用场景日志记录和异常处理如何使用)
+  - [AOP 的原理是什么？](#aop-的原理是什么)
+  - [你如何理解 AOP 中的连接点（Joinpoint）、切点（Pointcut）、增强（Advice）、引介（Introduction）、织入（Weaving）、切面（Aspect）这些概念？](#你如何理解-aop-中的连接点joinpoint切点pointcut增强advice引介introduction织入weaving切面aspect这些概念)
+  - [Spring 支持的事务管理类型有哪些？你在项目中使用哪种方式？](#spring-支持的事务管理类型有哪些你在项目中使用哪种方式)
+  - [介绍一下 spring？](#介绍一下-spring)
+  - [Struts 拦截器和 Spring AOP 区别？](#struts-拦截器和-spring-aop-区别)
+  - [spring 框架的优点？缺点？](#spring-框架的优点缺点)
+  - [选择使用 Spring 框架的原因（Spring 框架为企业级开发带来的好处有哪些）？](#选择使用-spring-框架的原因spring-框架为企业级开发带来的好处有哪些)
+  - [持久层设计要考虑的问题有哪些？你用过的持久层框架有哪些？](#持久层设计要考虑的问题有哪些你用过的持久层框架有哪些)
+  - [Spring 声明式事务，Spring 事务传播机制](#spring-声明式事务spring-事务传播机制)
+  - [Spring 事务写在哪一部分，为什么不写在 dao， controller 层](#spring-事务写在哪一部分为什么不写在-dao-controller-层)
+  - [Spring 中如何让 A 和 B 两个 bean 按顺序加载](#spring-中如何让-a-和-b-两个-bean-按顺序加载)
+  - [Spring 源码总结](#spring-源码总结)
+  - [Spring 中的设计模式](#spring-中的设计模式)
+  - [Spring AOP 源码](#spring-aop-源码)
 - [Mybatis](#mybatis)
-    - [解释一下 MyBatis 中命名空间（namespace）的作用。](#解释一下-mybatis-中命名空间namespace的作用)
-    - [MyBatis 中的动态 SQL 是什么意思？](#mybatis-中的动态-sql-是什么意思)
-    - [Mybatis 中 Mapper 接口编程原理](#mybatis-中-mapper-接口编程原理)
-    - [动态 SQL](#动态-sql)
+  - [解释一下 MyBatis 中命名空间（namespace）的作用。](#解释一下-mybatis-中命名空间namespace的作用)
+  - [MyBatis 中的动态 SQL 是什么意思？](#mybatis-中的动态-sql-是什么意思)
+  - [Mybatis 中 Mapper 接口编程原理](#mybatis-中-mapper-接口编程原理)
+  - [动态 SQL](#动态-sql)
 - [SpringMVC](#springmvc)
-    - [Spring MVC 注解的优点](#spring-mvc-注解的优点)
-    - [springmvc 和 spring-boot 区别？](#springmvc-和-spring-boot-区别)
-    - [SpringMVC 的运行机制，运行机制的每一部分的相关知识？](#springmvc-的运行机制运行机制的每一部分的相关知识)
-    - [谈谈 Spring MVC 的工作原理是怎样的？](#谈谈-spring-mvc-的工作原理是怎样的)
+  - [Spring MVC 注解的优点](#spring-mvc-注解的优点)
+  - [springmvc 和 spring-boot 区别？](#springmvc-和-spring-boot-区别)
+  - [SpringMVC 的运行机制，运行机制的每一部分的相关知识？](#springmvc-的运行机制运行机制的每一部分的相关知识)
+  - [谈谈 Spring MVC 的工作原理是怎样的？](#谈谈-spring-mvc-的工作原理是怎样的)
 
 <!-- /TOC -->
 
@@ -103,16 +105,22 @@ BeanPostProcessor 有一个不同于其他 3 个的点，实现 BeanPostProcesso
 **总结：**
 
 1. @RestController 相当于 @ResponseBody ＋ @Controller 一起作用。
-2. 使用 @Controller 注解，在对应的方法上，视图解析器可以解析 return 的 jsp, html 页面，并且跳转到相应页面，若返回 json 等内容到页面，则需要加@ResponseBody 注解；
-3. 相当于@Controller + @ResponseBody 两个注解的结合，返回 json 数据不需要在方法前面加@ResponseBody 注解了，但使用@RestController 这个注解，就不能返回 jsp,html 页面，视图解析器无法解析 jsp,html 页面
+2. 使用 @Controller 注解，在对应的方法上，视图解析器可以解析 return 的 jsp, html 页面，并且跳转到相应页面，若返回 json 等内容到页面，则需要加 @ResponseBody 注解；
+3. 相当于 @Controller + @ResponseBody 两个注解的结合，返回 json 数据不需要在方法前面加 @ResponseBody 注解了，但使用@RestController 这个注解，就不能返回 jsp、html 页面，视图解析器无法解析 jsp、html 页面
+
+## @Component 和 @Bean 的区别是什么
+
+1. @Component 注解作用于类，而 @Bean 注解作用于方法。
+2. @Component 通常是通过类路径扫描来自动侦测以及自动装配到 Spring 容器中；@Bean 注解通常是我们在标有该注解的方法中定义产生这个 bean，@Bean 告诉了 Spring 这是某个类的示例，当我需要用它的时候还给我。
 
 ## 依赖注入的方式有几种，哪几种？Bean 的装配方式有几种，哪几种？
 
 依赖注入方式：
 
-1. 构造器注入；
-2. setter 注入。首先把构造方法声明为无参数的，然后使用 setter 注入为其设置对应的值；
-3. 接口注入。例如外部的数据库连接资源，通过 JNDI 获取的数据源，通过 Spring 的接口注入实现
+1. 构造器注入，通过 xml 定义的 bean 中使用 `<constructor-arg>` 标签来进行属性注入；
+2. setter 注入。首先把构造方法声明为无参数的，然后使用 setter 注入为其设置对应的值，通过 xml 定义的 bean 中使用 `<property>` 标签来进行属性注入
+3. 静态工厂的方法注入
+4. 实例工厂的方法注入
 
 装配方式：
 
@@ -291,12 +299,12 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 
 ## 介绍一下 spring？
 
-1. Spring 的核心是一个轻量级（Lightweight）的容器（Container）.轻量级是指它的创建和销毁不需要消耗太多的资源，意味着可以在程序中经常创建和销毁 session 的对象；重量级意味不能随意的创建和销毁它的实例，会占用很多的资源。
+1. Spring 的核心是一个轻量级（Lightweight）的容器（Container）。轻量级是指它的创建和销毁不需要消耗太多的资源，意味着可以在程序中经常创建和销毁 session 的对象；重量级意味不能随意的创建和销毁它的实例，会占用很多的资源。
 2. Spring 是实现 Ioc（Inversion of Control）容器和非入侵性（No intrusive）的框架
 3. Spring 提供 AOP（Aspect-oriented programming）概念的实现方式
 4. Spring 提供对持久层（Persistence）、事务（Transaction）的支持
 5. Spring 提供 MVC Web 框架的是实现，并对一些常用的企业服务 api 提供一致的模型封装
-   6.Spring 提供了对现存的各种框架（Structs、JSF、Hibernate、Ibatis、Webwork 等）相整合的方案
+6. Spring 提供了对现存的各种框架（Structs、JSF、Hibernate、Ibatis、Webwork 等）相整合的方案
 
 ## Struts 拦截器和 Spring AOP 区别？
 
@@ -356,7 +364,7 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 6. `Propagation.NEVER`： 以非事务方式执行，如果当前存在事务，则抛出异常
 7. `Propagation.NESTED`：嵌套事务，如果当前存在事务，则在嵌套事务内执行。也就是调用方法如果抛出异常只回滚自己内部执行的 SQL，而不回滚主方法的 SQL
 
-## Spring 事务写在哪一部分，为什么不写在 dao， controller层
+## Spring 事务写在哪一部分，为什么不写在 dao， controller 层
 
 一般写在 service 层。
 
@@ -364,13 +372,9 @@ Spring 支持编程式事务管理和声明式事务管理。选择声明式事�
 
 结合事务的特点，如果我们的事务注解 `@Transactional` 加在 dao 层，那么只要与数据库做增删改，就要提交一次事务，如此做事务的特性就发挥不出来，尤其是事务的一致性，当出现并发问题是，用户从数据库查到的数据都会有所偏差。
 
-一般的时候，我们的 service 层可以调用多个 dao 层，我们只需要在 service层加一个事务注解 `@Transactional`，这样我们就可以一个事务处理多个请求，事务的特性也会充分的发挥出来。
+一般的时候，我们的 service 层可以调用多个 dao 层，我们只需要在 service 层加一个事务注解 `@Transactional`，这样我们就可以一个事务处理多个请求，事务的特性也会充分的发挥出来。
 
-
-
-
-
-## Spring 中如何让 A 和 B 两个 bean 按顺序加载 Spring 中如何让 A 和 B 两个 bean 按顺序加载
+## Spring 中如何让 A 和 B 两个 bean 按顺序加载
 
 1. 依赖关系
 
@@ -758,6 +762,64 @@ spring 中 Observer 模式常用的地方是 listener 的实现。如 Applicatio
 
 **模板方法**
 
+## Spring AOP 源码
+
+Spring 提供了 JDK 动态代理和 CGLIB 代理两种方式为目标类创建代理，默认情况下，如果目标类实现了一个以上的用户自定义的接口或者目标类本身就是接口，就会使用 JDK 动态代理，如果目标类本身不是接口并且没有实现任何接口，就会使用 CGLIB 代理
+
+JDK 动态代理是基于实现目标类的接口来创建代理类的，所以只有接口方法会被代理，其他方法不会被代理
+
+CGLIB 代理是基于继承目标类实现的，所以不能被继承的方法（例如 final 修饰的方法、private 修饰的方法等）是不能被代理的
+
+- 如果想强制使用 CGLIB 代理，则可以将 `proxy-target-class` 设置 true
+- `expose-proxy` 用来解决对象内部 this 调用无法被切面增强的问题
+
+[从源码入手，一文带你读懂 Spring AOP 面向切面编程](https://segmentfault.com/a/1190000016398359)
+
+在 Spring 配置文件中 `< aop : aspectj-autoproxy / >` 使得整个 Spring 项目拥有了 AOP 的功能。Spring 解析配置文件时，`aspectj-autoproxy` 字段被类 AspectJAutoProxyBeanDefinitionParser 解析，该类调用其方法 `parse()` 中的相关方法，来初始化一个 AOP 专用的 Bean，并注册到 Spring 容器中。
+
+![image](https://segmentfault.com/img/remote/1460000016398367)
+
+步骤如下：
+
+1. 第一句，注册一个 AnnotationAwareAspectJAutoProxyCreator（称它为自动代理器），这个 Creator 是 AOP 的操作核心，也是扫描 Bean，代理 Bean 的操作所在。
+2. 第二句，解析配置元素，决定代理的模式。其中有 JDK 动态代理，还有 CGLIB 代理。
+3. 第三句，作为系统组件，把 Creator 这个 Bean，放到 Spring 容器中。让 Spring 实例化，启动这个 Creator。
+
+**AnnotationAwareAspectJAutoProxyCreator（称它为自动代理器）**
+
+其父类 AbstractAutoProxyCreator **里面实现了 BeanPostProceesor 接口的 `postProcessAfterInitialization` 方法**。
+
+当一个 bean 加载完后，执行了方法 `postProcessAfterInitialization`，此方法即为 AOP 代理的入口，该方法会判断是否有必要对该 bean 进行包装返回一个被代理包装过后的 bean，这个 bean 即是新的代理对象：
+
+![image](https://segmentfault.com/img/remote/1460000016398368?w=1698&h=558)
+
+**wrapIfNecessary() 方法**
+
+该方法是整个 AOP 的核心流程。
+
+```java
+protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+    //省略部分代码...
+    //寻找符合此 Bean 的增强方法（通知方法）
+    Object[] specificInterceptors = getAdvicesAndAdvisorsForBean(bean.getClass(), beanName, null);
+    if (specificInterceptors != DO_NOT_PROXY) {
+        //标记为已代理
+        this.advisedBeans.put(cacheKey, Boolean.TRUE);
+        //根据找到的增强方法，对此 Bean 进行动态代理
+        Object proxy = createProxy(
+            bean.getClass(), beanName, specificInterceptors, new SingletonTargetSource(bean));
+        this.proxyTypes.put(cacheKey, proxy.getClass());
+        //将代理对象作为 Bean 返回给 IOC 容器
+        return proxy;
+    }
+	//如果走到这里，说明代理失败，标记为代理失败
+    this.advisedBeans.put(cacheKey, Boolean.FALSE);
+    return bean;
+}
+```
+
+**创建代理 createProxy()**
+
 # Mybatis
 
 ## 解释一下 MyBatis 中命名空间（namespace）的作用。
@@ -788,21 +850,22 @@ MyBatis 中用于实现动态 SQL 的元素主要有：if、choose（when，othe
 
 ## 动态 SQL
 
-[MyBatis3-动态SQL语句](https://www.cnblogs.com/EasonJim/p/7057575.html)
+[MyBatis3-动态 SQL 语句](https://www.cnblogs.com/EasonJim/p/7057575.html)
 
 `if`：相当于 java 中的 if，常与 `test` 属性联合使用
 
 `choose` + `when` + `otherwise`：三者联合使用，相当于 java 中的 `switch` + `case` + `default`
-  ```sql
-    <choose>
-        <when> </when>
-        <when> </when>
-        <otherwise> </otherwise>
-    </choose>
-  ```
+
+```sql
+  <choose>
+      <when> </when>
+      <when> </when>
+      <otherwise> </otherwise>
+  </choose>
+```
 
 `trim`：去掉一些特殊的字符串，`prefix` 代表的是语句的前缀，`prefixOverrides` 代表的是前缀需要去掉哪些字符串，`suffixOverrides` 代表的是后缀需要去掉哪些字符串
-  
+
 `where`：用来简化 SQL 语句中 `where` 条件判断的，能智能的处理 `and`、`or`，不必担心多余导致语法错误
 
 `set`：主要是用在更新操作的时候，它的主要功能和 `where` 元素其实是差不多的，主要是在包含的语句前输出一个 `set`，然后如果包含的语句是以逗号结束的话将会把该逗号忽略，如果 `set` 包含的内容为空的话则会出错。

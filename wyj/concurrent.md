@@ -1,47 +1,53 @@
 <!-- TOC -->
 
 - [线程](#线程)
-    - [多线程中的 i++线程安全吗？为什么？](#多线程中的-i线程安全吗为什么)
-    - [如何线程安全的实现一个计数器？](#如何线程安全的实现一个计数器)
-    - [多线程同步的方法](#多线程同步的方法)
-    - [介绍一下生产者消费者模式？](#介绍一下生产者消费者模式)
-    - [线程，进程，然后线程创建有很大开销，怎么优化？](#线程进程然后线程创建有很大开销怎么优化)
-    - [线程池](#线程池)
-    - [AQS](#aqs)
-    - [创建线程的方法，哪个更好，为什么？](#创建线程的方法哪个更好为什么)
-    - [Java 中有几种方式启动一个线程？](#java-中有几种方式启动一个线程)
-    - [cyclicbarrier 和 countdownlatch 的区别](#cyclicbarrier-和-countdownlatch-的区别)
-    - [如何理解 Java 多线程回调方法？](#如何理解-java-多线程回调方法)
-    - [概括的解释下线程的几种可用状态以及状态之间的关系](#概括的解释下线程的几种可用状态以及状态之间的关系)
-    - [同步方法和同步代码块的区别是什么？](#同步方法和同步代码块的区别是什么)
-    - [在监视器(Monitor)内部，是如何做线程同步的？程序应该做哪种级别的同步？](#在监视器monitor内部是如何做线程同步的程序应该做哪种级别的同步)
-    - [sleep() 和 wait() 有什么区别？](#sleep-和-wait-有什么区别)
-    - [同步和异步有何异同，在什么情况下分别使用他们？举例说明](#同步和异步有何异同在什么情况下分别使用他们举例说明)
-    - [设计 4 个线程，其中两个线程每次对 j 增加 1，另外两个线程对 j 每次减少 1，使用内部类实现线程，对 j 增减的时候没有考虑顺序问题](#设计-4-个线程其中两个线程每次对-j-增加-1另外两个线程对-j-每次减少-1使用内部类实现线程对-j-增减的时候没有考虑顺序问题)
-    - [启动一个线程是用 run()还是 start()?](#启动一个线程是用-run还是-start)
-    - [请说出你所知道的线程同步的方法](#请说出你所知道的线程同步的方法)
-    - [stop()和 suspend()方法为何不推荐使用？](#stop和-suspend方法为何不推荐使用)
-    - [线程的 sleep()方法和 yield()方法有什么区别？](#线程的-sleep方法和-yield方法有什么区别)
-    - [当一个线程进入一个对象的 synchronized 方法 A 之后，其它线程是否可进入此对象的 synchronized 方法 B？](#当一个线程进入一个对象的-synchronized-方法-a-之后其它线程是否可进入此对象的-synchronized-方法-b)
+  - [多线程中的 i++线程安全吗？为什么？](#多线程中的-i线程安全吗为什么)
+  - [如何线程安全的实现一个计数器？](#如何线程安全的实现一个计数器)
+  - [多线程同步的方法](#多线程同步的方法)
+  - [介绍一下生产者消费者模式？](#介绍一下生产者消费者模式)
+  - [线程，进程，然后线程创建有很大开销，怎么优化？](#线程进程然后线程创建有很大开销怎么优化)
+  - [线程池](#线程池)
+  - [AQS](#aqs)
+  - [创建线程的方法，哪个更好，为什么？](#创建线程的方法哪个更好为什么)
+  - [Java 中有几种方式启动一个线程？](#java-中有几种方式启动一个线程)
+  - [cyclicbarrier 和 countdownlatch 的区别](#cyclicbarrier-和-countdownlatch-的区别)
+  - [如何理解 Java 多线程回调方法？](#如何理解-java-多线程回调方法)
+  - [概括的解释下线程的几种可用状态以及状态之间的关系](#概括的解释下线程的几种可用状态以及状态之间的关系)
+  - [同步方法和同步代码块的区别是什么？](#同步方法和同步代码块的区别是什么)
+  - [在监视器(Monitor)内部，是如何做线程同步的？程序应该做哪种级别的同步？](#在监视器monitor内部是如何做线程同步的程序应该做哪种级别的同步)
+  - [sleep() 和 wait() 有什么区别？](#sleep-和-wait-有什么区别)
+  - [同步和异步有何异同，在什么情况下分别使用他们？举例说明](#同步和异步有何异同在什么情况下分别使用他们举例说明)
+  - [设计 4 个线程，其中两个线程每次对 j 增加 1，另外两个线程对 j 每次减少 1，使用内部类实现线程，对 j 增减的时候没有考虑顺序问题](#设计-4-个线程其中两个线程每次对-j-增加-1另外两个线程对-j-每次减少-1使用内部类实现线程对-j-增减的时候没有考虑顺序问题)
+  - [启动一个线程是用 run()还是 start()?](#启动一个线程是用-run还是-start)
+  - [请说出你所知道的线程同步的方法](#请说出你所知道的线程同步的方法)
+  - [stop()和 suspend()方法为何不推荐使用？](#stop和-suspend方法为何不推荐使用)
+  - [线程的 sleep()方法和 yield()方法有什么区别？](#线程的-sleep方法和-yield方法有什么区别)
+  - [当一个线程进入一个对象的 synchronized 方法 A 之后，其它线程是否可进入此对象的 synchronized 方法 B？](#当一个线程进入一个对象的-synchronized-方法-a-之后其它线程是否可进入此对象的-synchronized-方法-b)
 - [锁](#锁)
-    - [锁总结](#锁总结)
-    - [讲一下非公平锁和公平锁在 reetrantlock 里的实现](#讲一下非公平锁和公平锁在-reetrantlock-里的实现)
-    - [讲一下 synchronized，可重入怎么实现](#讲一下-synchronized可重入怎么实现)
-    - [锁和同步的区别](#锁和同步的区别)
-    - [什么是死锁(deadlock)？](#什么是死锁deadlock)
-    - [如何确保 N 个线程可以访问 N 个资源同时又不导致死锁？](#如何确保-n-个线程可以访问-n-个资源同时又不导致死锁)
-    - [ReentrantLock 中公平锁和非公平锁在哪里体现的？](#reentrantlock-中公平锁和非公平锁在哪里体现的)
-    - [volatile 的实现原理](#volatile-的实现原理)
+  - [锁总结](#锁总结)
+    - [乐观锁 VS 悲观锁](#乐观锁-vs-悲观锁)
+    - [自旋锁 VS 适应性自旋锁](#自旋锁-vs-适应性自旋锁)
+    - [无锁 VS 偏向锁 VS 轻量级锁 VS 重量级锁](#无锁-vs-偏向锁-vs-轻量级锁-vs-重量级锁)
+    - [公平锁 VS 非公平锁](#公平锁-vs-非公平锁)
+    - [可重入锁 VS 非可重入锁](#可重入锁-vs-非可重入锁)
+    - [独享锁 VS 共享锁](#独享锁-vs-共享锁)
+  - [讲一下非公平锁和公平锁在 reetrantlock 里的实现](#讲一下非公平锁和公平锁在-reetrantlock-里的实现)
+  - [讲一下 synchronized，可重入怎么实现](#讲一下-synchronized可重入怎么实现)
+  - [锁和同步的区别](#锁和同步的区别)
+  - [什么是死锁(deadlock)？](#什么是死锁deadlock)
+  - [如何确保 N 个线程可以访问 N 个资源同时又不导致死锁？](#如何确保-n-个线程可以访问-n-个资源同时又不导致死锁)
+  - [ReentrantLock 中公平锁和非公平锁在哪里体现的？](#reentrantlock-中公平锁和非公平锁在哪里体现的)
+  - [volatile 的实现原理](#volatile-的实现原理)
 - [底层原理](#底层原理)
-    - [java 内存模型](#java-内存模型)
-    - [synchronized 底层原理](#synchronized-底层原理)
-    - [java 对象头](#java-对象头)
-    - [Monitor](#monitor)
-    - [Executors 线程池，为什么不建议使用这个类来创建线程池呢？如何创建？](#executors-线程池为什么不建议使用这个类来创建线程池呢如何创建)
-    - [阻塞队列](#阻塞队列)
-        - [ArrayBlockingQueue](#arrayblockingqueue)
-        - [LinkedBlockingQueue](#linkedblockingqueue)
-        - [二者对比](#二者对比)
+  - [java 内存模型](#java-内存模型)
+  - [synchronized 底层原理](#synchronized-底层原理)
+  - [java 对象头](#java-对象头)
+  - [Monitor](#monitor)
+  - [Executors 线程池，为什么不建议使用这个类来创建线程池呢？如何创建？](#executors-线程池为什么不建议使用这个类来创建线程池呢如何创建)
+  - [阻塞队列](#阻塞队列)
+    - [ArrayBlockingQueue](#arrayblockingqueue)
+    - [LinkedBlockingQueue](#linkedblockingqueue)
+    - [二者对比](#二者对比)
 
 <!-- /TOC -->
 
@@ -145,7 +151,6 @@ Java 中的线程池实际就是一种生产者和消费者模式的实现方式
   1. ScheduledThreadPoolExecutor：适用于需要多个后台线程执行周期任务，包含若干个线程
   2. SingleThreadScheduledExecutor：适用于需要一个后台线程执行周期任务，只包含一个线程，同时需要保证顺序的执行各个任务的应用场景
 
-
 **处理流程**
 
 首先判断核心线程池里的线程是否都在执行任务，如果不是则直接从核心线程池中创建一个线程来执行，如果都在忙则判断任务队列是否也满了，没满的话将任务放进去等待执行，满了就判断线程池的全部线程是否都在忙，如果都在忙就交给饱和策略来处理，否则就创建一个线程来帮助核心线程处理任务。
@@ -157,20 +162,19 @@ Java 中的线程池实际就是一种生产者和消费者模式的实现方式
 3. `ThreadFactory`：线程工厂，主要用来创建线程
 4. `runnableTaskQueue`：任务队列，用于保存等待执行的任务的阻塞队列
 5. `RejectedExecutionHandler`：饱和策略
-   
+
 **策略**
 
-  1. `ThreadPoolExecutor.AbortPolicy`:丢弃任务并抛出 RejectedExecutionException 异常（默认情况）
-  2. `ThreadPoolExecutor.DiscardPolicy`：也是丢弃任务，但是不抛出异常。
-  3. `ThreadPoolExecutor.DiscardOldestPolicy`：丢弃队列最前面的任务，然后重新尝试执行任务  
-  4. `ThreadPoolExecutor.CallerRunsPolicy`：只用调用者所在线程来运行任务
-   
+1. `ThreadPoolExecutor.AbortPolicy`:丢弃任务并抛出 RejectedExecutionException 异常（默认情况）
+2. `ThreadPoolExecutor.DiscardPolicy`：也是丢弃任务，但是不抛出异常。
+3. `ThreadPoolExecutor.DiscardOldestPolicy`：丢弃队列最前面的任务，然后重新尝试执行任务
+4. `ThreadPoolExecutor.CallerRunsPolicy`：只用调用者所在线程来运行任务
+
 **使用线程池的优点：**
 
 1. 降低资源消耗，通过重复利用已经创建的线程降低线程创建和销毁造成的消耗
 2. 提高响应速度，当任务达到时，任务可以不需要的等到线程创建就能够立即执行
 3. 提高线程的可管理性，性程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，故使用线程池可以进行统一的分配，调用和监控，但是也要做到合理的利用线程池，所以要对线程池的原理了如指掌
-
 
 ## AQS
 
@@ -245,10 +249,6 @@ Java 中的线程池实际就是一种生产者和消费者模式的实现方式
 ## Java 中有几种方式启动一个线程？
 
 第一种:继承 Thread 类,重写 run 方法.第二种:实现 Runable 接口,重写 run 方法
-
-
-
-
 
 ## cyclicbarrier 和 countdownlatch 的区别
 
@@ -393,13 +393,65 @@ yield()：放弃当前 CPU 资源，将它让给其它的任务去占用 CPU 执
 ## 锁总结
 
 [参考美团技术团队](https://tech.meituan.com/2018/11/15/java-lock.html)
-![](https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018b/7f749fc8.png)
+![image](https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018b/7f749fc8.png)
 
-**1. 乐观锁 VS 悲观锁**
+### 乐观锁 VS 悲观锁
 
-JDBC 编程笔记中有总结
+**悲观锁**
 
-**2. 自旋锁 VS 适应性自旋锁**
+总是假设最坏的情况，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会阻塞直到它拿到锁（共享资源每次只给一个线程使用，其它线程阻塞，用完后再把资源转让给其它线程）。传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁。Java 中 synchronized 和 ReentrantLock 等独占锁就是悲观锁思想的实现。
+
+**乐观锁**
+
+总是假设最好的情况，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候会判断一下在此期间别人有没有去更新这个数据，可以使用版本号机制和 CAS 算法实现。乐观锁适用于多读的应用类型，这样可以提高吞吐量，像数据库提供的类似于 write_condition 机制，其实都是提供的乐观锁。在 Java 中 java.util.concurrent.atomic 包下面的原子变量类就是使用了乐观锁的一种实现方式 CAS 实现的。
+
+**两种锁的使用场景**
+
+乐观锁适用于写比较少的情况下（多读场景），即冲突真的很少发生的时候，这样可以省去了锁的开销，加大了系统的整个吞吐量。但如果是多写的情况，一般会经常产生冲突，这就会导致上层应用会不断的进行 retry，这样反倒是降低了性能，所以一般多写的场景下用悲观锁就比较合适。
+
+**乐观锁常见的两种实现方式**
+
+1. 版本号机制：
+
+   一般是在数据表中加上一个数据版本号 version 字段，表示数据被修改的次数，当数据被修改时，version 值会加一。当线程 A 要更新数据值时，在读取数据的同时也会读取 version 值，在提交更新时，若刚才读取到的 version 值为当前数据库中的 version 值相等时才更新，否则重试更新操作，直到更新成功。
+
+2. CAS 算法
+
+   即 compare and swap（比较与交换），是一种有名的无锁算法。无锁编程，即不使用锁的情况下实现多线程之间的变量同步，也就是在没有线程被阻塞的情况下实现变量的同步，所以也叫非阻塞同步（Non-blocking Synchronization）。CAS 算法涉及到三个操作数：
+
+   1. 需要读写的内存值 V
+   2. 进行比较的值 A
+   3. 拟写入的新值 B
+
+   当且仅当 V 的值等于 A 时，CAS 通过原子方式用新值 B 来更新 V 的值，否则不会执行任何操作（比较和替换是一个原子操作）。一般情况下是一个自旋操作，即不断的重试。
+
+**乐观锁的缺点**
+
+1. ABA 问题。
+
+   如果一个变量 V 初次读取的时候是 A 值，并且在准备赋值的时候检查到它仍然是 A 值，在这段时间它的值可能被改为其他值，然后又改回 A，那 CAS 操作就会误认为它从来没有被修改过。这个问题被称为 CAS 操作的 "ABA"问题。JDK 1.5 以后的 AtomicStampedReference 类就提供了此种能力，其中的 compareAndSet 方法就是首先检查当前引用是否等于预期引用，并且当前标志是否等于预期标志，如果全部相等，则以原子方式将该引用和该标志的值设置为给定的更新值。
+
+2. 循环时间长开销大。
+
+   自旋 CAS（也就是不成功就一直循环执行直到成功）如果长时间不成功，会给 CPU 带来非常大的执行开销。
+
+3. 只能保证一个共享变量的原子操作。
+
+   CAS 只对单个共享变量有效，当操作涉及跨多个共享变量时 CAS 无效。但是从 JDK 1.5 开始，提供了 AtomicReference 类来保证引用对象之间的原子性，你可以把多个变量放在一个对象里来进行 CAS 操作.所以我们可以使用锁或者利用 AtomicReference 类把多个共享变量合并成一个共享变量来操作。
+
+**CAS 与 synchronized 的使用情景**
+
+CAS 适用于写比较少的情况下（多读场景，冲突一般较少）
+
+synchronized 适用于写比较多的情况下（多写场景，冲突一般较多）
+
+对于资源竞争较少（线程冲突较轻）的情况，使用 synchronized 同步锁进行线程阻塞和唤醒切换以及用户态内核态间的切换操作额外浪费消耗 cpu 资源；而 CAS 基于硬件实现，不需要进入内核，不需要切换线程，操作自旋几率较少，因此可以获得更高的性能。
+
+对于资源竞争严重（线程冲突严重）的情况，CAS 自旋的概率会比较大，从而浪费更多的 CPU 资源，效率低于 synchronized。
+
+[乐观锁悲观锁参考文章](https://blog.csdn.net/qq_34337272/article/details/81072874)
+
+### 自旋锁 VS 适应性自旋锁
 
 > 阻塞或唤醒一个 Java 线程需要操作系统切换 CPU 状态来完成，这种状态转换需要耗费处理器时间。如果同步代码块中的内容过于简单，状态转换消耗的时间有可能比用户代码执行的时间还要长。
 
@@ -411,7 +463,7 @@ JDBC 编程笔记中有总结
 * 自适应的自旋锁（适应性自旋锁）：
   自适应意味着自旋的时间（次数）不再固定，而是由前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定。如果在同一个锁对象上，自旋等待刚刚成功获得过锁，并且持有锁的线程正在运行中，那么虚拟机就会认为这次自旋也是很有可能再次成功，进而它将允许自旋等待持续相对更长的时间。如果对于某个锁，自旋很少成功获得过，那在以后尝试获取这个锁时将可能省略掉自旋过程，直接阻塞线程，避免浪费处理器资源。
 
-**3. 无锁 VS 偏向锁 VS 轻量级锁 VS 重量级锁**
+### 无锁 VS 偏向锁 VS 轻量级锁 VS 重量级锁
 
 jdk1.6 对锁的实现引入了大量的优化，如自旋锁、适应性自旋锁、锁消除、锁粗化、偏向锁、轻量级锁等技术来减少锁操作的开销。锁主要存在四中状态，依次是：无锁状态、偏向锁状态、轻量级锁状态、重量级锁状态。
 
@@ -452,7 +504,7 @@ jdk1.6 对锁的实现引入了大量的优化，如自旋锁、适应性自旋�
 
   升级为重量级锁时，锁标志的状态值变为“10”，此时 Mark Word 中存储的是指向重量级锁的指针，此时等待锁的线程都会进入阻塞状态。
 
-**4. 公平锁 VS 非公平锁**
+### 公平锁 VS 非公平锁
 
 > 公平锁就是通过同步队列来实现多个线程按照申请锁的顺序来获取锁，从而实现公平的特性。非公平锁加锁时不考虑排队等待问题，直接尝试获取锁，所以存在后申请却先获得锁的情况。
 
@@ -484,13 +536,13 @@ jdk1.6 对锁的实现引入了大量的优化，如自旋锁、适应性自旋�
     ```
   - lock 方法对比非公平锁， 新来的线程没有插队的机会， 所有来的线程必须扔到队列尾部， acquire 方法也会像非公平锁一样首先调用 tryAcquire 插队试试，但是只有队列为空或着本身就是 head，那么才可能成功，如果队列非空那么肯定被扔到队列尾部去了。
 
-**5. 可重入锁 VS 非可重入锁**
+### 可重入锁 VS 非可重入锁
 
 - 可重入锁
   - 概念：是指在同一个线程在外层方法获取锁的时候，再进入该线程的内层方法会自动获取锁（前提锁对象得是同一个对象或者 class），不会因为之前已经获取过还没释放而阻塞
   - 优点：一定程度上可以避免死锁
 
-**6. 独享锁 VS 共享锁**
+### 独享锁 VS 共享锁
 
 - 独享锁：也叫排他锁，是指该锁一次只能被一个线程所持有，如果线程 T 对数据 A 加上排它锁后，则其他线程不能再对 A 加任何类型的锁
 - 共享锁：该锁可被多个线程所持有，如果线程 T 对数据 A 加上共享锁后，则其他线程只能对 A 再加共享锁，不能加排它锁
@@ -499,10 +551,6 @@ jdk1.6 对锁的实现引入了大量的优化，如自旋锁、适应性自旋�
   ![](https://awps-assets.meituan.net/mit-x/blog-images-bundle-2018b/762a042b.png)
   由代码可知：ReentrantReadWriteLock 有两把锁：ReadLock 和 WriteLock，ReadLock 和 WriteLock 是靠内部类 Sync 实现的锁。读锁是共享锁，写锁是独享锁，读锁的共享锁可保证并发读非常高效，而读写、写读、写写的过程互斥
   ReentrantReadWriteLock 中的 state 变量“按位切割”切分成了两个部分，高 16 位表示读锁状态（读锁个数），低 16 位表示写锁状态（写锁个数）。
-
-**7. AQS**
-
-笔记中有总结
 
 ## 讲一下非公平锁和公平锁在 reetrantlock 里的实现
 
@@ -673,15 +721,16 @@ ObjectMonitor 类中提供了几个方法，如`enter`、`exit`、`wait`、`noti
 
 ## Executors 线程池，为什么不建议使用这个类来创建线程池呢？如何创建？
 
-[Java中线程池，你真的会用吗？](https://www.hollischuang.com/archives/2888)
+[Java 中线程池，你真的会用吗？](https://www.hollischuang.com/archives/2888)
 
-Executors 是一个Java中的工具类。提供工厂方法来创建不同类型的线程池。常用方法有以下几个：
-* `newFiexedThreadPool(int Threads)`：创建固定数目线程的线程池。
-* `newCachedThreadPool()`：创建一个可缓存的线程池，调用 execute 将重用以前构造的线程（如果线程可用）。如果没有可用的线程，则创建一个新线程并添加到池中。终止并从缓存中移除那些已有 60 秒钟未被使用的线程
-* `newSingleThreadExecutor()`：创建一个单线程化的Executor。
-* `newScheduledThreadPool(int corePoolSize)`：创建一个支持定时及周期性的任务执行的线程池，多数情况下可用来替代 Timer 类。
+Executors 是一个 Java 中的工具类。提供工厂方法来创建不同类型的线程池。常用方法有以下几个：
 
-使用 Executors 创建线程池可能会导致 OOM(OutOfMemory内存溢出)，Executors 其实底层确实是通过 LinkedBlockingQueue 实现的，newFixedThreadPool 中创建 `LinkedBlockingQueue` 时，并未指定容量。此时，`LinkedBlockingQueue` 就是一个无边界队列，对于一个无边界队列来说，是可以不断的向队列中加入任务的，这种情况下就有可能因为任务过多而导致内存溢出问题。
+- `newFiexedThreadPool(int Threads)`：创建固定数目线程的线程池。
+- `newCachedThreadPool()`：创建一个可缓存的线程池，调用 execute 将重用以前构造的线程（如果线程可用）。如果没有可用的线程，则创建一个新线程并添加到池中。终止并从缓存中移除那些已有 60 秒钟未被使用的线程
+- `newSingleThreadExecutor()`：创建一个单线程化的 Executor。
+- `newScheduledThreadPool(int corePoolSize)`：创建一个支持定时及周期性的任务执行的线程池，多数情况下可用来替代 Timer 类。
+
+使用 Executors 创建线程池可能会导致 OOM(OutOfMemory 内存溢出)，Executors 其实底层确实是通过 LinkedBlockingQueue 实现的，newFixedThreadPool 中创建 `LinkedBlockingQueue` 时，并未指定容量。此时，`LinkedBlockingQueue` 就是一个无边界队列，对于一个无边界队列来说，是可以不断的向队列中加入任务的，这种情况下就有可能因为任务过多而导致内存溢出问题。
 
 避免使用 Executors 创建线程池，主要是避免使用其中的默认实现，那么我们可以自己直接调用 `ThreadPoolExecutor` 的构造函数来自己创建线程池。在创建的同时，给 `BlockingQueue` 指定容量就可以了。
 
@@ -700,12 +749,12 @@ Java 中的阻塞队列 `BlockingQueue` 主要有两种实现，分别是 `Array
 
 ### ArrayBlockingQueue
 
-[【死磕 Java 集合】— ArrayBlockingQueue源码分析](http://cmsblogs.com/?p=4755)
+[【死磕 Java 集合】— ArrayBlockingQueue 源码分析](http://cmsblogs.com/?p=4755)
 
-* 是一个用数组实现的有界阻塞队列，其大小在构造时由构造函数来决定，确认之后就不能再改变了。
-* 支持对等待的生产者线程和使用者线程进行排序的可选公平策略，但是在默认情况下不保证线程公平的访问，在构造时可以选择公平策略（fair = true）。公平性通常会降低吞吐量，但是减少了可变性和避免了“不平衡性”。
-* 继承 `AbstractQueue` ，实现 `BlockingQueue` 接口，继承 `java.util.Queue` 为阻塞队列的核心接口，提供了在多线程环境下的出列、入列操作。
-* 内部使用可重入锁 ReentrantLock + Condition 来完成多线程环境的并发操，提供了诸多方法，可以将元素加入队列尾部。
+- 是一个用数组实现的有界阻塞队列，其大小在构造时由构造函数来决定，确认之后就不能再改变了。
+- 支持对等待的生产者线程和使用者线程进行排序的可选公平策略，但是在默认情况下不保证线程公平的访问，在构造时可以选择公平策略（fair = true）。公平性通常会降低吞吐量，但是减少了可变性和避免了“不平衡性”。
+- 继承 `AbstractQueue` ，实现 `BlockingQueue` 接口，继承 `java.util.Queue` 为阻塞队列的核心接口，提供了在多线程环境下的出列、入列操作。
+- 内部使用可重入锁 ReentrantLock + Condition 来完成多线程环境的并发操，提供了诸多方法，可以将元素加入队列尾部。
 
 **主要属性**
 
@@ -737,55 +786,56 @@ public ArrayBlockingQueue(int capacity, boolean fair) {
 **入队**
 
 `add(E e)` 将指定的元素插入到此队列的尾部，在成功时返回 true，如果此队列已满，则抛出 IllegalStateException
-  
-  ```java
-    public boolean add(E e) {
-        return super.add(e);
-    }
 
-    public boolean add(E e) {
-        if (offer(e))
-            return true;
-        else
-            throw new IllegalStateException("Queue full");
-    }
-  ```
+```java
+  public boolean add(E e) {
+      return super.add(e);
+  }
 
-  `add` 方法调用 `offer(E e)`，如果返回 false 则抛出异常。`offer(E e)` 为其实现：
+  public boolean add(E e) {
+      if (offer(e))
+          return true;
+      else
+          throw new IllegalStateException("Queue full");
+  }
+```
 
-  ```java
-    public boolean offer(E e) {
-        checkNotNull(e);
-        final ReentrantLock lock = this.lock;
-        lock.lock();
-        try {
-            if (count == items.length)
-                return false;
-            else {
-                enqueue(e);
-                return true;
-            }
-        } finally {
-            lock.unlock();
-        }
-    }
-  ```
+`add` 方法调用 `offer(E e)`，如果返回 false 则抛出异常。`offer(E e)` 为其实现：
 
-  方法首先检查是否为 null，然后获取 lock 锁。获取锁成功后，如果队列已满则直接返回 false，否则调用 enqueue(E e)，enqueue(E e) 为入列的核心方法，所有入列的方法最终都将调用该方法在队列尾部插入元素：
+```java
+  public boolean offer(E e) {
+      checkNotNull(e);
+      final ReentrantLock lock = this.lock;
+      lock.lock();
+      try {
+          if (count == items.length)
+              return false;
+          else {
+              enqueue(e);
+              return true;
+          }
+      } finally {
+          lock.unlock();
+      }
+  }
+```
 
-  ```java
-    private void enqueue(E x) {
-        // assert lock.getHoldCount() == 1;
-        // assert items[putIndex] == null;
-        final Object[] items = this.items;
-        items[putIndex] = x;
-        if (++putIndex == items.length)
-            putIndex = 0;
-        count++;
-        notEmpty.signal();
-    }
-  ```
-  该方法就是在 putIndex（队尾）处添加元素，最后使用 `notEmpty.signal()` 方法通知阻塞在**出列**的线程
+方法首先检查是否为 null，然后获取 lock 锁。获取锁成功后，如果队列已满则直接返回 false，否则调用 enqueue(E e)，enqueue(E e) 为入列的核心方法，所有入列的方法最终都将调用该方法在队列尾部插入元素：
+
+```java
+  private void enqueue(E x) {
+      // assert lock.getHoldCount() == 1;
+      // assert items[putIndex] == null;
+      final Object[] items = this.items;
+      items[putIndex] = x;
+      if (++putIndex == items.length)
+          putIndex = 0;
+      count++;
+      notEmpty.signal();
+  }
+```
+
+该方法就是在 putIndex（队尾）处添加元素，最后使用 `notEmpty.signal()` 方法通知阻塞在**出列**的线程
 
 **出队**
 
@@ -802,15 +852,16 @@ public E poll() {
         }
     }
 ```
+
 `dequeue()` 方法主要是从列头（takeIndex 位置）取出元素，同时如果迭代器 itrs 不为 null，则需要维护下该迭代器。最后调用`notFull.signal()` 唤醒**入列**线程。
 
 `take()` 与 `poll()` 存在一个区别就是 count == 0 时的处理，`poll()` 直接返回 null，而 `take()` 则是在 notEmpty 上面等待直到被入列的线程唤醒。
 
 ### LinkedBlockingQueue
 
-[【死磕 Java 集合】— LinkedBlockingQueue源码分析](http://cmsblogs.com/?p=4759)
+[【死磕 Java 集合】— LinkedBlockingQueue 源码分析](http://cmsblogs.com/?p=4759)
 
-`LinkedBlockingQueue` 是一个用单链表实现的有界阻塞队列，容量可以选择进行设置，不设置的话，将是一个无边界的阻塞队列，最大长度为Integer.MAX_VALUE。
+`LinkedBlockingQueue` 是一个用单链表实现的有界阻塞队列，容量可以选择进行设置，不设置的话，将是一个无边界的阻塞队列，最大长度为 Integer.MAX_VALUE。
 
 **主要属性：**
 
@@ -829,7 +880,6 @@ private final ReentrantLock putLock = new ReentrantLock();
 private final Condition notFull = putLock.newCondition();
 ```
 
-
 **入队**
 
 `put(E e)` 方法主要流程：
@@ -839,13 +889,15 @@ private final Condition notFull = putLock.newCondition();
     final ReentrantLock putLock = this.putLock;
    ```
 2. 如果队列满了就阻塞在 notFull 条件上；
+
    ```java
     final AtomicInteger count = this.count;
-    
+
     while (count.get() == capacity) {
             notFull.await();
     }
    ```
+
 3. 否则就入队；
    ```java
     enqueue(node);
@@ -855,29 +907,29 @@ private final Condition notFull = putLock.newCondition();
     c = count.getAndIncrement();
     if (c + 1 < capacity) {
         notFull.signal();
-    }          
+    }
    ```
 5. 释放锁；
    ```java
     putLock.unlock();
    ```
-6. 如果放元素之前队列长度为0，就唤醒 notEmpty 条件；
-    ```java
-    // 如果原队列长度为0，现在加了一个元素后立即唤醒notEmpty条件
-    if (c == 0)
-        signalNotEmpty();
-    ```
+6. 如果放元素之前队列长度为 0，就唤醒 notEmpty 条件；
+   ```java
+   // 如果原队列长度为0，现在加了一个元素后立即唤醒notEmpty条件
+   if (c == 0)
+       signalNotEmpty();
+   ```
 
 **出队**
 
 `take()` 方法主要流程：
 
-1. 使用takeLock加锁；
+1. 使用 takeLock 加锁；
    ```java
     final ReentrantLock takeLock = this.takeLock;
     takeLock.lockInterruptibly();
    ```
-2. 如果队列空了就阻塞在notEmpty条件上；
+2. 如果队列空了就阻塞在 notEmpty 条件上；
    ```java
     while (count.get() == 0) {
         notEmpty.await();
@@ -893,7 +945,7 @@ private final Condition notFull = putLock.newCondition();
    ```java
     if (c > 1) {
         notEmpty.signal();
-    }   
+    }
    ```
 5. 释放锁；
 6. 如果取元素之前队列长度等于容量，就唤醒 notFull 条件；

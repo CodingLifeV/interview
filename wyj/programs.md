@@ -1,93 +1,101 @@
 <!-- TOC -->
 
 - [链表](#链表)
-    - [从尾到头打印链表](#从尾到头打印链表)
-    - [在 O(1)时间内删除链表节点](#在-o1时间内删除链表节点)
-    - [删除链表中重复的结点](#删除链表中重复的结点)
-    - [链表中倒数第 k 个结点](#链表中倒数第-k-个结点)
-    - [链表中环的入口结点](#链表中环的入口结点)
-    - [合并二个排序的链表](#合并二个排序的链表)
-    - [反转链表](#反转链表)
-    - [两个链表的第一个公共结点](#两个链表的第一个公共结点)
+  - [从尾到头打印链表](#从尾到头打印链表)
+  - [在 O(1)时间内删除链表节点](#在-o1时间内删除链表节点)
+  - [删除链表中重复的结点](#删除链表中重复的结点)
+  - [链表中倒数第 k 个结点](#链表中倒数第-k-个结点)
+  - [链表中环的入口结点](#链表中环的入口结点)
+  - [合并二个排序的链表](#合并二个排序的链表)
+  - [反转链表](#反转链表)
+  - [两个链表的第一个公共结点](#两个链表的第一个公共结点)
+  - [复杂链表的复制](#复杂链表的复制)
 - [树](#树)
-    - [根据前序中序遍历结果重建二叉树](#根据前序中序遍历结果重建二叉树)
-    - [给定二叉树其中的一个节点，返回中序遍历顺序的下一个结点](#给定二叉树其中的一个节点返回中序遍历顺序的下一个结点)
-    - [树的子结构](#树的子结构)
-    - [二叉树的镜像](#二叉树的镜像)
-    - [对称二叉树](#对称二叉树)
-    - [从上往下打印二叉树](#从上往下打印二叉树)
-    - [把二叉树打印成多行](#把二叉树打印成多行)
-    - [按之字形顺序打印二叉树](#按之字形顺序打印二叉树)
-    - [二叉查找树的第 K 个节点](#二叉查找树的第-k-个节点)
-    - [二叉树的深度](#二叉树的深度)
-    - [平衡二叉树](#平衡二叉树)
-    - [树中二个节点的最低公共祖先](#树中二个节点的最低公共祖先)
+  - [根据前序中序遍历结果重建二叉树](#根据前序中序遍历结果重建二叉树)
+  - [给定二叉树其中的一个节点，返回中序遍历顺序的下一个结点](#给定二叉树其中的一个节点返回中序遍历顺序的下一个结点)
+  - [树的子结构](#树的子结构)
+  - [二叉树的镜像](#二叉树的镜像)
+  - [对称二叉树](#对称二叉树)
+  - [从上往下打印二叉树](#从上往下打印二叉树)
+  - [把二叉树打印成多行](#把二叉树打印成多行)
+  - [按之字形顺序打印二叉树](#按之字形顺序打印二叉树)
+  - [二叉查找树的第 K 个节点](#二叉查找树的第-k-个节点)
+  - [二叉树的深度](#二叉树的深度)
+  - [平衡二叉树](#平衡二叉树)
+  - [二叉搜索树的后续遍历序列](#二叉搜索树的后续遍历序列)
+  - [二叉树中和为某一值的路径](#二叉树中和为某一值的路径)
+  - [树中二个节点的最低公共祖先](#树中二个节点的最低公共祖先)
 - [排序](#排序)
-    - [归并排序](#归并排序)
-    - [快速排序](#快速排序)
-    - [堆排序](#堆排序)
-    - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数)
-    - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
-    - [最小的 k 个数](#最小的-k-个数)
-    - [数据流中的中位数](#数据流中的中位数)
+  - [归并排序](#归并排序)
+  - [快速排序](#快速排序)
+  - [堆排序](#堆排序)
+  - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数)
+  - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
+  - [最小的 k 个数](#最小的-k-个数)
+  - [数据流中的中位数](#数据流中的中位数)
+  - [冒泡](#冒泡)
+  - [选择排序](#选择排序)
+  - [插入排序](#插入排序)
+  - [希尔排序](#希尔排序)
+  - [桶排序](#桶排序)
+  - [基数排序](#基数排序)
 - [栈](#栈)
-    - [用二个栈实现队列](#用二个栈实现队列)
-    - [包含 min 函数的栈](#包含-min-函数的栈)
-    - [输入二个序列，第一个序列是栈的压入序列，判断第二个序列是否为栈的弹出序列](#输入二个序列第一个序列是栈的压入序列判断第二个序列是否为栈的弹出序列)
+  - [用二个栈实现队列](#用二个栈实现队列)
+  - [包含 min 函数的栈](#包含-min-函数的栈)
+  - [输入二个序列，第一个序列是栈的压入序列，判断第二个序列是否为栈的弹出序列](#输入二个序列第一个序列是栈的压入序列判断第二个序列是否为栈的弹出序列)
 - [数组](#数组)
-    - [数组中重复的数字](#数组中重复的数字)
-    - [二维数组中的查找，数组从左到右从上到下递增](#二维数组中的查找数组从左到右从上到下递增)
-    - [旋转数组的最小数字](#旋转数组的最小数字)
-    - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字-1)
-    - [调整数组顺序使奇数位于偶数前面](#调整数组顺序使奇数位于偶数前面)
-    - [把数组中的所有数字拼接起来，排成最小的数](#把数组中的所有数字拼接起来排成最小的数)
-    - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数-1)
-    - [数组中只出现一次的数字](#数组中只出现一次的数字)
-    - [递增数组中找和为 S 的二个数，若有多个， 输出乘积最小者](#递增数组中找和为-s-的二个数若有多个-输出乘积最小者)
-    - [和为 S 的连续正数序列](#和为-s-的连续正数序列)
-    - [滑动窗口中的最大值](#滑动窗口中的最大值)
-    - [5 张扑克牌能否组成顺子](#5-张扑克牌能否组成顺子)
+  - [数组中重复的数字](#数组中重复的数字)
+  - [二维数组中的查找，数组从左到右从上到下递增](#二维数组中的查找数组从左到右从上到下递增)
+  - [旋转数组的最小数字](#旋转数组的最小数字)
+  - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字-1)
+  - [调整数组顺序使奇数位于偶数前面，并且相对位置不发生变化](#调整数组顺序使奇数位于偶数前面并且相对位置不发生变化)
+  - [把数组中的所有数字拼接起来，排成最小的数](#把数组中的所有数字拼接起来排成最小的数)
+  - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数-1)
+  - [数组中只出现一次的数字](#数组中只出现一次的数字)
+  - [递增数组中找和为 S 的二个数，若有多个， 输出乘积最小者](#递增数组中找和为-s-的二个数若有多个-输出乘积最小者)
+  - [和为 S 的连续正数序列](#和为-s-的连续正数序列)
+  - [滑动窗口中的最大值](#滑动窗口中的最大值)
+  - [5 张扑克牌能否组成顺子](#5-张扑克牌能否组成顺子)
+  - [顺时针打印矩阵](#顺时针打印矩阵)
 - [动态规划](#动态规划)
-    - [连续子数组的最大和](#连续子数组的最大和)
-    - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
-    - [m * n 的棋盘上拿礼物，求礼物的最大价值](#m--n-的棋盘上拿礼物求礼物的最大价值)
-    - [剪绳子，使得每段的长度乘积最大](#剪绳子使得每段的长度乘积最大)
-    - [变态跳台阶](#变态跳台阶)
-    - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5)
+  - [连续子数组的最大和](#连续子数组的最大和)
+  - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串)
+  - [m \* n 的棋盘上拿礼物，求礼物的最大价值](#m--n-的棋盘上拿礼物求礼物的最大价值)
+  - [剪绳子，使得每段的长度乘积最大](#剪绳子使得每段的长度乘积最大)
+  - [变态跳台阶](#变态跳台阶)
+  - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5)
 - [贪心](#贪心)
-    - [股票的最大利润](#股票的最大利润)
+  - [股票的最大利润](#股票的最大利润)
 - [递归](#递归)
-    - [斐波那契数列](#斐波那契数列)
-    - [跳 n 级台阶总共的跳法](#跳-n-级台阶总共的跳法)
-    - [用 2 _ 1 的小矩形不重叠的覆盖 2 _ n 的大矩形](#用-2-_-1-的小矩形不重叠的覆盖-2-_-n-的大矩形)
-    - [变态跳台阶](#变态跳台阶-1)
-    - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字)
+  - [斐波那契数列](#斐波那契数列)
+  - [跳 n 级台阶总共的跳法](#跳-n-级台阶总共的跳法)
+  - [用 2 _ 1 的小矩形不重叠的覆盖 2 _ n 的大矩形](#用-2-_-1-的小矩形不重叠的覆盖-2-_-n-的大矩形)
+  - [变态跳台阶](#变态跳台阶-1)
+  - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字)
 - [字符串](#字符串)
-    - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串-1)
-    - [字符串中第一次只出现一次的字符位置](#字符串中第一次只出现一次的字符位置)
-    - [把数字翻译成字符串](#把数字翻译成字符串)
-    - [不用额外的空间，翻转单词顺序列](#不用额外的空间翻转单词顺序列)
-    - [左旋转字符串](#左旋转字符串)
-    - [把字符串转成整数](#把字符串转成整数)
-    - [将字符串中的控格替换成" "](#将字符串中的控格替换成)
+  - [最长不含重复字符的子字符串](#最长不含重复字符的子字符串-1)
+  - [字符串中第一次只出现一次的字符位置](#字符串中第一次只出现一次的字符位置)
+  - [把数字翻译成字符串](#把数字翻译成字符串)
+  - [不用额外的空间，翻转单词顺序列](#不用额外的空间翻转单词顺序列)
+  - [左旋转字符串](#左旋转字符串)
+  - [把字符串转成整数](#把字符串转成整数)
+  - [将字符串中的控格替换成" "](#将字符串中的控格替换成)
 - [数字](#数字)
-    - [二进制中 1 的个数](#二进制中-1-的个数)
-    - [数值的整数次方](#数值的整数次方)
-    - [最小的 k 个数](#最小的-k-个数-1)
-    - [数据流中的中位数](#数据流中的中位数-1)
-    - [字符流中第一个不重复的字符](#字符流中第一个不重复的字符)
-    - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5-1)
-    - [圆圈中最后剩下的数](#圆圈中最后剩下的数)
-    - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字-1)
+  - [二进制中 1 的个数](#二进制中-1-的个数)
+  - [数值的整数次方](#数值的整数次方)
+  - [最小的 k 个数](#最小的-k-个数-1)
+  - [数据流中的中位数](#数据流中的中位数-1)
+  - [字符流中第一个不重复的字符](#字符流中第一个不重复的字符)
+  - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5-1)
+  - [圆圈中最后剩下的数](#圆圈中最后剩下的数)
+  - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字-1)
 - [回溯法](#回溯法)
-    - [打印从 1 到最大的 n 个数](#打印从-1-到最大的-n-个数)
-    - [矩阵中的路径](#矩阵中的路径)
+  - [打印从 1 到最大的 n 个数](#打印从-1-到最大的-n-个数)
+  - [矩阵中的路径](#矩阵中的路径)
 - [其它](#其它)
-    - [多线程死锁](#多线程死锁)
+  - [多线程死锁](#多线程死锁)
 
 <!-- /TOC -->
-
-
 
 [剑指 Offer 学习心得](http://wiki.jikexueyuan.com/project/for-offer/)
 
@@ -147,6 +155,19 @@ public class Main {
 ```
 
 3. 递归
+
+```java
+public class Solution {
+    ArrayList<Integer> arrayList=new ArrayList<Integer>();
+    public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        if(listNode!=null){
+            this.printListFromTailToHead(listNode.next);
+            arrayList.add(listNode.val);
+        }
+        return arrayList;
+    }
+}
+```
 
 ## 在 O(1)时间内删除链表节点
 
@@ -374,6 +395,55 @@ public class Main {
 }
 ```
 
+## 复杂链表的复制
+
+[复杂链表的复制](https://www.nowcoder.com/questionTerminal/f836b2c43afc4b35ad6adc41ec941dba?f=discussion)
+
+**思想：**
+
+1. 遍历链表，复制每个结点，如复制结点 A 得到 A1，将结点 A1 插到结点 A 后面；
+2. 重新遍历链表，复制老结点的随机指针给新结点，如 A1.random = A.random.next;
+3. 拆分链表，将链表拆分为原链表和复制后的链表
+
+```java
+public class Solution {
+    public RandomListNode Clone(RandomListNode pHead) {
+        if(pHead == null) {
+            return null;
+        }
+
+        RandomListNode currentNode = pHead;
+        //1、复制每个结点，如复制结点A得到A1，将结点A1插到结点A后面；
+        while(currentNode != null){
+            RandomListNode cloneNode = new RandomListNode(currentNode.label);
+            RandomListNode nextNode = currentNode.next;
+            currentNode.next = cloneNode;
+            cloneNode.next = nextNode;
+            currentNode = nextNode;
+        }
+
+        currentNode = pHead;
+        //2、重新遍历链表，复制老结点的随机指针给新结点，如A1.random = A.random.next;
+        while(currentNode != null) {
+            currentNode.next.random = currentNode.random==null?null:currentNode.random.next;
+            currentNode = currentNode.next.next;
+        }
+
+        //3、拆分链表，将链表拆分为原链表和复制后的链表
+        currentNode = pHead;
+        RandomListNode pCloneHead = pHead.next;
+        while(currentNode != null) {
+            RandomListNode cloneNode = currentNode.next;
+            currentNode.next = cloneNode.next;
+            cloneNode.next = cloneNode.next==null?null:cloneNode.next.next;
+            currentNode = currentNode.next;
+        }
+
+        return pCloneHead;
+    }
+}
+```
+
 # 树
 
 ## 根据前序中序遍历结果重建二叉树
@@ -539,7 +609,7 @@ public class Main {
 public class Main {
     public ArrayList<Integer> printBinaryTree(TreeNode pRoot) {
         if(pRoot == null) {
-            return null;
+            return new ArrayList<>();
         }
 
         Queue<TreeNode> queue = new LinkedList<>();
@@ -548,12 +618,12 @@ public class Main {
         while(!queue.isEmpty()) {
             int size = queue.size();
             while(size-- > 0) {
-                //队列的poll()方法,返回并删除
+                //队列的 poll()方法，返回并删除
                 TreeNode t = queue.poll();
                 if(t == null) {
                     continue;
                 }
-                ret.add(t);
+                ret.add(t.val);
                 queue.add(t.left);
                 queue.add(t.right);
             }
@@ -703,6 +773,80 @@ public class Main{
 }
 ```
 
+## 二叉搜索树的后续遍历序列
+
+**思想：**
+
+采用分治法的思想，找到根结点、左子树的序列、右子树的序列，分别判断左右子序列是否为二叉树的后序序列。
+
+由题意可得：
+
+1. 后序遍历序列的最后一个元素为二叉树的根节点；
+2. 二叉搜索树左子树上所有的结点均小于根结点、右子树所有的结点均大于根结点。
+
+算法步骤如下：
+
+1. 找到根结点；
+2. 遍历序列，找到第一个大于等于根结点的元素 i，则 i 左侧为左子树、i 右侧为右子树；
+3. 我们已经知道 i 左侧所有元素均小于根结点，那么再依次遍历右侧，看是否所有元素均大于根结点；若出现小于根结点的元素，则直接返回 false；若右侧全都大于根结点，则：
+4. 分别递归判断左/右子序列是否为后序序列；
+
+```java
+public class Solution {
+    public boolean VerifySquenceOfBST(int [] sequence) {
+        if(sequence.length == 0)
+            return false;
+        if(sequence.length == 1)
+            return true;
+        return judge(sequence, 0, sequence.length-1);
+
+    }
+    public boolean judge(int[] a,int start,int root){
+        if(start >= root)
+            return true;
+        int i = root;
+        //从后面开始找
+        while(i > start && a[i-1] > a[root])
+            i--;//找到比根小的坐标
+
+        //从前面开始找 star到i-1应该比根小
+        for(int j = star;j<i-1;j++)
+            if(a[j]>a[root])
+                return false;
+
+        return judge(a, star, i-1) && judge(a, i, root-1);
+    }
+}
+
+```
+
+## 二叉树中和为某一值的路径
+
+**思想：**
+
+递归实现
+
+```java
+public class Solution {
+    ArrayList<ArrayList<Integer>> ret = new ArrayList<>();
+    ArrayList<Integer> list = new ArrayList<>();
+    public ArrayList<ArrayList<Integer>> FindPath(TreeNode root, int target) {
+        if (root == null) {
+            return ret;
+        }
+        list.add(root.val);
+        target -= root.val;
+        if (target == 0 && root.left == null && root.right == null) {
+            ret.add(new ArrayList<>(list));
+        }
+        FindPath(root.left, target);
+        FindPath(root.right, target);
+        list.remove(list.size() - 1);
+        return ret;
+    }
+}
+```
+
 ## 树中二个节点的最低公共祖先
 
 1. 二叉查找树
@@ -741,11 +885,26 @@ public TreeNode getLowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 
 # 排序
 
+[【数据结构与算法】这或许是东半球分析十大排序算法最好的一篇文章](https://mp.weixin.qq.com/s/iiH2wSG-hVeUHxIsfuu9gw)
+
+[面试时写不出排序算法？看这篇就够了。](https://juejin.im/post/5cb6b8f551882532c334bcf2)
+
+|              | 排序类别 | 平均时间复杂度 | 最好时间复杂度 | 最坏时间复杂度 | 空间复杂度 | 复杂性 |
+| ------------ | -------- | -------------- | -------------- | -------------- | ---------- | ------ |
+| 冒泡排序     | 交换排序 | O(N2)          | O(N)           | O(N2)          | O(1)       | 稳定   | 简单 |
+| 简单选择排序 | 选择排序 | O(N2)          | O(N2)          | O(N2)          | O(1)       | 不稳定 | 简单 |
+| 直接插入排序 | 插入排序 | O(N2)          | O(N)           | O(N2)          | O(1)       | 稳定   | 简单 |
+| 希尔排序     | 插入排序 | O(Nlog2N)      |                | O(N1.5)        | O(1)       | 不稳定 | 较复杂 |
+| 归并排序     | 归并排序 | O(nlog2n)      | O(nlog2n)      | O(nlog2n)      | O(n)       | 稳定   | 较复杂 |
+| 快速排序     | 快速排序 | O(Nlog2N)      | O(Nlog2N)      | O(N2)          | O(Nlog2N)  | 不稳定 | 较复杂 |
+| 堆排序       | 堆排序   | O(nlog2n)      | O(nlog2n)      | O(nlog2n)      | O(1)       | 不稳定 | 较复杂 |
+| 基数排序     | 基数排序 | O(d(n+r))      | O(d(n+r))      | O(d(n+r))      | O(n+r)     | 稳定   | 较复杂 |
+
 ## 归并排序
 
 **思想：**
 
-归并排序是利用归并的思想实现的排序方法，采用经典的分治算法实现，这里的分就是把问题无序的数分解成一些小的组并使其有序，而治就是将这些有序的组进行有序的组合实现整个数列有序，其是通过归并实现的。
+归并排序是利用归并的思想实现的排序方法，将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为二路归并。
 
 **代码实现：**
 
@@ -797,11 +956,14 @@ public class Main {
 > 对于长度为 N 的数组，$2^n$ = N，k $\in$[0, n-1]，
 > 第 k 层有 $2^k$ 个子数组，每个子数组的长度为$2^{n-k}$，归并最多需要 $2^{n-k}$ 次比较。因此每层的比较次数为 $2^k$ \* $2^{n-k}$ = $2^n$，n 层总共为 n$2^n$ = N$\log$N
 
+归并排序的形式就是一棵二叉树，它需要遍历的次数就是二叉树的深度，而根据完全二叉树的可以得出它的时间复杂度是 O(n\*log2n)
+
 ## 快速排序
 
 **思想：**
 
-通过选取一个基准（理论上是可以任意取序列中的一个元素），通过基准将一个序列分割成独立的两部分，将小于基准的所有数据都和大于基准的另外一部分的所有数据分开，然后再按此方法对这两部分数据分别进行类似的排序，最终整个序列就可以实现有序，整个排序过程可以递归进行。
+通过一趟排序将要排序的数据分割成独立的两部分：分割点左边都是比它小的数，右边都是比它大的数。
+然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列。
 
 **代码实现：**
 
@@ -842,7 +1004,11 @@ public class Main {
 
 最好情况下每次都将数组对半分，最好平均为 O(N$\log$N)
 
-最坏情况数组本身有序，最坏 O($N^2$)
+最坏情况数组本身有序，以第一个关键字为基准分为两个子序列，前一个子序列为空，此时执行效率最差，最坏 O($N^2$)
+
+**空间复杂度：**
+
+快速排序在每次分割的过程中，需要 1 个空间存储基准值。而快速排序的大概需要 Nlog2N 次的分割处理，所以占用空间也是 Nlog2N 个。
 
 ## 堆排序
 
@@ -850,39 +1016,55 @@ public class Main {
 
 分两个阶段：
 
-- 堆的构造阶段：从右至左用 sink()函数构造大顶堆
-- 下层排序阶段：将堆中的最大元素删除，然后放入堆缩小后数组中空出的位置
+1. 根据初始数组去构造初始堆（构建一个完全二叉树，保证所有的父结点都比它的孩子结点数值大）。
+2. 每次交换第一个和最后一个元素，输出最后一个元素（最大值），然后把剩下元素重新调整为大根堆。
 
 **代码实现：**
 
 ```java
-public class Main{
-    public void sort(int[] arr) {
-        int arrIndex = arr.length - 1;
-        //构造大顶堆
-        for(int i = (arrIndex - 1) / 2 ; i >= 0; i--) {
-            sink(arr, i, arrIndex);
-        }
+public class HeapSort {
+    public static void sort(int[] arr) {
+        int length = arr.length;
+        buildHeap(arr, length);
 
-        //下层排序阶段
-        while(arrLength > 0) {
-            swap(arr, 0, arrLength--);
-            sink(arr, 0, arrLength);
+        // 进行n-1次循环，完成排序
+        for (int i = length - 1; i > 0; i--) {
+            //将堆顶元素与末位元素交换
+            swap(arr, 0, i);
+            // 数组长度 -1 隐藏堆尾元素
+            length--;
+            // 将堆顶元素下沉,目的是将最大的元素浮到堆顶来
+            sink(arr, 0,length);
         }
     }
-    //下沉元素
-    private void sink(int[] arr, int index, int arrIndex) {
-        while((2 * index + 1) <= arrIndex) {
+
+    /**
+     * 构建初始堆
+     */
+    public static void buildHeap(int[] arr, int length) {
+        for (int i = length / 2; i >= 0; i--) {
+            sink(arr, i, length);
+        }
+    }
+
+    /**
+     * 下沉堆元素
+     */
+    public static void sink(int[] arr, int index, int length) {
+        while (2 * index + 1 < length) {
             int j = 2 * index + 1;
-            if(j < arrIndex && arr[j] < arr[j+1]) j++;
-            if(arr[index] >= arr[j]) break;
+            if (j < length - 1 && arr[j] < arr[j + 1]) j++;
+            if (arr[index] >= arr[j]) {
+                break;
+            }
             swap(arr, index, j);
         }
     }
-    private void swap(int[] arr, int i, int j) {
+
+    public static void swap(int[] arr, int i, int j) {
         int temp = arr[i];
-        arr[i]   = arr[j];
-        arr[j]   = temp;
+        arr[i] = arr[j];
+        arr[j] = temp;
     }
 }
 ```
@@ -890,6 +1072,8 @@ public class Main{
 **时间复杂度：**
 
 最好最坏平均情况下都为 O(N$\log$N)
+
+当想得到一个序列中第 k 个最小的元素之前的部分排序序列，最好采用堆排序。
 
 ## 数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数
 
@@ -1115,6 +1299,293 @@ public class Main {
 }
 ```
 
+---
+
+## 冒泡
+
+**思想：**
+
+从序列的一端开始往另一端冒泡，依次比较相邻的两个数的大小。两层循环，外层冒泡轮数，里层依次比较
+
+```java
+public void bubbleSort(int[] array) {
+        if (array.length == 0 || array == null) {
+            return;
+        }
+
+        for (int i = 0; i < array.length - 1; i++) {
+            for (int j = 0; j < array.length - 1 - i; j++) {
+                if (array[j] > array[j + 1]) {
+                    swap(array, j, j + 1);
+                }
+            }
+        }
+    }
+
+    private void swap(int[] array, int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+```
+
+**优化：**
+
+如果有序，停止遍历
+
+```java
+public void bubbleSortOptimized(int[] array) {
+    if (array.length == 0 || array == null) {
+        return;
+    }
+
+    for (int i = 0; i < array.length - 1; i++) {
+        boolean isSorted = true;
+        for (int j = 0; j < array.length - 1 - i; j++) {
+            if (array[j] > array[j + 1]) {
+                swap(array, j, j + 1);
+                isSorted = false;
+            }
+        }
+        if (isSorted) {
+            return;
+        }
+
+    }
+}
+```
+
+**时间复杂度**
+
+## 选择排序
+
+**思想：**
+
+每趟从待排序的记录中选出关键字最小的记录，顺序放在已排序的记录序列末尾，直到全部排序结束为止。
+
+```java
+public void selectSort(int[] arr) {
+    if (arr.length == 0 || arr == null) {
+        return;
+    }
+
+    for (int i = 0; i < arr.length; i++) {
+        int min = i;
+        for (int j = i + 1; j < arr.length; j++) {
+            if (arr[j] < arr[min]) {
+                min = j;
+            }
+        }
+        swap(arr, i, min);
+    }
+}
+```
+
+**时间复杂度**
+
+1. 简单选择排序的比较次数与序列的初始排序无关。假设待排序的序列有 N 个元素，则比较次数总是 N (N - 1) / 2；
+2. 而移动次数与序列的初始排序有关。当序列正序时，移动次数最少，为 0。当序列反序时，移动次数最多，为 3N (N - 1) / 2。
+
+综合以上，简单排序的时间复杂度为 O(N2)。
+
+## 插入排序
+
+**思想：**
+
+每一趟将一个待排序的记录，按照其关键字的大小插入到有序队列的合适位置里，直到全部插入完成。
+
+```java
+public void insertSort(int[] arr) {
+    if (arr.length == 0 || arr == null) {
+        return;
+    }
+
+    for (int i = 1; i < arr.length; i++) {
+        int j = 0;//插入的位置
+        int temp = arr[i];// 取出第i个数，和前i-1个数比较后，插入合适位置
+        for (j = i - 1; j >= 0; j--) {
+            if (arr[j] > temp) {
+                arr[j + 1] = arr[j];
+            }
+        }
+        arr[j + 1] = temp;
+    }
+}
+```
+
+**时间复杂度**
+
+1. 当数据正序时，执行效率最好，每次插入都不用移动前面的元素，时间复杂度为 O(N)。
+2. 当数据反序时，执行效率最差，每次插入都要前面的元素后移，时间复杂度为 O(N2)。
+
+所以，数据越接近正序，直接插入排序的算法性能越好。
+
+## 希尔排序
+
+**思想：**
+
+它是一种插入排序。把记录按步长 gap 分组，对每组记录采用直接插入排序方法进行排序。 随着步长逐渐减小，所分成的组包含的记录越来越多，当步长的值减小到 1 时，整个数据合成为一组，构成一组有序记录，则完成排序。
+
+```java
+public void shellSort(int[] arr) {
+    if (arr.length == 0 || arr == null) {
+        return;
+    }
+
+    int gap = arr.length / 2;
+    while (gap >= 1) {
+        for (int i = gap; i < arr.length; i++) {
+            int j = 0;
+            int temp = arr[i];
+
+            for (j = i - gap; j >= 0; j -= gap) {
+                if (arr[j] > temp) {
+                    arr[j + gap] = arr[j];
+                }
+            }
+            arr[j + gap] = temp;
+        }
+        gap = gap / 2;
+    }
+}
+```
+
+## 桶排序
+
+**思想**
+
+将要排的数据分到多个有序的桶里，每个桶里的数据再单独排序，再把每个桶的数据依次取出，即可完成排序。
+
+**代码**
+
+```java
+public class BucketSort {
+    public void bucketSort(int[] arr) {
+        int max = arr[0], min = arr[0];
+        int length = arr.length;
+
+        //最大值和最小值的差
+        for (int i = 0; i < length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            } else if (arr[i] < min) {
+                min = arr[i];
+            }
+        }
+        int diff = max - min;
+
+        //桶列表
+        ArrayList<ArrayList<Integer>> bucketList = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            bucketList.add(new ArrayList<>());
+        }
+
+        //每个桶的存数区间
+        float section = (float) diff / (float) (length - 1);
+
+        //数据如桶
+        for (int i = 0; i < length; i++) {
+            //当前数除以区间得出存放桶的位置 减1后得出桶的下标
+            int num = (int) (arr[i] / section) - 1;
+            if (num < 0) {
+                num = 0;
+            }
+            bucketList.get(num).add(arr[i]);
+        }
+
+        //桶内排序
+        for (int i = 0; i < bucketList.size(); i++) {
+            Collections.sort(bucketList.get(i));
+        }
+
+        //写入原数组
+        int index= 0;
+        for (ArrayList<Integer> arrayList : bucketList) {
+            for (Integer value : arrayList) {
+                arr[index++] = value;
+            }
+        }
+    }
+}
+
+```
+
+**时间复杂度**
+
+在额外空间充足的情况下，尽量增大桶的数量，极限情况下每个桶只有一个数据时，或者是每只桶只装一个值时，完全避开了桶内排序的操作，桶排序的最好时间复杂度就能够达到 O(n)。
+
+如果所有得数据都放在了一个桶内，这是非常影响效率的情况，会使时间复杂度下降到 O(nlogn)
+
+## 基数排序
+
+**思想**
+
+将数据按位数切割成不同的数字，然后按每个位数分别比较。不管你的数字有多大，按照一位一位的排，0 - 9 最多也就十个桶：先按权重小的位置排序，然后按权重大的位置排序。
+
+基数排序可以看成桶排序的扩展，也是用桶来辅助排序
+
+**代码**
+
+```java
+public class RadixSort {
+    public static void radixSort(int[] arr) {
+        int length = arr.length;
+        int max = arr[0];
+
+        //最大值
+        for (int i = 1; i < length; i++) {
+            if (arr[i] > max) {
+                max = arr[i];
+            }
+        }
+
+        //当前排序位置
+        int location = 1;
+        //桶列表
+        ArrayList<ArrayList<Integer>> bucketList = new ArrayList<>();
+        //长度为10 装入余数0-9的数据
+        for (int i = 0; i < 10; i++) {
+            bucketList.add(new ArrayList<>());
+        }
+
+        while (true) {
+            //判断是否排完
+            double dd = Math.pow(10, location - 1);
+            if (max < dd) {
+                break;
+            }
+
+            //数据入桶
+            for (int i = 0; i < length; i++) {
+                int number = (int) (arr[i] / dd) % 10;
+                bucketList.get(number).add(arr[i]);
+            }
+
+            //写回数组
+            int nn = 0;
+            for (int i=0;i<10;i++){
+                int size = bucketList.get(i).size();
+                for(int ii = 0;ii < size;ii ++){
+                    arr[nn++] = bucketList.get(i).get(ii);
+                }
+                bucketList.get(i).clear();
+            }
+            location++;
+        }
+    }
+}
+
+```
+
+**时间复杂度**
+
+假设在基数排序中，r 为基数，d 为位数。则基数排序的时间复杂度为 O(d(n+r))。
+
+**空间复杂度**
+
+在基数排序过程中，对于任何位数上的基数进行装桶操作时，都需要 n+r 个临时空间。
+
 # 栈
 
 栈的常用方法：
@@ -1128,24 +1599,24 @@ public class Main {
 
 ```java
 public class Main {
-    private Stack<Integer> in;
-    private Stack<Integer> out;
+    private Stack<Integer> stack1;
+    private Stack<Integer> stack2;
     public void push(int node) {
-        in.push(node);
+        stack1.push(node);
     }
     public void pop() {
-        if(out.isEmpty()) {
+        if(stack2.isEmpty()) {
             //if(in.isEmpty())
             //    throw new Exception("queue is Empty");
-            while(!in.isEmpty()) {
-                out.push(in.pop());
+            while(!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
             }
         }
 
-        if(out.isEmpty())
+        if(stack2.isEmpty())
             throw new Exception("queue is Empty");
 
-        return out.pop();
+        return stack2.pop();
     }
 }
 ```
@@ -1154,8 +1625,8 @@ public class Main {
 
 ```java
 public class Main{
-    private Stack<Integer> dataStack;
-    private Stack<Integer> minStack;
+    private Stack<Integer> dataStack = new Stack<>();
+    private Stack<Integer> minStack = new Stack<>();
 
     public void push(int node) {
         dataStack.push(node);
@@ -1236,23 +1707,25 @@ public class Main {
 
 ```java
 public class Main {
-    public boolean findTarget(int[][] matrix, int target) {
-        if(matrix == null || matrix.length == 0 || matrix[0] == 0) {
+    public boolean Find(int target, int[][] array) {
+        if (array.length == 0 || array == null || array[0] == null) {
             return false;
         }
 
-        int row = matrix.length, col = matrix[0].length;
-        int r = 0, c = col - 1;
+        int row = array.length, col = array[0].length;
+        int i = 0, j = col - 1;
 
-        while(r <= row-1 && c >= 0) {
-            if(target == matrix[r][c]) {
+        while (i <= row - 1 && j >= 0) {
+            if (target == array[i][j]) {
                 return true;
-            } else if(target > matrix[r][c]) {
-                r++;
+            } else if (target > array[i][j]) {
+                i++;
             } else {
-                c--;
+                j--;
             }
         }
+
+        return false;
     }
 }
 ```
@@ -1261,26 +1734,31 @@ public class Main {
 
 **思想：**
 
-二分查找
+[二分查找](https://www.nowcoder.com/questionTerminal/9f3231a991af4f55b95579b44b7a01ba?f=discussion)变形，含有重复数组
+
+旋转之后的数组实际上可以划分成两个有序的子数组：前面子数组的大小都大于后面子数组中的元素
+
+array[mid] == array[high]：出现这种情况的 array 类似 [1,0,1,1,1] 或者[1,1,1,0,1]，此时最小数字不好判断在 mid 左边
+还是右边，这时只好一个一个试：high = high - 1
 
 ```java
 public class Main {
-    public int getMinNumber(int[] rotate) {
-        if(rotate == null || rotate.length == 0) {
-            return Integer.MIN_VALUE;
+    public int getMinNumber(int[] array) {
+        if(array == null || array.length == 0) {
+            return 0;
         }
 
-        int l = 0, h = rotate.length - 1;
+        int l = 0, h = array.length - 1;
         while(l < h) {
             int m = l + (h - l) / 2;
-            if(rotate[m] <= rotate[h]) {
+            if(array[m] <= array[h]) {
                 h = m;
             } else {
                 l = m + 1;
             }
         }
-mai
-        return ratate[l];
+
+        return array[l];
     }
 }
 ```
@@ -1331,25 +1809,30 @@ public class Main {
 }
 ```
 
-## 调整数组顺序使奇数位于偶数前面
+## 调整数组顺序使奇数位于偶数前面，并且相对位置不发生变化
 
-**思想：双指针**
+**思想**
+
+相对位置不发生变化可知保持稳定性，可以考虑采用插入排序的思想实现
 
 ```java
 public class Main {
-    pubic int[] reAdjustArr(int[] nums) {
-        if(nums.length == null || nums.length == 0) {
-            return null;
-        }
+    public void reOrderArray(int [] array) {
+        int len = array.length;
+        int oddNum = 0;// 存储已经摆好位置的奇数个数
 
-        int i = 0, j = nums.length - 1;
-        while(i < j) {
-            while(nums[i] % 2 != 0) i++;
-            while(nums[j] % 2 == 0) j++;
-            swap(nums, i, j);
+        for (int i = 0; i < len; i++) {
+            if (array[i] % 2 == 1) {
+                int j = i;// i 前面有几个偶数
+                while (j > oddNum) {
+                    int temp = array[j];
+                    array[j] = array[j - 1];
+                    array[j - 1] = temp;
+                    j--;
+                }
+                oddNum++;
+            }
         }
-
-        return nums;
     }
 }
 ```
@@ -1587,6 +2070,41 @@ public class Main {
 }
 ```
 
+## 顺时针打印矩阵
+
+**思想：**
+
+用四个变量分别控制矩阵的上下左右角变量，进行打印输出，还需要判断矩阵是否是单行或者单列。
+
+```java
+public ArrayList<Integer> printMatrix(int [][] matrix) {
+    ArrayList<Integer> ret = new ArrayList<>();
+
+    int r1 = 0, r2 = matrix.length - 1, c1 = 0, c2 = matrix[0].length - 1;
+
+    while (r1 <= r2 && c1 <= c2) {
+        for (int i = c1; i <= c2; i++) {
+            ret.add(matrix[r1][i]);
+        }
+        for (int i = r1 + 1; i <= r2; i++) {
+            ret.add(matrix[i][c2]);
+        }
+        if (r1 != r2) {
+            for (int i = c2 - 1; i >= c1; i--) {
+                ret.add(matrix[r2][i]);
+            }
+        }
+        if (c1 != c2) {
+            for (int i = r2 - 1; i > r1; i--) {
+                ret.add(matrix[i][c1]);
+            }
+        }
+        r1++; r2--; c1++; c2--;
+    }
+    return ret;
+}
+```
+
 # 动态规划
 
 ## 连续子数组的最大和
@@ -1614,6 +2132,21 @@ public class Main {
         return max;
     }
 }
+```
+
+雷同：
+
+```java
+    int[] dp = new int[array.length];
+    int max = array[0];
+    dp[0] = array[0];
+
+    for (int i = 1; i < array.length; i++) {
+        dp[i] = Math.max(array[i], dp[i-1] + array[i]);
+        if (dp[i] > max) {
+            max = dp[i];
+        }
+    }
 ```
 
 ## 最长不含重复字符的子字符串
@@ -1669,7 +2202,7 @@ public class Main{
 }
 ```
 
-## m * n 的棋盘上拿礼物，求礼物的最大价值
+## m \* n 的棋盘上拿礼物，求礼物的最大价值
 
 **思想：**
 
@@ -1696,6 +2229,7 @@ public class Main {
     }
 }
 ```
+
 ## 剪绳子，使得每段的长度乘积最大
 
 **思想：**
@@ -2156,7 +2690,7 @@ public class Main {
 ```
 
 ## 将字符串中的控格替换成"%20"
- 
+
 **思想：**
 
 从后往前遍历字符串，p1 指针指向字符串原来的末尾位置，p2 指针指向现在的末尾位置
@@ -2176,7 +2710,7 @@ public class Main {
         //现在的末尾位置
         int p2 = str.length() - 1;
         while(p1 >= 0 && p2 > p1) {
-            char c = str.charAt(P1--);
+            char c = str.charAt(p1--);
             if(c == ' ') {
                 str.setCharAt(p2--, '0');
                 str.setCharAt(p2--, '2');
@@ -2446,18 +2980,20 @@ public class Test {
 ## 打印从 1 到最大的 n 个数
 
 ```java
+
 ```
 
 ## 矩阵中的路径
 
 **思想**
 
-回朔法。首先，在矩阵中任选一个格子作为路径的起点。如果路径上的第 i 个字符不是 ch，那么这个格子不可能处在路径上的第i个位置。如果路径上的第 i 个字符正好是 ch，那么往相邻的格子寻找路径上的第 i+1 个字符。除在矩阵边界上的格子之外，其他格子都有 4 个相邻的格子。重复这个过程直到路径上的所有字符都在矩阵中找到相应的位置。
+回朔法。首先，在矩阵中任选一个格子作为路径的起点。如果路径上的第 i 个字符不是 ch，那么这个格子不可能处在路径上的第 i 个位置。如果路径上的第 i 个字符正好是 ch，那么往相邻的格子寻找路径上的第 i+1 个字符。除在矩阵边界上的格子之外，其他格子都有 4 个相邻的格子。重复这个过程直到路径上的所有字符都在矩阵中找到相应的位置。
 
 由于回朔法的递归特性，路径可以被开成一个栈。当在矩阵中定位了路径中前 n 个字符的位置之后，在与第 n 个字符对应的格子的周围都没有找到第 n+1 个字符，这个时候只要在路径上回到第 n-1 个字符，重新定位第 n 个字符。
-　　
+
 由于路径不能重复进入矩阵的格子，还需要定义和字符矩阵大小一样的布尔值矩阵，用来标识路径是否已经进入每个格子。 当矩阵中坐标为 (row,col) 的格子和路径字符串中相应的字符一样时，从 4 个相邻的格子 (row,col-1)，(row-1,col)，(row,col+1) 以及(row+1,col) 中去定位路径字符串中下一个字符。如果 4 个相邻的格子都没有匹配字符串中下一个的字符，表明当前路径字符串中字符在矩阵中的定位不正确，我们需要回到前一个，然后重新定位。
 　　一直重复这个过程，直到路径字符串上所有字符都在矩阵中找到合适的位置。
+
 ```java
 
 //用一个状态数组保存之前访问过的字符，然后再分别按上，下，左，右递归
@@ -2472,7 +3008,7 @@ public class Solution {
         }
         return false;
     }
- 
+
     private boolean helper(char[] matrix, int rows, int cols, int i, int j, char[] str, int k, int[] flag) {
         // index (i, j) 元素在数组 matrix 中的位置
         int index = i * cols + j;
@@ -2496,8 +3032,6 @@ public class Solution {
     }
 }
 ```
-
-
 
 **思想：**
 
@@ -2536,14 +3070,14 @@ public class DieLock extends Thread {
         if(flag) {
             sychronized(MyLock.objA) {
                 //
-                sychronized(MyLock.objB) { 
+                sychronized(MyLock.objB) {
                     //do
                 }
             }
         } else {
             sychronized(MyLock.objB) {
                 //
-                sychronized(MyLock.objA) { 
+                sychronized(MyLock.objA) {
                     //do
                 }
             }
