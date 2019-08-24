@@ -94,6 +94,7 @@
   - [矩阵中的路径](#矩阵中的路径)
 - [其它](#其它)
   - [多线程死锁](#多线程死锁)
+  - [读取文件中的内容写入到另外一个文件](#读取文件中的内容写入到另外一个文件)
 
 <!-- /TOC -->
 
@@ -3093,6 +3094,60 @@ public class DeadLockDemo {
         DieLock dl2 = new DieLock(false);
         dl1.start();
         dl2.start();
+    }
+}
+```
+
+## 读取文件中的内容写入到另外一个文件
+
+```java
+public class Main {
+    public void solution() {
+        try {
+            FileInputStream fis = new FileInputStream("c:\\..\\tmp.txt");
+            FileOutputStream fos = new FileOutputStream("c:\\..\\tmp1.txt");
+
+            int len = 0;
+            byte[] b = new byte[fis.available()];
+
+            while((len == fis.read(b)) != -1) {
+                fos.write(b, 0, len);
+                fos.flush();
+            }
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+```java
+public class Main {
+    public void solution() {
+        try {
+			BufferedReader  br =  new BufferedReader(
+                new InputStreamReader(new FileInputStream("C:\\...\\tmp.txt"),"GB2312"));
+			String b="";
+			StringBuffer sb = new StringBuffer();
+			try {
+				while((b = br.readLine())!=null){
+					//得到文件内容放到sb中
+					sb.append(b);
+					//这里可以写自己想对每一行的处理代码
+				}
+				String s = sb.toString();
+				BufferedWriter bw = new BufferedWriter(
+                    new OutputStreamWriter(new FileOutputStream("C:\\...\\tmp1.txt"),"GB2312"));
+				bw.write(s);
+				bw.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (UnsupportedEncodingException | FileNotFoundException e) {
+			e.printStackTrace();
+		}
     }
 }
 ```

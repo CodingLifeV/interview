@@ -87,7 +87,7 @@
     - [给我一个你最常见到的 runtime exception](#给我一个你最常见到的-runtime-exception)
     - [Java 中的异常处理机制的简单原理和应用。](#java-中的异常处理机制的简单原理和应用)
     - [java 中有几种类型的流？JDK 为每种类型的流提供了一些抽象类以供继承，请说出他们分别是哪些类？](#java-中有几种类型的流jdk-为每种类型的流提供了一些抽象类以供继承请说出他们分别是哪些类)
-    - [什么是 java 序列化，如何实现 java 序列化？](#什么是-java-序列化如何实现-java-序列化)
+    - [什么是 java 序列化，如何实现 java 序列化？一台机器将一个对象插入数据库，另一台机器读这条数据，这个过程中用到的序列化和反序列化的 API](#什么是-java-序列化如何实现-java-序列化一台机器将一个对象插入数据库另一台机器读这条数据这个过程中用到的序列化和反序列化的-api)
     - [运行时异常与受检异常有什么区别？](#运行时异常与受检异常有什么区别)
 
 <!-- /TOC -->
@@ -885,6 +885,20 @@ ArrayList 是实现了基于动态数组的数据结构，LinkedList 基于链�
 
 选择 LinkedList，arraylist 是静态内存。如果一直插，需要耗费时间，并且可能会造成没内存泄露，扩容有可能导致内存不够
 
+**ArrayList**
+
+[面试题：Java容器之ArrayList全解析](https://mp.weixin.qq.com/s?__biz=MzI3MjUxNzkxMw==&mid=2247483748&idx=1&sn=887a9c77babc59d1861a8d47c0e86b51&chksm=eb301f12dc479604d538e9f693a5f6f24d7f2c3c43c52457c9ec96778d9627a6afd3dd096cd3&scene=21#wechat_redirect)
+
+ArrayList 继承自 AbstractList，实现了 List 接口。底层基于数组实现容量大小动态变化。允许 null 的存在，同时还实现了 RandomAccess、Cloneable、Serializable 接口，是支持快速访问、复制、序列化的。
+
+动态数组不是意味着去改变原有内部生成的数组的长度，而是保留原有数组的引用，将其指向新生成的数组对象，这样会造成数组的长度可变的假象。
+
+ArrayList的扩容计算为 newCapacity = oldCapacity + (oldCapacity >> 1);且扩容并非是无限制的，有内存限制，虚拟机限制
+
+扩容方法 `ensureCapacityInternal()` ArrayList在每次增加元素（可能是1个，也可能是一组）时，都要调用该方法来确保足够的容量。当容量不足以容纳当前的元素个数时，就设置新的容量为旧的容量的 1.5 倍加 1，如果设置后的新容量还不够，则直接新容量设置为传入的参数（也就是所需的容量），而后用Arrays.copyof()方法将元素拷贝到新的数组。从中可以看出，当容量不够时，每次增加元素，都要将原来的元素拷贝到一个新的数组中，非常之耗时，也因此建议在事先能确定元素数量的情况下，才使用 ArrayList，否则不建议使用。
+
+ArrayList 默认容量为 10。调用无参构造新建一个 ArrayList 时，它的 elementData = DEFAULTCAPACITYEMPTYELEMENTDATA, 当第一次使用 add() 添加元素时，ArrayList的容量会为 10。
+
 ## TreeMap 底层，红黑树原理？
 
 [参考 1](https://blog.csdn.net/sun_tttt/article/details/65445754)
@@ -1065,11 +1079,63 @@ Java 中的流分为两种，一种是字节流，另一种是字符流，分别
 1. 字节流可用于任何类型的对象，包括二进制对象，而字符流只能处理字符或者字符串；
 2. 字节流提供了处理任何类型的 IO 操作的功能，但它不能直接处理 Unicode 字符，而字符流就可以。
 
-## 什么是 java 序列化，如何实现 java 序列化？
+## 什么是 java 序列化，如何实现 java 序列化？一台机器将一个对象插入数据库，另一台机器读这条数据，这个过程中用到的序列化和反序列化的 API
 
 序列化指把 Java 对象转换为字节序列的过程；反序列化指把字节序列恢复为 Java 对象的过程。
 
-- java.io.ObjectOutputStream 代表对象输出流，它的 writeObject(Object obj) 方法可对参数指定的 obj 对象进行序列化，把得到的字节序列写到一个目标输出流中。
-- java.io.ObjectInputStream 代表对象输入流，它的 readObject() 方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。
+**序列化**
+
+java.io.ObjectOutputStream 代表对象输出流，它的 writeObject(Object obj) 方法可对参数指定的 obj 对象进行序列化，把得到的字节序列写到一个目标输出流中。
+
+java.io.ObjectInputStream 代表对象输入流，它的 readObject() 方法从一个源输入流中读取字节序列，再把它们反序列化为一个对象，并将其返回。
+
+
+```java
+public byte[] serialize(Serializable value) {
+        //序列化的核心是 ByteArrayOutputStream
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        //创建输出流
+        ObjectOutputStream oos = new ObjectOutputStream(bao);
+        //输出流写操作
+        oos.writeObject(value);
+        //关闭流操作
+        //返回Byte数组
+        return bao.toByteArray();
+}
+    //将对象序列化为byte数组
+    byte by[] = fh.serialize(p);
+    //存入数据库状态
+    boolean flag = false;
+    if(by!=null) {
+        try {
+            //因为在mysql中的字段类型我 varchar，所以需要转化类型，固定转换编码类型，降低转换类型错误率
+            //将字符串存入数据库
+            flag = logDao.insertFile(new String(by,"ISO-8859-1"));
+        } catch (UnsupportedEncodingException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+    }
+
+```
+
+```java
+public Object roadSerializable(byte[] value) {
+    Object result;
+    //反序列化的核心ByteArrayInputStream
+    ByteArrayInputStream bai = new ByteArrayInputStream(value);
+    //创建输入流
+    ObjectInputStream ois = new ObjectInputStream(bai);
+    //读取文件
+    result  = ois.readObject();
+    //关闭流
+    ois.close();
+    return result;
+}
+
+    //强转为对象
+    Person pp = (Person) fh.roadSerializable(bb);
+
+```
 
 ## 运行时异常与受检异常有什么区别？
