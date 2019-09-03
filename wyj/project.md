@@ -49,6 +49,11 @@
   - [zookeeper 集群搭建](#zookeeper-集群搭建)
 - [Solr 集群](#solr-集群)
   - [solr 服务搭建](#solr-服务搭建)
+- [项目问题排查](#项目问题排查)
+  - [JVM Crash](#jvm-crash)
+  - [Redis 相关错误](#redis-相关错误)
+  - [JVM 调优](#jvm-调优)
+  - [人员分工](#人员分工)
 
 <!-- /TOC -->
 
@@ -1895,3 +1900,57 @@ Mapper 的映射 xml 文件 SearchItemMapper.xml 需要添加相对应的 select
 
 10. 访问地址：`http://127.0.0.1:8080/solr`，查看 solr 的管控台
     ![image](https://segmentfault.com/img/bVbaaQQ?w=1085&h=721)
+
+# 项目问题排查
+
+## JVM Crash
+
+分析原因：
+
+1. JVM GC 时间过长，导致应用暂停/JVM 内存溢出
+
+   排查：查看 JVM 日志进行日志分析。
+
+   通过日志查看，并没有发现导致 JVM 内存溢出的错误，如果是因为 JVM 内存不足的话在日志里面应该会出现 java.lang.OutOfMemoryError: Java heap space （堆内存中的空间不足）错误 或者 java.lang.OutOfMemoryError: Metaspace （元数据区(Metaspace) 已被用满）
+
+2. JVM Crash 日志分析
+
+   日志文件在 tomcat 安装 bin 目录里面的 hs_err_pid%.log 日志文件中
+
+   日志分析：
+
+   首先看到日志头提示出现问题帧信息：`C [tcnative-1.dll+0X802e]`。
+   C  表示帧类型为本地帧，并且出现问题的代码是 tomcat 的 native 包下的 tcnative-1.dll
+
+   继续往下看导致出错的线程信息：
+   看到导致 Error 线程信息是一个名字叫 `http-apr-8080-Poller` 的线程名，执行到 `tomcat.jni.Poll.poll` 方法方法（推测是一个本地方法），通过 JNI（java 本地接口）调用 tcnative.dll 中的代码时出现了异常。
+
+因此我们推断是 tomcat 本地代码库出现了问题，因此我们会考虑更换 tomcat 版本。考虑到之前 tomcat 版本是 7.0 的，了解到 tomcat8.0.44 对 native 包进行了较大版本的升级（从 1.1x 到 1.2x），因此对 tomcat 进行升级到 8.0.44。之后问题解决
+
+## Redis 相关错误
+
+异常 `No reachable node in cluster`
+
+分析原因：
+
+1. 调用了 JedisCluster.close()方法，原因：我们使用的是 redis3.0 的集群，用 jedis 的 JedisCluster.close()方法造成的集群连接关闭的情况。 jedisCluster 内部使用了池化技术，每次使用完毕都会自动释放 Jedis 因此不需要关闭。如果调用 close 方法后再调用 jedisCluster 的 api 进行操作时就会出现如上错误。
+
+2. Redis 集群宕机了。我们在 Redis 命令窗口中输入 cluster info 信息，发现：cluster_state:fail 的消息，知道 Redis 集群宕机了，之后使用 Redis 命令存储一个 key-value 值，的确发现提示错误：`(error)The cluster is down`。
+
+于是我们通过`./redis-trib.rb check 192.168.107.132:7001` 检查了一个集群结点，Redis 会自动检查集群中的所有结点，发现 16384 个槽并没有被所有结点覆盖，其余结点都是不能连接的。
+
+于是我通过 fix 命令进行修复，可是发现问题仍然没有解决
+
+之后我检查其他结点，竟然都是这样的错误，说明整个集群出错了，于是我删除了集群下的 `dump.rdb` 和 `nodes.conf` 两个文件，并将将几个 Redis 数据库结点清空，并将 bind 配置为 0.0.0.0（如果绑定到 0.0.0.0 那么所有机器上的地址都可以访问服务，如果绑定到特定的 ip 那么只能是特定的 ip 能够到达 redis 服务） 重新创建，发现成功了！！！
+
+## JVM 调优
+
+我们使用 Visual VM 堆 JVM 堆内存进行监控，并安装 Visual GC 插件对 JVM 内存的各个区域进行监控，结合 JVM 日志进行分析调优
+
+1. 首先发现堆空间进行了扩容，说明初始堆内存设置过小，初始堆内容起初是 128M，此时我把初始堆内容使用-Xms 命令设置到和最大堆内存一样大，为 512M
+
+2. 并发测试我们发现频繁进行 minor gc，并且在 GC 日志中发现了频繁的 GC（Allocation Failure），Eden 区的总容量此时大约 300M，二个 Survivor 占 100M，可知新生代的空间设置过小了，因此我们考虑将堆内存从 512M 增大到 1.00G
+
+3. 我们发现 Eden 区和二个 Survivor 大小比为 3：1：1，为了减少更多的对象在 Eden 区内，我们增大 Eden 区的空间，使得 Eden 区和二个 Survivor 为 8：1：1，使用参数-XX:SurvivorRatio=8
+
+## 人员分工

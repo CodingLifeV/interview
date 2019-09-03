@@ -16,7 +16,7 @@
     - [你了解大 O 符号(big-Onotation)么？你能给出不同数据结构的例子么？](#你了解大-o-符号big-onotation么你能给出不同数据结构的例子么)
     - [String 是最基本的数据类型吗?](#string-是最基本的数据类型吗)
     - [int 和 Integer 有什么区别？](#int-和-integer-有什么区别)
-    - [String、StringBuffer、StringBuffer，什么时候会走 StringBuilder？](#stringstringbufferstringbuffer什么时候会走-stringbuilder)
+    - [String、StringBuffer、StringBuffer](#stringstringbufferstringbuffer)
     - [我们在 web 应用开发过程中经常遇到输出某种编码的字符，如 iso8859-1 等，如何输出一个某种编码的字符串？](#我们在-web-应用开发过程中经常遇到输出某种编码的字符如-iso8859-1-等如何输出一个某种编码的字符串)
     - [&和&&的区别？](#和的区别)
     - [在 Java 中，如何跳出当前的多重嵌套循环？](#在-java-中如何跳出当前的多重嵌套循环)
@@ -58,9 +58,10 @@
     - [Java 中，什么是构造函数？什么是构造函数重载？什么是复制构造函数？](#java-中什么是构造函数什么是构造函数重载什么是复制构造函数)
 - [集合](#集合)
     - [ConcurrentHashMap？ConcurrentSkipListMap？二者的区别](#concurrenthashmapconcurrentskiplistmap二者的区别)
-    - [hashMap？](#hashmap)
+    - [hashMap](#hashmap)
+    - [CopyOnWriteArrayList](#copyonwritearraylist)
     - [如果 hashMap 的 key 是一个自定义的类，怎么办？](#如果-hashmap-的-key-是一个自定义的类怎么办)
-    - [ArrayList 和 LinkedList 的区别，如果一直在 list 的尾部添加元素，用哪个效率高？](#arraylist-和-linkedlist-的区别如果一直在-list-的尾部添加元素用哪个效率高)
+    - [ArrayList 和 LinkedList](#arraylist-和-linkedlist)
     - [TreeMap 底层，红黑树原理？](#treemap-底层红黑树原理)
     - [ArrayList 是否会越界？](#arraylist-是否会越界)
     - [Java 集合类框架的基本接口有哪些？](#java-集合类框架的基本接口有哪些)
@@ -83,7 +84,7 @@
 - [IO 和 NIO、AIO](#io-和-nioaio)
     - [怎么打印日志？](#怎么打印日志)
     - [运行时异常与一般异常有何异同？](#运行时异常与一般异常有何异同)
-    - [error 和 exception 有什么区别?](#error-和-exception-有什么区别)
+    - [error 和 exception ，ClassNotFoundException和NoClassDefFoundError的区别](#error-和-exception-classnotfoundexception和noclassdeffounderror的区别)
     - [给我一个你最常见到的 runtime exception](#给我一个你最常见到的-runtime-exception)
     - [Java 中的异常处理机制的简单原理和应用。](#java-中的异常处理机制的简单原理和应用)
     - [java 中有几种类型的流？JDK 为每种类型的流提供了一些抽象类以供继承，请说出他们分别是哪些类？](#java-中有几种类型的流jdk-为每种类型的流提供了一些抽象类以供继承请说出他们分别是哪些类)
@@ -191,7 +192,7 @@ O 表示算法的时间或者空间复杂度上界。比如数组的插入时间
 
 Ingeter 是 int 的包装类，int 的初值为 0，Ingeter 的初值为 null。java 可以通过自动拆箱和装箱对 int 和 Integer 进行转化。
 
-## String、StringBuffer、StringBuffer，什么时候会走 StringBuilder？
+## String、StringBuffer、StringBuffer
 
 三者区别：
 
@@ -205,6 +206,47 @@ Ingeter 是 int 的包装类，int 的初值为 0，Ingeter 的初值为 null。
 
 1. 通过变量和字符串拼接，java 是需要先到内存找变量对应的值，才能进行完成字符串拼接的工作，这种方式 java 编译器没法优化，只能走 StringBuilder 进行拼接字符串，然后调用 toString 方法。当然返回的结果和常量池中的字符串的内存地址是不一样的。
 2. 直接在表达式里写值，java 不用根据变量去内存里找对应的值，可以在编译的时候直接对这个表达式进行优化，不用走 StringBilder，优化后的表达式直接指向常量池的字符串
+
+
+**比较：**
+
+[StringBuffer和StringBuilder源码分析](https://yq.aliyun.com/articles/629416)
+
+继承层次相同，都继承了 AbstractStringBuilder ，实现了 Serializable 和 CharSequence 接口; 
+
+成员变量：
+```java
+char[] value
+private transient char[] toStringCache
+```
+底层都是用字符数组 `char[]` 实现，存储字符串，默认的大小为 16。String 的 value 数组使用 final 修饰，不能变动，StringBuffer 和StringBuilder 的 value 数组没有 final 修饰，是可变的。  关于数组的大小，默认的初始化容量是 16，假如初始化的时候，传入字符串，则最终的容量将是 (传入字符串的长度 + 16) 。 
+
+`toStringCache` 是 StringBuffer 特有，缓存 `toString` 最后一次返回的值。 多次连续调用 `toString` 方法的时候由于这个字段的缓存就可以少了 `Arrays.copyOfRange` 的操作
+
+```java
+public synchronized String toString() { 
+    if (toStringCache == null) {// toStringCache为空，第一次操作 
+        toStringCache = Arrays.copyOfRange(value, 0, count); 
+    } 
+    // 使用缓存的toStringCache，实际只传递了引用，没有复制操作 
+    return new String(toStringCache, true);
+}
+```
+
+两者方法最大的区别是：StringBuffer 是线程安全的，StringBuilder 是非线程安全的。实现是StringBuffer 在和 StringBuilder 相同的方法上加了 `synchronized` 修饰。 
+
+StringBuffer的`append()` 方法：
+```java
+public synchronized StringBuffer append(String str) { 
+    toStringCache = null; 
+    super.append(str); 
+    return this; 
+}
+```
+
+底层存储的扩容机制：
+
+初始容量都是 16，扩容机制都是"以前容量 * 2 + 2" 的形式，如果扩容之后仍不满足所需容量，则直接扩容到所需容量。
 
 ## 我们在 web 应用开发过程中经常遇到输出某种编码的字符，如 iso8859-1 等，如何输出一个某种编码的字符串？
 
@@ -759,7 +801,7 @@ concurrenthashmap 是 hashmap 的多线程版本
 
 是线程安全的有序的哈希表，适用于高并发的场景。
 
-## hashMap？
+## hashMap
 
 [Java 8 系列之重新认识 HashMap](https://zhuanlan.zhihu.com/p/21673805)
 
@@ -868,6 +910,53 @@ JDK1.8 中不使用头插法，用 head 和 tail 来保证链表的顺序和之�
 
 但是 1.8 和 1.7 的 put 操作都会导致数据丢失的问题，因此还是线程不安全的
 
+## CopyOnWriteArrayList
+
+[java并发编程笔记--CopyOnWriteArrayList](https://yq.aliyun.com/articles/594457)
+
+**特点：**
+
+1. CopyOnWriteArrayList 是 List的一种线程安全的实现；
+2. 其实现原理采用 ”CopyOnWrite” 的思路（写时复制），即所有写操作，包括：add，remove，set等都会触发底层数组的拷贝，从而在写操作过程中，不会影响读操作；避免了使用 synchronized 等进行读写操作的线程同步；
+3. CopyOnWrite 对于写操作来说代价很大，故不适合于写操作很多的场景；当遍历操作远远多于写操作的时候，适合使用CopyOnWriteArrayList；
+4. 迭代器以”快照”方式实现，在迭代器创建时，引用指向 List 当前状态的底层数组，所以在迭代器使用的整个生命周期中，其内部数据不会被改变；并且集合在遍历过程中进行修改，也不会抛出 ConcurrentModificationException；迭代器在遍历过程中，不会感知集合的 add，remove，set 等操作；
+5. 因为迭代器指向的是底层数组的”快照”，因此也不支持对迭代器本身的修改操作，包括 add，remove，set 等操作，如果使用这些操作，将会抛出 UnsupportedOperationException；
+6. 相关 Happens-Before 规则：一个线程将元素放入集合的操作happens-before于其它线程访问/删除该元素的操作；
+
+**查找：**
+
+1. 所有读操作都不需要加锁
+2. 单个元素的访问，直接通过索引访问底层数组
+3. 查找遍历等涉及多个元素的读操作，都会针对 array 的快照进行，即每次操作开始前使用名为 elements 的 Object[] 局部变量存放 array 当前的引用。在遍历过程中，array 发生变化时，遍历操作遍历的依然是原来的快照，从而保证了读操作不需要加锁，写操作也不会发生 ConcurrentModificationException 异常；
+
+**新增元素：**
+
+1. 所有的新增元素操作都需要使用 lock 加互斥锁；
+2. 新增元素需要考虑添加元素的个数（单个/集合），添加元素的位置（末尾/非末尾）；
+
+**更新元素：**
+
+1. 同添加元素操作一样，更新元素也需要使用 lock 加互斥锁；
+2. 即使待更新元素和集合中元素引用相同，也需要执行 setArray() 操作，以便触发 volatile 语义，通知所有线程；
+
+**删除元素：**
+
+删除元素时，同样需要加互斥锁，但出于效率考虑，在加锁前都检测待删除元素是否存在，如果不存在则不加锁，直接返回false；
+
+**迭代器实现：**
+
+1. COWIterator迭代器实现是基于快照的，即在调用iterator()方法创建迭代器时，传入array的引用作为快照； 通过一个整型游标记录当前访问到元素的索引；
+2. 因为迭代器是基于快照的，故所有读操作都无须加锁，且迭代过程中，对 CopyOnWriteArrayList 集合的修改不会影响到迭代操作，也不会抛出 ConcurrentModificationException；
+
+**适用场景：**
+
+数据量小，读多写少
+
+**缺点：**
+
+1. 写操作耗时。不可变对象的每次写操作就要进行一次 copy/new 操作，带来的性能消耗随着 copy 的数据量显著增加，包括内存的消耗以及 copy/new 过程的时间消耗；故不适合 copy/new 数据量很大，并且写操作很多的场景
+2. 集合占用内存更多。使用 Copy-On-Write，如果短时间有大量读伴随着写，则会有很多”快照”引用得不到释放，占用大量内存。
+
 ## 如果 hashMap 的 key 是一个自定义的类，怎么办？
 
 必须重写该类的 hashcode()方法和 equals()方法
@@ -875,29 +964,64 @@ JDK1.8 中不使用头插法，用 head 和 tail 来保证链表的顺序和之�
 HashMap 中，如果要比较 key 是否相等，要同时使用这两个函数:通过 hashcode 值定位 bucket 位置，如果发生冲突通过 equal 方法定位在链表或者红黑树中的插入位置
 因为自定义的类的 hashcode()方法继承于 Object 类，其 hashcode 码为默认的内存地 址，这样即便有相同含义的两个对象，比较也是不相等的，equals()比较的是内存地址是否相等。
 
-## ArrayList 和 LinkedList 的区别，如果一直在 list 的尾部添加元素，用哪个效率高？
+## ArrayList 和 LinkedList
 
 ArrayList 是实现了基于动态数组的数据结构，LinkedList 基于链表的数据结构
 
-~~当输入的数据一直是小于千万级别的时候，大部分是 Linked 效率高, 而当数据量大于千万级别的时候，就会出现 ArrayList 的效率比较高了。~~
-
-~~LinkedList 每次增加的时候，会 new 一个 Node 对象来存新增加的元素，所以当数据量小的时候，这个时间并不明显，而 ArrayList 需要扩容，所以 LinkedList 的效率就会比较高，其中如果 ArrayList 出现不需要扩容的时候，那么 ArrayList 的效率应该是比 LinkedList 高的，当数据量很大的时候，new 对象的时间大于扩容的时间，那么就会出现 ArrayList'的效率比 Linkedlist 高了~~
-
-选择 LinkedList，arraylist 是静态内存。如果一直插，需要耗费时间，并且可能会造成没内存泄露，扩容有可能导致内存不够
-
 **ArrayList**
 
-[面试题：Java容器之ArrayList全解析](https://mp.weixin.qq.com/s?__biz=MzI3MjUxNzkxMw==&mid=2247483748&idx=1&sn=887a9c77babc59d1861a8d47c0e86b51&chksm=eb301f12dc479604d538e9f693a5f6f24d7f2c3c43c52457c9ec96778d9627a6afd3dd096cd3&scene=21#wechat_redirect)
+[面试题：Java容器之ArrayList全解析](https://mp.weixin.qq.com/s/Hd22c-CHQ8OZs4sY4ukZFw)
 
 ArrayList 继承自 AbstractList，实现了 List 接口。底层基于数组实现容量大小动态变化。允许 null 的存在，同时还实现了 RandomAccess、Cloneable、Serializable 接口，是支持快速访问、复制、序列化的。
 
 动态数组不是意味着去改变原有内部生成的数组的长度，而是保留原有数组的引用，将其指向新生成的数组对象，这样会造成数组的长度可变的假象。
 
-ArrayList的扩容计算为 newCapacity = oldCapacity + (oldCapacity >> 1);且扩容并非是无限制的，有内存限制，虚拟机限制
+ArrayList 的扩容计算为 `newCapacity = oldCapacity + (oldCapacity >> 1)`；且扩容并非是无限制的，有内存限制，虚拟机限制
 
-扩容方法 `ensureCapacityInternal()` ArrayList在每次增加元素（可能是1个，也可能是一组）时，都要调用该方法来确保足够的容量。当容量不足以容纳当前的元素个数时，就设置新的容量为旧的容量的 1.5 倍加 1，如果设置后的新容量还不够，则直接新容量设置为传入的参数（也就是所需的容量），而后用Arrays.copyof()方法将元素拷贝到新的数组。从中可以看出，当容量不够时，每次增加元素，都要将原来的元素拷贝到一个新的数组中，非常之耗时，也因此建议在事先能确定元素数量的情况下，才使用 ArrayList，否则不建议使用。
+扩容方法 `ensureCapacityInternal()` ArrayList在每次增加元素（可能是1个，也可能是一组）时，都要调用该方法来确保足够的容量。当容量不足以容纳当前的元素个数时，就设置新的容量为旧的容量的 1.5 倍加 1，如果设置后的新容量还不够，则直接新容量设置为传入的参数（也就是所需的容量），而后用 `Arrays.copyof()` 方法将元素拷贝到新的数组。从中可以看出，当容量不够时，每次增加元素，都要将原来的元素拷贝到一个新的数组中，非常之耗时，也因此建议在事先能确定元素数量的情况下，才使用 ArrayList，否则不建议使用。
+
+`Arrays.copyof()` 非常之耗时，也因此建议在事先能确定元素数量的情况下，才使用ArrayList，否则不建议使用。
 
 ArrayList 默认容量为 10。调用无参构造新建一个 ArrayList 时，它的 elementData = DEFAULTCAPACITYEMPTYELEMENTDATA, 当第一次使用 add() 添加元素时，ArrayList的容量会为 10。
+
+使用 ArrayList 比较常见的一个问题就是在遍历 ArrayList 的时候调用 `remove()` 方法进行元素的删除操作，从而得到意想不到的结果：在调用 `remove()` 方法时 List 的长度会发生变化而且元素的位置会发生移动，从而在遍历时 list 实际上是变化的。
+
+解决方案：
+1. 逆向遍历List删除
+2. 使用迭代器中的remove方法
+
+**LinkedList**
+
+[面试题：Java容器之LinkedList全解析](https://mp.weixin.qq.com/s/psLuW2G4uJIqDjvwnyYbjg)
+
+实现List接口与Deque接口双向链表，实现了列表的所有操作
+Deque接口：双端队列，支持在两端插入和删除元素
+
+添加节点：
+1. 记录当前末尾节点，通过构造另外一个指向末尾节点的指针 l
+2. 产生新的节点：注意的是由于是添加在链表的末尾，next 是为 null 的
+3. last指向新的节点
+4. 这里有个判断，我的理解是判断是否为第一个元素(当 l==null 时，表示链表中是没有节点的)， 那么就很好理解这个判断了，如果是第一节点，则使用 first 指向这个节点，若不是则当前节点的 next 指向新增的节点
+5. size 增加 
+
+
+删除节点：
+1. 首先确定 index 的位置，是靠近 first 还是靠近 last
+2. 若靠近 first 则从头开始查询，否则从尾部开始查询，可以看出这样避免极端情况的发生，也更好的利用了 LinkedList 双向链表的特征
+
+这也正是不使用 `foreach` 迭代遍历 LinkedList，原因是，每一次 `get` 任何一个位置的数据的时候，都会把前面的数据走一遍，遍历的时间复杂度为 `O(N2)`
+
+相同点：
+
+1. 都是线程不安全的
+2. 接口实现，都实现了 List 接口，都是线性链表的实现
+
+
+不同点：
+1. 底层实现:ArrayList 内部是数组实现，而 LinkedList 内部实现是双向链表结构
+2. 接口实现：ArrayList 实现了 RandomAccess 可以支持随机元素访问，而 LinkedList 实现了 Deque 可以当做队列使用
+3. 性能：新增、删除元素时 ArrayList 需要使用到拷贝原数组，而 LinkedList 只需移动指针，查找元素 ArrayList 支持随机元素访问，而LinkedList只能一个节点的去遍历
+
 
 ## TreeMap 底层，红黑树原理？
 
@@ -1061,7 +1185,11 @@ JAVA 语言编译之后会生成一个.class 文件，反射就是通过字节�
 
 ## 运行时异常与一般异常有何异同？
 
-## error 和 exception 有什么区别?
+## error 和 exception ，ClassNotFoundException和NoClassDefFoundError的区别
+
+* ClassNotFoundException：运行时异常，是从 Exception 继承的，当应用程序运行的过程中尝试使用类加载器去加载 Class 文件的时候，如果没有在 classpath 中查找到指定的类，就会抛出 ClassNotFoundException
+
+* NoClassDefFoundError：是从 Error 继承的，如果这个类在编译时是可用的，但是在运行时找不到这个类的定义的时候，JVM 就会抛出一个 NoClassDefFoundError 错误
 
 ## 给我一个你最常见到的 runtime exception
 

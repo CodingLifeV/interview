@@ -10,7 +10,7 @@
   - [AQS](#aqs)
   - [创建线程的方法，哪个更好，为什么？](#创建线程的方法哪个更好为什么)
   - [Java 中有几种方式启动一个线程？](#java-中有几种方式启动一个线程)
-  - [cyclicbarrier 和 countdownlatch 的区别](#cyclicbarrier-和-countdownlatch-的区别)
+  - [CountDownLatch，CyclicBarrier，Semaphore，CountDownLatch](#countdownlatchcyclicbarriersemaphorecountdownlatch)
   - [如何理解 Java 多线程回调方法？](#如何理解-java-多线程回调方法)
   - [概括的解释下线程的几种可用状态以及状态之间的关系](#概括的解释下线程的几种可用状态以及状态之间的关系)
   - [同步方法和同步代码块的区别是什么？](#同步方法和同步代码块的区别是什么)
@@ -137,19 +137,42 @@ Java 中的线程池实际就是一种生产者和消费者模式的实现方式
 
 ## 线程池
 
+[线程池的几种实现方式](https://www.jianshu.com/p/e9b0378db56a)
+
 **概念**
 
 线程池是存储线程的容器,线程事先创建好后放入线程池,当有任务需要执行时,直接从线程池拿空闲线程使用,使用完毕后归还给线程池
 
-**类型**
+**FixedThreadPool**
 
-- ThreadPoolExcutor 有以下三种：
-  1. FixedThreadPool ：创建一个指定工作线程数量的线程池。每当提交一个任务就创建一个工作线程，如果工作线程数量达到线程池初始的最大数，则将提交的任务存入到池队列中,使用 LinkedBlockingQueue 作为线程池的工作队列；
-  2. SingleThreadExecutor ：创建一个单线程化的 Executor，即只创建唯一的工作者线程来执行任务，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。如果这个线程异常结束，会有另一个取代它，保证顺序执行，使用 LinkedBlockingQueue 作为线程池的工作队列；
-  3. CachedThreadPool ：创建一个可缓存线程池， 如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程
-- ScheduledThreadPoolExecutor 有以下二种：
-  1. ScheduledThreadPoolExecutor：适用于需要多个后台线程执行周期任务，包含若干个线程
-  2. SingleThreadScheduledExecutor：适用于需要一个后台线程执行周期任务，只包含一个线程，同时需要保证顺序的执行各个任务的应用场景
+创建一个指定工作线程数量的线程池。每当提交一个任务就创建一个工作线程，如果工作线程数量达到线程池初始的最大数，则将提交的任务存入到池队列中，使用 LinkedBlockingQueue 作为线程池的工作队列；
+
+`corePoolSize` 和 `maximumPoolSize` 都被设置为创建 FixedThreadPool 时指定的参数 `nThreads`。当线程池中的线程数大于`corePoolSize` 时，`keepAliveTime` 为多余的空闲线程等待新任务的最长时间，超过这个时间后多余的线程将被终止。这里把`keepAliveTime` 设置为 0L，意味着多余的空闲线程会被立即终止。
+
+FixedThreadPool 使用无界队列 LinkedBlockingQueue 作为线程池的工作队列，`maximumPoolSize`、`keepAliveTime` 将是一个无效参数。
+
+**SingleThreadExecutor**
+
+创建一个单线程化的 Executor，即只创建唯一的工作者线程来执行任务，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO， LIFO， 优先级)执行。如果这个线程异常结束，会有另一个取代它，保证顺序执行，使用 LinkedBlockingQueue 作为线程池的工作队列；
+
+`corePoolSize` 和 `maximumPoolSize` 被设置为 1。其他参数与  FixedThreadPool 相同。
+
+SingleThreadExecutor 使用无界队列 LinkedBlockingQueue 作为线程池的工作队列（队列的容量为 Integer.MAX_VALUE），`maximumPoolSize`、`keepAliveTime` 将是一个无效参数。
+
+**CachedThreadPool**
+
+创建一个可缓存线程池， 如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程
+
+CachedThreadPool 的 `corePoolSize` 被设置为 0，即 corePool 为空；`maximumPoolSize` 被设置为  Integer.MAX_VALUE，即 maximumPool 是无界的。这里把 `keepAliveTime` 设置为 60L，意味着  CachedThreadPool 中的空闲线程等待新任务的最长时间为 60 秒，空闲线程超过 60 秒后将会被终止。
+
+CachedThreadPool 使用没有容量的 SynchronousQueue 作为线程池的工作队列，但  CachedThreadPool 的 maximumPool 是无界的。这意味着，如果主线程提交任务的速度高于  maximumPool 中线程处理任务的速度时，CachedThreadPool 会不断创建新线程。极端情况下， CachedThreadPool 会因为创建过多线程而耗尽 CPU 和内存资源
+
+**ScheduledThreadPoolExecutor**
+
+有以下二种：
+
+1. ScheduledThreadPoolExecutor：适用于需要多个后台线程执行周期任务，包含若干个线程
+2. SingleThreadScheduledExecutor：适用于需要一个后台线程执行周期任务，只包含一个线程，同时需要保证顺序的执行各个任务的应用场景
 
 **处理流程**
 
@@ -250,10 +273,27 @@ Java 中的线程池实际就是一种生产者和消费者模式的实现方式
 
 第一种:继承 Thread 类,重写 run 方法.第二种:实现 Runable 接口,重写 run 方法
 
-## cyclicbarrier 和 countdownlatch 的区别
+## CountDownLatch，CyclicBarrier，Semaphore，CountDownLatch
 
-1. CountdownLatch 阻塞主线程，等所有子线程完结了再继续下去，其计数器只能使用一次
-2. Syslicbarrier 阻塞一组线程，直至某个状态之后再全部同时执行，并且所有线程都被释放后，还能通过 reset 来重用
+**CountDownLatch：**
+
+异步辅助类，它能让一个和多个线程处于等待状态，直到其他线程完成了一系列操作。countDown()方法代表
+
+**CyclicBarrier：**
+
+让一组线程等待至某个状态之后再全部同时执行。
+最重要的是中最重要的方法就是 await 方法，用来挂起当前线程，直至所有线程都到达 barrier 状态再同时执行后续任务
+
+**Semaphore：**
+
+Semaphore 可以控制同时访问的线程个数，通过 acquire() 获取一个许可，如果没有就等待，而 release() 释放一个许可。
+
+**总结：**
+
+1. CountDownLatch 和 CyclicBarrier 都能够实现线程之间的等待，只不过它们侧重点不同：CountDownLatch 一般用于某个线程 A 等待若干个其他线程执行完任务之后，它才执行；而 CyclicBarrier 一般用于一组线程互相等待至某个状态，然后这一组线程再同时执行；另外，CountDownLatch 是不能够重用的，而 CyclicBarrier 是可以重用的。
+2. Semaphore 其实和锁有点类似，它一般用于控制对某组资源的访问权限。
+3. CountdownLatch 阻塞主线程，等所有子线程完结了再继续下去，其计数器只能使用一次
+4. Syslicbarrier 阻塞一组线程，直至某个状态之后再全部同时执行，并且所有线程都被释放后，还能通过 reset 来重用
 
 ## 如何理解 Java 多线程回调方法？
 

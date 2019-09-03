@@ -25,12 +25,15 @@
   - [二叉搜索树的后续遍历序列](#二叉搜索树的后续遍历序列)
   - [二叉树中和为某一值的路径](#二叉树中和为某一值的路径)
   - [树中二个节点的最低公共祖先](#树中二个节点的最低公共祖先)
+  - [非递归的中序遍历](#非递归的中序遍历)
+  - [二叉搜索树与双向链表](#二叉搜索树与双向链表)
 - [排序](#排序)
   - [归并排序](#归并排序)
   - [快速排序](#快速排序)
   - [堆排序](#堆排序)
   - [数组中前一个数字大于后面一个数字构成逆序对，求数组中的逆序对个数](#数组中前一个数字大于后面一个数字构成逆序对求数组中的逆序对个数)
   - [数组中出现次数超过一半的数字](#数组中出现次数超过一半的数字)
+  - [数组中只出现一次的字符，有二个只出现一次的字符](#数组中只出现一次的字符有二个只出现一次的字符)
   - [最小的 k 个数](#最小的-k-个数)
   - [数据流中的中位数](#数据流中的中位数)
   - [冒泡](#冒泡)
@@ -39,6 +42,7 @@
   - [希尔排序](#希尔排序)
   - [桶排序](#桶排序)
   - [基数排序](#基数排序)
+  - [统计一个数字 k 在排序数组中出现的次数。](#统计一个数字-k-在排序数组中出现的次数)
 - [栈](#栈)
   - [用二个栈实现队列](#用二个栈实现队列)
   - [包含 min 函数的栈](#包含-min-函数的栈)
@@ -80,6 +84,7 @@
   - [左旋转字符串](#左旋转字符串)
   - [把字符串转成整数](#把字符串转成整数)
   - [将字符串中的控格替换成" "](#将字符串中的控格替换成)
+  - [字符串的排列](#字符串的排列)
 - [数字](#数字)
   - [二进制中 1 的个数](#二进制中-1-的个数)
   - [数值的整数次方](#数值的整数次方)
@@ -89,6 +94,7 @@
   - [求按从小到大的顺序的第 N 个丑数，丑数只包含因子 2、3 和 5](#求按从小到大的顺序的第-n-个丑数丑数只包含因子-23-和-5-1)
   - [圆圈中最后剩下的数](#圆圈中最后剩下的数)
   - [求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字](#求-123n要求不能用-forwhileifelse-等关键字-1)
+  - [不用加减乘除做加法](#不用加减乘除做加法)
 - [回溯法](#回溯法)
   - [打印从 1 到最大的 n 个数](#打印从-1-到最大的-n-个数)
   - [矩阵中的路径](#矩阵中的路径)
@@ -884,6 +890,70 @@ public TreeNode getLowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
 }
 ```
 
+## 非递归的中序遍历
+
+**思想：**
+
+1. 如果 head 非空，把它压入栈中，并让 head 指向它的左孩子。
+2. 如果 head 为空，弹出栈顶节点，用 head 保存该节点，并打印该节点的值，并让 head 指向它的右孩子。
+
+```java
+public void middleorderTraversal(TreeNode root) {
+    if (root == null) return;
+
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode p = root;
+    while (p != null || !stack.isEmpty()) {
+        while (p != null) {
+            stack.push(p);
+            p = p.left;
+        }
+        if (!stack.isEmpty()) {
+            p = stack.pop();
+            System.out.println(p.val);
+            p = p.right;
+        }
+    }
+}
+```
+
+## 二叉搜索树与双向链表
+
+**思想：**
+
+1. 核心是中序遍历的非递归算法。
+2. 修改当前遍历节点与前一遍历节点的指针指向。
+
+```java
+public TreeNode Convert(TreeNode pRootOfTree) {
+    if (pRootOfTree == null) {
+        return null;
+    }
+    TreeNode p = pRootOfTree;
+    TreeNode pre = p;//记录p的前一个节点
+    Stack<TreeNode> stack = new Stack<>();
+    boolean isFirst = true;
+    while(p != null || !stack.isEmpty()) {
+        while (p != null) {
+            stack.push(p);
+            p = p.left;
+        }
+        p = stack.pop();
+        if (isFirst) {
+            pRootOfTree = p;
+            pre = pRootOfTree;
+            isFirst = false;
+        } else {
+            p.left = pre;
+            pre.right = p;
+            pre = p;
+        }
+        p = p.right;
+    }
+    return pRootOfTree;
+}
+```
+
 # 排序
 
 [【数据结构与算法】这或许是东半球分析十大排序算法最好的一篇文章](https://mp.weixin.qq.com/s/iiH2wSG-hVeUHxIsfuu9gw)
@@ -1173,6 +1243,12 @@ public class Main {
         nums[j]  = temp;
     }
 }
+```
+
+## 数组中只出现一次的字符，有二个只出现一次的字符
+
+```java
+
 ```
 
 ## 最小的 k 个数
@@ -1587,6 +1663,17 @@ public class RadixSort {
 
 在基数排序过程中，对于任何位数上的基数进行装桶操作时，都需要 n+r 个临时空间。
 
+## 统计一个数字 k 在排序数组中出现的次数。
+
+**思想：**
+
+1. 算 k+0.5 和 k-0.5 之间的距离
+2. 二分法，分别定位最左，最右的数字
+
+```java
+
+```
+
 # 栈
 
 栈的常用方法：
@@ -1841,6 +1928,15 @@ public class Main {
 ## 把数组中的所有数字拼接起来，排成最小的数
 
 **思想：**
+
+解题思路：
+先将整型数组转换成 String 数组，然后将 String 数组排序，最后将排好序的字符串数组拼接出来。关键就是制定排序规则。
+
+排序规则如下：
+
+- 若 ab > ba 则 a > b，
+- 若 ab < ba 则 a < b，
+- 若 ab = ba 则 a = b；
 
 排序问题，比较 s1+s2 和 s2+s1 的大小
 
@@ -2724,6 +2820,53 @@ public class Main {
     }
 ```
 
+## 字符串的排列
+
+[字符串的排列](https://www.nowcoder.com/questionTerminal/fe6b651b66ae47d7acce78ffdd9a96c7?f=discussion)
+
+**思想：**
+
+回溯法
+
+```java
+public class Solution {
+    public ArrayList<String> Permutation(String str) {
+        if (str.length() == 0 || str == null) {
+            return new ArrayList<>();
+        }
+        List<String> ret = new ArrayList<>();
+        fun(str.toCharArray(), ret, 0);
+        Collections.sort(ret);
+        return (ArrayList)ret;
+    }
+
+    private static void fun(char[] chars, List<String> list, int i) {
+        if (i == chars.length - 1) {
+            if (!list.contains(new String(chars))) {
+                list.add(new String(chars));
+                return;
+            }
+        } else {
+            //i = 0开始回溯
+            for (int j = i; j < chars.length; j++) {
+                swap(chars, i, j);
+                fun(chars, list, i + 1);
+                swap(chars, i, j);
+            }
+        }
+    }
+
+    //交换数组的两个下标的元素
+    private static void swap(char[] str, int i, int j) {
+        if (i != j) {
+            char t = str[i];
+            str[i] = str[j];
+            str[j] = t;
+        }
+    }
+}
+```
+
 # 数字
 
 ## 二进制中 1 的个数
@@ -2975,6 +3118,36 @@ public class Test {
 ```
 
 ## 求 1+2+3+...+n，要求不能用 for、while、if、else 等关键字
+
+```java
+public class Solution {
+    public int Sum_Solution(int n) {
+        int sum = n;
+        boolean b = (n > 0) && (sum += Sum_Solution(n - 1)) > 0;
+        return sum;
+    }
+}
+```
+
+## 不用加减乘除做加法
+
+思想：
+
+1. 两个数异或：相当于每一位相加，而不考虑进位；
+2. 两个数相与，并左移一位：相当于求得进位；
+3. 将上述两步的结果相加
+
+```java
+public int Add(int num1,int num2) {
+    while( num2!=0 ){
+        int sum = num1 ^ num2;
+        int carray = (num1 & num2) << 1;
+        num1 = sum;
+        num2 = carray;
+    }
+    return num1;
+}
+```
 
 # 回溯法
 

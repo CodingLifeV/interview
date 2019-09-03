@@ -15,7 +15,7 @@
   - [描述一下 JVM 加载 class 文件的原理机制？](#描述一下-jvm-加载-class-文件的原理机制)
   - [内存分配与回收策略](#内存分配与回收策略)
   - [JVM 调优](#jvm-调优)
-  - [类加载机制，双亲委派模型，好处是什么？如何破坏双亲委派模型？应用场景？](#类加载机制双亲委派模型好处是什么如何破坏双亲委派模型应用场景)
+  - [类加载机制，双亲委派模型](#类加载机制双亲委派模型)
   - [Java 类的加载机制](#java-类的加载机制)
   - [new 一个对象，JVM 如何操作](#new-一个对象jvm-如何操作)
 - [GC](#gc)
@@ -25,6 +25,7 @@
   - [4、GC 是什么? 为什么要有 GC?](#4gc-是什么-为什么要有-gc)
   - [5、垃圾回收的优点和原理。并考虑 2 种回收机制](#5垃圾回收的优点和原理并考虑-2-种回收机制)
   - [6、垃圾回收器可以马上回收内存吗？有什么办法主动通知虚拟机进行垃圾回收？（垃圾回收）](#6垃圾回收器可以马上回收内存吗有什么办法主动通知虚拟机进行垃圾回收垃圾回收)
+  - [JVM 性能调优监控工具 jps、jstack、jmap、jhat、jstat、hprof 使用。系统 CPU 过高和 GC 频繁，如何排查](#jvm-性能调优监控工具-jpsjstackjmapjhatjstathprof-使用系统-cpu-过高和-gc-频繁如何排查)
 
 <!-- /TOC -->
 
@@ -347,7 +348,7 @@ JVM 中类的装载是由 ClassLoader 和它的子类来实现的，Java ClassLo
   -XX:MaxMetaspaceSize=512m
   ```
 
-## 类加载机制，双亲委派模型，好处是什么？如何破坏双亲委派模型？应用场景？
+## 类加载机制，双亲委派模型
 
 [参考网址 1](https://www.jianshu.com/p/60dbd8009c64)
 [参考网址 2](https://blog.csdn.net/yangcheng33/article/details/52631940)
@@ -360,6 +361,8 @@ JVM 中类的装载是由 ClassLoader 和它的子类来实现的，Java ClassLo
 **优点：**
 
 采用双亲委派的一个好处是： 双亲委派模型很好地解决了各个类加载器的基础类统一问题 (越基础的类由越上层的加载器进行加载）。
+
+如果不是同一个类加载器加载，即时是相同的 class 文件，也会出现判断不想同的情况，从而引发一些意想不到的情况，为了保证相同的 class 文件，在使用的时候，是相同的对象，jvm 设计的时候，采用了双亲委派的方式来加载类。
 
 对于任意一个类，都需要由加载它的类加载器和这个类本身来一同确立其在 Java 虚拟机中的唯一性。如果不是同一个类加载器加载，即时是相同的 class 文件，也会出现判断不想同的情况，从而引发一些意想不到的情况，为了保证相同的 class 文件，在使用的时候，是相同的对象，jvm 设计的时候，采用了双亲委派的方式来加载类。
 
@@ -401,7 +404,15 @@ JVM 中类的装载是由 ClassLoader 和它的子类来实现的，Java ClassLo
     }
 ```
 
+**为什么需要破坏双亲委派**
+
+因为在某些情况下父类加载器需要委托子类加载器去加载 class 文件。受到加载范围的限制，父类加载器无法加载到需要的文件。
+
+以 Driver 接口为例，由于 Driver 接口定义在 jdk 当中的，而其实现由各个数据库的服务商来提供，比如 mysql 的就写了 MySQL Connector，那么问题就来了，DriverManager（也由 jdk 提供）要加载各个实现了 Driver 接口的实现类，然后进行管理，但是 DriverManager 由启动类加载器加载，只能加载 JAVA_HOME 的 lib 下文件，而其实现是由服务商提供的，由系统类加载器加载，这个时候就需要启动类加载器来委托子类来加载 Driver 实现，从而破坏了双亲委派。
+
 **实现自定义加载器**
+
+打破双亲委派机制则不仅要继承 ClassLoader 类，还要重写 loadClass 和 findClass 方法。
 
 1. 如果不想打破双亲委派模型，那么只需要重写 findClass 方法即可
 2. 如果想打破双亲委派模型，那么就重写整个 loadClass 方法
@@ -413,6 +424,12 @@ Java 中所有涉及 SPI 的加载动作基本上都采用这种方式，例如 
 例如 JDBC 中，引入线程上下文件类加载器， 程序就可以把原本需要由启动类加载器进行加载的类，由应用程序类加载器去进行加载了。
 
 Java SPI 机制：为某个接口寻找服务实现的机制。有点类似 IOC 的思想，就是将装配的控制权移到程序之外。
+
+**JVM 如何判断两个类是否相同**
+
+Java 虚拟机不仅要看类的全名是否相同，还要看加载此类的类加载器是否一样。只有两者都相同的情况，才认为两个类是相同的。即便是同样的字节代码，被不同的类加载器加载之后所得到的类，也是不同的。
+
+比如一个 Java 类  `com.example.Sample`，编译之后生成了字节代码文件  `Sample.class`。两个不同的类加载器  `ClassLoaderA` 和  `ClassLoaderB` 分别读取了这个  `Sample.class` 文件，并定义出两个 `java.lang.Class` 类的实例来表示这个类。这两个实例是不相同的。对于 Java 虚拟机来说，它们是不同的类。试图对这两个类的对象进行相互赋值，会抛出运行时异常  `ClassCastException`。
 
 ## Java 类的加载机制
 
@@ -496,3 +513,39 @@ GC 是垃圾回收。
 可以马上回收内存。
 
 程序员可以手动执行 System.gc()，通知 GC 运行，但是 Java 语言规范并不保证 GC 一定会执行。
+
+## JVM 性能调优监控工具 jps、jstack、jmap、jhat、jstat、hprof 使用。系统 CPU 过高和 GC 频繁，如何排查
+
+[Linux 系统异常排查(main)](https://blog.csdn.net/mynamepg/article/details/80583242)
+
+[JVM 性能调优监控工具 jps、jstack、jmap、jhat、jstat、hprof 使用详解](https://mp.weixin.qq.com/s/_95OrhCDXI4ODGvdBZor8g)
+
+Full GC 次数过多：
+
+1. `top` 分析 cpu 使用情况，`shift + m` 和 `shift + p` 来按 memory 和 CPU 使用对进程进行排序。找到占用内存较高的进程 id 号
+2. `top -Hp 进程id`，查看该进程的各个线程运行情况，查看各个线程的 CPU 使用情况，复制其线程的 id 号
+3. 通过线程 id 的十六进制表示在 jstack 日志中查看当前线程具体的堆栈信息
+
+JVM 性能调优监控工具有：
+
+- `jps`：输出 JVM 中运行的进程状态信息
+- `jmap`：查看堆内存使用状况，一般结合 jhat 使用
+- `Jstat`：JVM 统计监测工具
+- `Jstack`：查看某个 Java 进程内的线程堆栈信息
+
+```java
+jstack pid
+jstack -l pid 观察锁持有情况，发生死锁时使用
+```
+
+使用 `top -Hp pid` 定位到具体的最耗费 CPU 进行对应的线程 PID 之后，使用
+`printf ”%x\n” pid` 打印出十六进制表示方式，例如 PID = 21742，其十六进制为 54ee
+
+使用 jstack 输出进程 21711 的堆栈信息 `jstack 21711 | grep 54ee`，然后根据线程 ID 的十六进制值 grep
+
+```
+root@ubuntu:/# jstack 21711 | grep 54ee
+"PollIntervalRetrySchedulerThread" prio=10 tid=0x00007f950043e000 nid=0x54ee in Object.wait() [0x00007f94c6eda000]
+```
+
+可以看到 CPU 消耗在 `PollIntervalRetrySchedulerThread` 这个类的 `Object.wait()` 方法，之后便可以定位具体的方法上
