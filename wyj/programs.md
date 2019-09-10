@@ -101,6 +101,7 @@
 - [其它](#其它)
   - [多线程死锁](#多线程死锁)
   - [读取文件中的内容写入到另外一个文件](#读取文件中的内容写入到另外一个文件)
+  - [LRU 算法](#lru-算法)
 
 <!-- /TOC -->
 
@@ -3323,4 +3324,111 @@ public class Main {
 		}
     }
 }
+```
+
+## LRU 算法
+
+**思想：**
+
+LRU 使用了哈希链表来实现。所以需要维护一个 HashMap 和定义为 Node 类的链表
+
+使用 head 和 end 表示链表的头和尾，在时间上先被访问的数据作为双向链表的 head，后被访问的数据作为双向链表的 end，当达到内存设置大小之后，新进入未被访问过的数据，则将 head 的节点删除，将新的数据插入 end 处，如果访问的数据在内存中，则将数据更新到 end 初，删除原始在的位置。
+
+```java
+class Node {
+    Node(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+    public Node pre;
+    public Node next;
+    public String key;
+    public String val;
+}
+
+class LRUCache {
+    private Node head;
+    private Node end;
+    //缓存存储上限
+    private int limit;
+
+    private HashMap<String, Node> map;
+
+    public LRUCache(int limit) {
+        this.limit = limit;
+        map = new HashMap<String, Node>();
+    }
+
+    //删除结点：删除头尾中间结点
+    private String removeNode(Node node) {
+        if(node == end) {
+            node = node.pre;
+        } else if(node == head) {
+            node = node.next;
+        } else {
+            node.next.pre = node.pre;
+            node.pre.next = node.next;
+        }
+        return node.key;
+    }
+
+    //插入结点：Node链表为空或者不为空
+    public void addNode(Node node) {
+        if(end != null) {
+            end.next = node;
+            node.pre = end;
+            node.next = null;
+        }
+        end = node;
+
+        if(head == null) {
+            head = node;
+        }
+    }
+
+    //刷新被访问的结点
+    private void refreshNode(Node node) {
+        //如果访问的是尾结点
+        if(node == end) {
+            return;
+        }
+
+        removeNode(node);
+        addNode(node);
+    }
+
+    public void remove(String key) {
+        Node node = map.get(key);
+        removeNode(node);
+        map.remove(key);
+    }
+
+    public void put(String key, String value) {
+        Node node = map.get(key);
+        if(node == null) {
+            if(map.size() >= limit) {
+                String oldKey = removeNode(key);
+                map.remove(key);
+            }
+            node = new Node(key, value);
+            addNode(key);
+            map.put(key, node);
+        } else {
+            node.val = value;
+            refreshNode(node);
+        }
+    }
+
+    public String get(String key) {
+        Node node = map.get(key);
+        if(node == null) {
+            return null;
+        }
+        refreshNode(node);
+        return node.val;
+    }
+
+
+}
+
 ```
